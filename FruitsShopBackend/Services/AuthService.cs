@@ -54,7 +54,10 @@ namespace FruitsShopBackend.Services
                 PasswordHash = passwordHash,
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow,
-                NumFollowers = 0
+                NumFollowers = 0,
+                IsSeller = false,
+                Role = Constants.RoleType.Buyer
+                
             };
 
             // Add user to the database
@@ -64,6 +67,31 @@ namespace FruitsShopBackend.Services
             return new Result { Success = true };
         }
 
-        // Implement other methods as needed
+        public async Task<Result> LoginAsync(string email, string password)
+        {
+            // Find user by email
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email);
+
+            // Check if user exists
+            if (user == null)
+            {
+                return new Result { Success = false, Message = "Invalid email or password." };
+            }
+
+            // Verify the password
+            var result = _passwordHasher.VerifyHashedPassword(null, user.PasswordHash, password);
+
+            if (result == PasswordVerificationResult.Success)
+            {
+                // Password is correct, return success
+                return new Result { Success = true };
+            }
+            else
+            {
+                // Password is incorrect, return failure
+                return new Result { Success = false, Message = "Invalid email or password." };
+            }
+        }
+        //implement method as needed
     }
 }

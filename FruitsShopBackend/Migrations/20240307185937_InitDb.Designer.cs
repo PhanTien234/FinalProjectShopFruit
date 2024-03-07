@@ -4,14 +4,16 @@ using FruitsShopBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace FruitsShopBackend.Migrations
 {
     [DbContext(typeof(UserSQLDbContext))]
-    partial class UserSQLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240307185937_InitDb")]
+    partial class InitDb
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

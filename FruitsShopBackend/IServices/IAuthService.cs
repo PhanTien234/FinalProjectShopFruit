@@ -7,5 +7,6 @@ namespace FruitsShopBackend.IServices
     {
         Task<Result> RegisterAsync(RegisterRequest request);
         //Add other authentication-related methods if needed
+        Task<Result> LoginAsync(string email, string password);
     }
 }
