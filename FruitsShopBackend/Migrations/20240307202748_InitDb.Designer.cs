@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FruitsShopBackend.Migrations
 {
     [DbContext(typeof(UserSQLDbContext))]
-    [Migration("20240307185937_InitDb")]
+    [Migration("20240307202748_InitDb")]
     partial class InitDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,7 +31,7 @@ namespace FruitsShopBackend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DoB")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");

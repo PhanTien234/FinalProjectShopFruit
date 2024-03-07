@@ -29,7 +29,7 @@ namespace FruitsShopBackend.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DoB")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");

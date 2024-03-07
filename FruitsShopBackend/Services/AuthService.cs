@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Engines;
+using System.Globalization;
 
 namespace FruitsShopBackend.Services
 {
@@ -47,11 +48,13 @@ namespace FruitsShopBackend.Services
             string[] emailParts = request.Email.Split('@');
             string defaultFirstName = emailParts[0];
 
+
             var user = new User
             {
                 FirstName = defaultFirstName,
                 Email = request.Email,
                 PasswordHash = passwordHash,
+                DoB = DateTime.MinValue,
                 CreatedAt = DateTime.UtcNow,
                 LastLoginAt = DateTime.UtcNow,
                 NumFollowers = 0,
