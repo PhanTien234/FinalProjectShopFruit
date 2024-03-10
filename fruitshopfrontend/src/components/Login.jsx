@@ -1,38 +1,63 @@
-import React from 'react';
-import backgroundImage from '../assets/images/backgroundimage.png'; // Adjust the path as needed
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import { configureAlerts, ToastContainer } from '../alert/alert';
+import backgroundImage from '../assets/images/backgroundimage.png';
 
 const LoginForm = () => {
+  const { success, alertError } = configureAlerts();
+
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post('https://localhost:5001/api/Auths/login', {
+        email,
+        password,
+      });
+      // Show success notification
+      success(response.data.message);
+    } catch (error) {
+      // Show error notification
+      alertError(error.response.data.error);
+    }
+  };
+
   return (
     <div 
       className="min-h-screen flex justify-center items-center"
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}
     >
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-8">Đăng nhập</h2>
+        <h2 className="text-2xl font-bold mb-8">Login</h2>
         <div className="mb-4">
           <input
             type="text"
-            placeholder="Email/Số điện thoại/Tên đăng nhập"
+            placeholder="Email"
             className="w-full p-3 border rounded"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div className="mb-4">
           <input
-            type="password"
-            placeholder="Mật khẩu"
+            placeholder="Password"
             className="w-full p-3 border rounded"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div className="mb-4">
-          <button className="w-full bg-red-500 text-white p-3 rounded">ĐĂNG NHẬP</button>
+          <button className="w-full bg-red-500 text-white p-3 rounded" onClick={handleSubmit}>Login</button>
         </div>
         <div className="text-center mb-4">
-          <a href="#" className="text-sm text-blue-600">Quên mật khẩu</a>
+          <Link to="#" className="text-sm text-blue-600">Forgot password</Link>
         </div>
         <div className="flex items-center justify-between mb-4">
           <hr className="w-1/2" />
-          <span className="p-2 text-gray-500">HOẶC</span>
+          <span className="p-2 text-gray-500">OR</span>
           <hr className="w-1/2" />
         </div>
         <div className="flex justify-between mb-4">
@@ -40,10 +65,21 @@ const LoginForm = () => {
           <button className="w-1/2 bg-green-500 text-white p-3 rounded ml-2">Google</button>
         </div>
         <div className="text-center mt-4">
-          <span className="text-sm text-gray-600">Bạn mới biết đến Shopee? </span>
-          <Link to="/register" className="text-sm text-blue-600">Đăng ký</Link>
+          <span className="text-sm text-gray-600">Don't have an account? </span>
+          <Link to="/register" className="text-sm text-blue-600">Register</Link>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

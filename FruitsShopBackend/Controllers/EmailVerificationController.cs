@@ -31,5 +31,21 @@ namespace FruitsShopBackend.Controllers
                 return BadRequest(new { Error = result.Message });
             }
         }
+
+        [HttpPost("verify-code")]
+        public async Task<IActionResult> VerifyVerificationCode([FromBody] VerifyVerificationCodeRequest request)
+        {
+            // Call service to verify verification code
+            var result = await _emailVerificationService.VerifyVerificationCodeAsync(request.Email, request.VerificationCode);
+
+            if (result.Success)
+            {
+                return Ok(new { Message = "Verification code verified successfully" });
+            }
+            else
+            {
+                return BadRequest(new { Error = result.Message });
+            }
+        }
     }
 }

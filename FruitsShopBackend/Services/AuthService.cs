@@ -33,13 +33,6 @@ namespace FruitsShopBackend.Services
                 return new Result { Success = false, Message = "Email is already registered." };
             }
 
-            // Verify the verification code
-            var verifyResult = await _emailVerificationService.VerifyVerificationCodeAsync(request.Email, request.VerificationCode);
-
-            if (!verifyResult.Success)
-            {
-                return new Result { Success = false, Message = "Failed to verify email. Please enter the correct verification code." };
-            }
 
             // Hash the password
             var passwordHash = _passwordHasher.HashPassword(null, request.Password);
