@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { configureAlerts, ToastContainer } from '../alert/alert';
 import backgroundImage from '../assets/images/backgroundimage.png';
@@ -9,6 +9,7 @@ const LoginForm = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
 
   const handleSubmit = async () => {
@@ -18,6 +19,7 @@ const LoginForm = () => {
         password,
       });
       // Show success notification
+      navigate('/');
       success(response.data.message);
     } catch (error) {
       // Show error notification

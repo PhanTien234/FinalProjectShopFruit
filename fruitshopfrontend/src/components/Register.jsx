@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import FadeLoader from "react-spinners/FadeLoader";
 import { configureAlerts, ToastContainer } from '../alert/alert';
@@ -14,9 +14,10 @@ const RegisterForm = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [verificationSent, setVerificationSent] = useState(false);
   const [verificationSuccess, setVerificationSuccess] = useState(false);
-  const [setRegistrationSuccess] = useState(false);
+  const [registrationSuccess,setRegistrationSuccess] = useState(false);
   const [loading, setLoading] = useState(false); // Spinner state
   const [showPassword, setShowPassword] = useState(false); // State for showing password
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSendVerificationCode = async () => {
     try {
@@ -44,25 +45,26 @@ const RegisterForm = () => {
     }
   };
 
-  const handleSubmit = async () => {
-    try {
+  const handleSubmitRegister = async () => {
+    // try {
       if (password !== confirmPassword) {
         alertError('Password and confirm password do not match.');
         return;
       }
 
-      await axios.post('https://localhost:5001/api/Auths/register', {
+      const response = await axios.post('https://localhost:5001/api/Auths/register', {
         email,
         password,
         confirmPassword,
       });
-      setRegistrationSuccess(true);
+      navigate('/');
+      success(response.data.message);
       // Show success notification
-      success('Registration successful!');
-    } catch (error) {
-      // Show error notification
-      alertError('Registration failed! User already exists');
-    }
+      //success('Registration successful!');
+    // } catch (error) {
+    //   // Show error notification
+    //   alertError('Registration failed! User already exists');
+    // }
   };
 
   return (
@@ -133,7 +135,7 @@ const RegisterForm = () => {
             <div className="mb-4">
               <button
                 className="w-full bg-blue-500 text-white p-3 rounded"
-                onClick={handleSubmit}
+                onClick={handleSubmitRegister}
               >
                 Register
               </button>

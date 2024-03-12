@@ -1,11 +1,17 @@
-// components/Home.js
+// Home.jsx
 import React from 'react';
+import Navbar from '../layout/Navbar';
+import Banner from '../layout/Banner';
+import ProductGrid from '../layout/ProductGrid';
+import Footer from '../layout/Footer';
 
 const Home = () => {
   return (
     <div>
-      <h2>Welcome to Fruit Shop</h2>
-      <p>Buy fresh fruits with guaranteed hygiene and safety!</p>
+      <Navbar />
+      <Banner />
+      <ProductGrid />
+      <Footer />
     </div>
   );
 };

@@ -14,13 +14,11 @@ namespace FruitsShopBackend.Services
     public class AuthService : IAuthService
     {
         private readonly UserSQLDbContext _context;
-        private readonly IEmailVerificationService _emailVerificationService;
         private readonly PasswordHasher<User> _passwordHasher;
 
-        public AuthService(UserSQLDbContext context, IEmailVerificationService emailVerificationService)
+        public AuthService(UserSQLDbContext context)
         {
             _context = context;
-            _emailVerificationService = emailVerificationService;
             _passwordHasher = new PasswordHasher<User>();
         }
 
