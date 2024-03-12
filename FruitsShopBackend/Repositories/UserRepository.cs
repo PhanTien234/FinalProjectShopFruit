@@ -1,5 +1,5 @@
 ﻿using FruitsShopBackend.Data;
-using FruitsShopBackend.IRepositories;
+using FruitsShopBackend.Interfaces.IRepositories;
 using FruitsShopBackend.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;

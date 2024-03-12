@@ -1,5 +1,5 @@
 ﻿using FruitsShopBackend.Dtos;
-using FruitsShopBackend.IServices;
+using FruitsShopBackend.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System;

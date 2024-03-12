@@ -1,24 +1,18 @@
 using FruitsShopBackend.Data;
 using FruitsShopBackend.Dtos;
-using FruitsShopBackend.Extensions.Collections;
-using FruitsShopBackend.IRepositories;
-using FruitsShopBackend.IServices;
+using FruitsShopBackend.Interfaces.IRepositories;
+using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Repositories;
 using FruitsShopBackend.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
+using FruitsShopBackend.Mappings;
 
 namespace FruitsShopBackend
 {
@@ -37,20 +31,30 @@ namespace FruitsShopBackend
             services.AddControllers();
             services.AddMemoryCache();
 
-            // Add MongoDB context
             // Configure DbContext
 
             services.AddDbContext<UserSQLDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("UserConnection")));
 
+            // Add MongoDB context
+            services.AddSingleton<MongoDbContext>();
+
+            // Register AutoMapper and specify the profile class
+            services.AddTransient<IMapper>(_ => new Mapper(new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new AutoMapperProfiles());
+            })));
+
             // Configure MailSettings from appsettings.json
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailVerificationService, EmailVerificationService>();
             services.AddScoped<IMailService, MailService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             // Add other custom services here
 

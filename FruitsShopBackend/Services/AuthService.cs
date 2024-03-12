@@ -1,6 +1,5 @@
 ﻿using FruitsShopBackend.Data;
 using FruitsShopBackend.Dtos;
-using FruitsShopBackend.IServices;
 using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
@@ -8,6 +7,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Crypto.Engines;
 using System.Globalization;
+using FruitsShopBackend.Interfaces.IServices;
 
 namespace FruitsShopBackend.Services
 {

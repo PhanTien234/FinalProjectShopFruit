@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-namespace FruitsShopBackend.IServices
+namespace FruitsShopBackend.Interfaces.IServices
 {
     public interface IEmailVerificationService
     {

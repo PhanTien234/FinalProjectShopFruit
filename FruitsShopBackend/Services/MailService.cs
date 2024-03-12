@@ -1,11 +1,11 @@
 ﻿using FruitsShopBackend.Dtos;
-using FruitsShopBackend.IServices;
 using System.Threading.Tasks;
 using System;
 using MimeKit;
 using MailKit.Security;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Options;
+using FruitsShopBackend.Interfaces.IServices;
 
 namespace FruitsShopBackend.Services
 {

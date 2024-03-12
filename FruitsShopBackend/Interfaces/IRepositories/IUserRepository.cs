@@ -1,7 +1,7 @@
 ﻿using FruitsShopBackend.Model;
 using System.Threading.Tasks;
 
-namespace FruitsShopBackend.IRepositories
+namespace FruitsShopBackend.Interfaces.IRepositories
 {
     public interface IUserRepository
     {

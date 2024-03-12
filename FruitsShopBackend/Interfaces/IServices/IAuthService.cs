@@ -1,7 +1,7 @@
 ﻿using FruitsShopBackend.Dtos;
 using System.Threading.Tasks;
 
-namespace FruitsShopBackend.IServices
+namespace FruitsShopBackend.Interfaces.IServices
 {
     public interface IAuthService
     {

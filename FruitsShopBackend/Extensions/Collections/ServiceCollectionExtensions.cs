@@ -1,5 +1,4 @@
-﻿using FruitsShopBackend.IRepositories;
-using FruitsShopBackend.IServices;
+﻿
 using FruitsShopBackend.Repositories;
 using FruitsShopBackend.Services;
 using Microsoft.Extensions.Configuration;

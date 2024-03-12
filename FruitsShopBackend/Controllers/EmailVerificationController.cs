@@ -1,5 +1,5 @@
 ﻿using FruitsShopBackend.Dtos;
-using FruitsShopBackend.IServices;
+using FruitsShopBackend.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
