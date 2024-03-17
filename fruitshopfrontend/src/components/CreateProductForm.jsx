@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { configureAlerts, ToastContainer } from '../alert/alert';
+import { useNavigate} from 'react-router-dom';
 
 const CreateProductForm = () => {
-  const { success, alertError } = configureAlerts();
-
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
   const [productData, setProductData] = useState({
     name: '',
     description: '',
@@ -58,12 +58,16 @@ const CreateProductForm = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      success('Product created successfully!');
       console.log('Product created:', response.data);
+      setShowModal(true); // Show modal after successful creation
     } catch (error) {
-      alertError('Failed to create Product!');
       console.error('Error creating product:', error);
     }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    navigate('/products'); // Redirect to Products page
   };
 
   return (
@@ -114,17 +118,15 @@ const CreateProductForm = () => {
         </div>
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Create Product</button>
       </form>
-      <ToastContainer
-        position="top-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+      {/* Modal for success message */}
+      {showModal && (
+        <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <p className="text-lg font-semibold mb-4">Product created successfully!</p>
+            <button onClick={handleModalClose} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">OK</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
