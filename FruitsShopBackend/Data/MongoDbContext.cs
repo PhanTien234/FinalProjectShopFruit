@@ -23,5 +23,6 @@ namespace FruitsShopBackend.Data
         // Add properties for each collection you want to interact with
         public IMongoCollection<Product> Products => _database.GetCollection<Product>("Products");
         public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");
+        public IMongoCollection<CloudImage> CloudImages => _database.GetCollection<CloudImage>("CloudImages");
     }
 }

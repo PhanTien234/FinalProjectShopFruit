@@ -11,6 +11,8 @@ namespace FruitsShopBackend.Mappings
             CreateMap<Category, CategoryDto>().ReverseMap();
             CreateMap<CategoryCreateDto, Category>();
             CreateMap<CategoryUpdateDto, Category>();
+            CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<ProductCreateUpdateDto, Product>();
         }
     }
 }

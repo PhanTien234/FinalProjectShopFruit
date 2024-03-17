@@ -1,31 +1,20 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
-using FruitsShopBackend.Dtos;
+﻿using FruitsShopBackend.Model;
+using Microsoft.AspNetCore.Http;
 
-namespace FruitsShopBackend.Model
+namespace FruitsShopBackend.Dtos
 {
-    public class Product
+    public class ProductDto
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
         public string ProductId { get; set; }
-
         public string Name { get; set; }
-
         public string Description { get; set; }
-
         public decimal Price { get; set; }
-
         public double OverallRating { get; set; }
-
-        public CategoryDto Category { get; set; }
-
+        public string CategoryId { get; set; } // Change to CategoryId
         public int AvailableQuantity { get; set; }
-
         public string SupplierId { get; set; }
-
-        public CloudImage CloudImage{ get; set; }
-
+        public CloudImage CloudImage { get; set; }  
+        public IFormFile Image { get; set; }
         public bool IsCertificate { get; set; }
     }
 }

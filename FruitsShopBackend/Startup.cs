@@ -13,6 +13,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
 using FruitsShopBackend.Mappings;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
 
 namespace FruitsShopBackend
 {
@@ -39,6 +41,18 @@ namespace FruitsShopBackend
             // Add MongoDB context
             services.AddSingleton<MongoDbContext>();
 
+            // Configure Cloudinary
+            // Configure Cloudinary
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
+            services.AddSingleton(x =>
+            {
+                var cloudinarySettings = x.GetRequiredService<IOptions<CloudinarySettings>>().Value;
+                return new Cloudinary(new Account(
+                    cloudinarySettings.CloudName,
+                    cloudinarySettings.ApiKey,
+                    cloudinarySettings.ApiSecret));
+            });
+
             // Register AutoMapper and specify the profile class
             services.AddTransient<IMapper>(_ => new Mapper(new MapperConfiguration(cfg =>
             {
@@ -50,11 +64,14 @@ namespace FruitsShopBackend
 
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailVerificationService, EmailVerificationService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICloudinaryService, CloudinaryService>();
 
             // Add other custom services here
 
