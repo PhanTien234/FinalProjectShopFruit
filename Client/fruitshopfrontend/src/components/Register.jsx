@@ -61,6 +61,8 @@ const RegisterForm = () => {
       success(response.data.message);
       // Show success notification
       //success('Registration successful!');
+
+      
     // } catch (error) {
     //   // Show error notification
     //   alertError('Registration failed! User already exists');

@@ -7,6 +7,9 @@ import LoginForm from './components/Login';
 import CreateProductForm from './components/CreateProductForm'; 
 import Products from './components/Products';
 import UpdateProductForm from './components/UpdateProductForm'; 
+import CreateCategoryForm from './components/CreateCategoryForm'; 
+import Categories from './components/Categories'; 
+import UpdateCategoryForm from './components/UpdateCategoryForm'; 
 
 const App = () => {
   return (
@@ -18,6 +21,9 @@ const App = () => {
         <Route path="/create-product" element={<CreateProductForm />} />
         <Route path="/products" element={<Products />} />
         <Route path="/update-product/:productId" element={<UpdateProductForm />} />
+        <Route path="/create-category" element={<CreateCategoryForm />} /> 
+        <Route path="/categories" element={<Categories />} /> 
+        <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
       </Routes>
     </Router>
   );

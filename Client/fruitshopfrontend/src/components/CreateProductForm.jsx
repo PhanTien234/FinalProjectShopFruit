@@ -121,7 +121,7 @@ const CreateProductForm = () => {
       {/* Modal for success message */}
       {showModal && (
         <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-6 rounded shadow-lg">
+          <div className="bg-white p-6 rounded shadow-lg flex flex-col items-center">
             <p className="text-lg font-semibold mb-4">Product created successfully!</p>
             <button onClick={handleModalClose} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">OK</button>
           </div>

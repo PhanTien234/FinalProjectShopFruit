@@ -43,7 +43,7 @@ namespace FruitsShopBackend.Repositories
             var existingCategory = await GetCategoryById(id);
             if (existingCategory != null)
             {
-                category.CreatedAt = existingCategory.CreatedAt;
+                category.CreatedAt = DateTime.UtcNow;
                 await _context.Categories.ReplaceOneAsync(cat => cat.Id == id, category);
             }
             else
