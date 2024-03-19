@@ -71,7 +71,9 @@ const Products = () => {
                 <td className="border px-4 py-2">{product.supplierId}</td>
                 <td className="border px-4 py-2">{product.isCertificate ? 'Yes' : 'No'}</td>
                 <td className="border px-4 py-2">
-                  <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Edit</button>
+                <Link to={`/update-product/${product.productId}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
+                  Edit
+                </Link>
                   <button onClick={() => handleDelete(product.productId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
                 </td>
               </tr>

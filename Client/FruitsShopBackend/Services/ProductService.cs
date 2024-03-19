@@ -4,6 +4,7 @@ using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IRepositories;
 using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
