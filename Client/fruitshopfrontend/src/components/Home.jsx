@@ -8,10 +8,10 @@ import Footer from '../layout/Footer';
 const Home = () => {
   return (
     <div>
-      <Navbar />
-      <Banner />
-      <ProductGrid />
-      <Footer />
+        <Navbar />
+        {/* <Banner /> */}
+        <ProductGrid />
+        <Footer />
     </div>
   );
 };

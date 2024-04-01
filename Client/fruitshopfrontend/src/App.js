@@ -10,22 +10,26 @@ import UpdateProductForm from './components/UpdateProductForm';
 import CreateCategoryForm from './components/CreateCategoryForm'; 
 import Categories from './components/Categories'; 
 import UpdateCategoryForm from './components/UpdateCategoryForm'; 
+import { AuthProvider } from './components/AuthContext';
+
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/register" element={<RegisterForm />} />
-        <Route path="/login" element={<LoginForm />} />
-        <Route path="/create-product" element={<CreateProductForm />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/update-product/:productId" element={<UpdateProductForm />} />
-        <Route path="/create-category" element={<CreateCategoryForm />} /> 
-        <Route path="/categories" element={<Categories />} /> 
-        <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
-      </Routes>
-    </Router>
+    <AuthProvider> {/* Wrap Routes with AuthProvider */}
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/create-product" element={<CreateProductForm />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/update-product/:productId" element={<UpdateProductForm />} />
+          <Route path="/create-category" element={<CreateCategoryForm />} /> 
+          <Route path="/categories" element={<Categories />} /> 
+          <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 

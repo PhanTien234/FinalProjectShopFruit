@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FruitsShopBackend.Migrations
 {
     [DbContext(typeof(UserSQLDbContext))]
-    [Migration("20240308022321_InitDB")]
-    partial class InitDB
+    [Migration("20240401203129_InitCreateUserDb")]
+    partial class InitCreateUserDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

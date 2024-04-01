@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FruitsShopBackend.Migrations
 {
-    public partial class InitDB : Migration
+    public partial class InitCreateUserDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

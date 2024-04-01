@@ -15,9 +15,9 @@ namespace FruitsShopBackend.Repositories
             _context = context;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<User> GetUserById(string UserId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == UserId);
         }
 
         public async Task CreateUserAsync(User user)

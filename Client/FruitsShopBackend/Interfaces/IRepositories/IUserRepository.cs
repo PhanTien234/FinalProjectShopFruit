@@ -5,7 +5,7 @@ namespace FruitsShopBackend.Interfaces.IRepositories
 {
     public interface IUserRepository
     {
-        Task<User> GetUserByEmailAsync(string email);
+        Task<User> GetUserById(string UserId);
         Task CreateUserAsync(User user);
         Task UpdateUserAsync(User user);
     }

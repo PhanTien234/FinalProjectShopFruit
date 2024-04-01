@@ -4,6 +4,7 @@ import axios from 'axios';
 import FadeLoader from "react-spinners/FadeLoader";
 import { configureAlerts, ToastContainer } from '../alert/alert';
 import backgroundImage from '../assets/images/backgroundimage.png';
+import { useAuth } from '../components/AuthContext';
 
 const RegisterForm = () => {
   const { success, alertError } = configureAlerts();
@@ -18,6 +19,9 @@ const RegisterForm = () => {
   const [loading, setLoading] = useState(false); // Spinner state
   const [showPassword, setShowPassword] = useState(false); // State for showing password
   const navigate = useNavigate(); // Initialize useNavigate
+
+  // Inside LoginForm component after successful login
+const { login } = useAuth();
 
   const handleSendVerificationCode = async () => {
     try {
@@ -57,16 +61,14 @@ const RegisterForm = () => {
         password,
         confirmPassword,
       });
+
+      login({
+        FirstName: response.data.firstName,
+        LastName: response.data.lastName,
+        avatar: response.data.avatar // Replace with actual avatar path if available
+      });
       navigate('/');
       success(response.data.message);
-      // Show success notification
-      //success('Registration successful!');
-
-      
-    // } catch (error) {
-    //   // Show error notification
-    //   alertError('Registration failed! User already exists');
-    // }
   };
 
   return (

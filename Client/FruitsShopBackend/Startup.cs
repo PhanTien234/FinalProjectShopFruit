@@ -15,6 +15,10 @@ using AutoMapper;
 using FruitsShopBackend.Mappings;
 using CloudinaryDotNet;
 using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System;
 
 namespace FruitsShopBackend
 {
@@ -65,15 +69,40 @@ namespace FruitsShopBackend
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<ICartRepository, CartRepository>();
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailVerificationService, EmailVerificationService>();
             services.AddScoped<IMailService, MailService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ICartService, CartService>();
             services.AddScoped<ICloudinaryService, CloudinaryService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             // Add other custom services here
+
+            // Read JWT Secret from appsettings.json
+            var jwtSecret = Configuration.GetSection("Jwt:Secret").Value;
+            var key = Encoding.ASCII.GetBytes(jwtSecret);
+
+            // Configure JWT Authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             services.AddCors(options =>
             {
@@ -94,7 +123,30 @@ namespace FruitsShopBackend
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "FruitsShopBackend", Version = "v1" });
+
+                // Add JWT bearer authentication
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] { }
+                    }
+                });
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -111,6 +163,9 @@ namespace FruitsShopBackend
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            //Enable authentication
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

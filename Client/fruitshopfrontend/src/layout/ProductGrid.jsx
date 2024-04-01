@@ -1,54 +1,60 @@
-import React from 'react';
-
-// Dummy data for products, replace with your actual data source
-const products = [
-  {
-    id: 1,
-    name: 'Xoài tú quý đào vàng',
-    price: '55,000₫',
-    image: '/path-to-xoai-image.jpg',
-    discount: null,
-  },
-  // ... add other products
-];
-
-const ProductCard = ({ product }) => {
-  return (
-    <div className="max-w-sm bg-white rounded-lg shadow-md overflow-hidden">
-      <img className="w-full" src={product.image} alt={product.name} />
-      <div className="px-5 py-3">
-        <h3 className="text-gray-700 uppercase">{product.name}</h3>
-        <span className="text-gray-500 mt-2">{product.price}</span>
-        <div className="flex items-center justify-between mt-3">
-          <button className="px-3 py-1 bg-orange-500 text-white text-xs font-bold uppercase rounded">
-            Chọn mua
-          </button>
-          {product.discount && (
-            <span className="text-sm text-red-500 font-semibold">
-              -{product.discount}%
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-};
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const ProductGrid = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('https://localhost:5001/api/Product');
+        setProducts(response.data);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const formatCurrency = (price) => {
+    // Implement currency formatting logic here
+    return `$${price.toFixed(2)}`;
+  };
+
   return (
-    <div className="bg-orange-100 p-4">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">
-        Trái cây Việt Nam
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+    <div className="container mx-auto py-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {products.map(product => (
+          <div key={product.productId} className="bg-white shadow overflow-hidden rounded-lg">
+            <img src={product.cloudImage.imagePath} alt={product.name} className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+              <p className="text-gray-700 mb-4">{product.description}</p>
+              {product.discountPrice && (
+                <div className="flex items-baseline mb-2">
+                  <span className="text-sm line-through text-gray-500">{formatCurrency(product.originalPrice)}</span>
+                  <span className="ml-2 text-lg font-bold">{formatCurrency(product.discountPrice)}</span>
+                </div>
+              )}
+              {!product.discountPrice && <p className="text-lg font-bold mb-2">{formatCurrency(product.price)}</p>}
+              <div className="flex items-center mb-4">
+                <span className="text-yellow-400 text-sm">
+                  {Array.from({ length: product.overallRating }, (_, i) => (
+                    <span key={i}>★</span>
+                  ))}
+                </span>
+                <span className="ml-2 text-gray-600 text-sm">{product.reviewCount} reviews</span>
+              </div>
+              <p className={product.isCertificate ? "text-green-600 mb-4 font-semibold" : "text-red-600 mb-4 font-semibold"}>
+                {product.isCertificate ? 'Certified' : 'No Certificate'}
+              </p>
+              <button className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Add to Cart
+              </button>
+            </div>
+          </div>
         ))}
-      </div>
-      <div className="text-center mt-8">
-        <button className="px-4 py-2 bg-orange-500 text-white text-lg font-bold uppercase rounded-full">
-          Xem thêm sản phẩm trái cây việt nam
-        </button>
       </div>
     </div>
   );
