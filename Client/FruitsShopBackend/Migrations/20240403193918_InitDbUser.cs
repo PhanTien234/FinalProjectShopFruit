@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FruitsShopBackend.Migrations
 {
-    public partial class InitCreateUserDb : Migration
+    public partial class InitDbUser : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,6 +21,8 @@ namespace FruitsShopBackend.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastLoginAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NumFollowers = table.Column<int>(type: "int", nullable: false),
+                    ImageId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageUserPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsSeller = table.Column<bool>(type: "bit", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

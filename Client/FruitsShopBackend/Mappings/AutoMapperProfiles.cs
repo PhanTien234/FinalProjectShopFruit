@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using FruitsShopBackend.Constants;
 using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Model;
+using System;
 using System.Collections.Generic;
 
 namespace FruitsShopBackend.Mappings
@@ -17,6 +19,9 @@ namespace FruitsShopBackend.Mappings
             CreateMap<Cart, CartDto>()
                            .ForMember(dest => dest.TotalPrice, opt => opt.MapFrom(src => CalculateTotalPrice(src.Items)));
             CreateMap<CartItem, CartItemDto>();
+            CreateMap<User, UserDto>().ReverseMap();
+            CreateMap<UserCreateDto, User>();
+            CreateMap<UserUpdateDto, User>();
         }
 
         private decimal CalculateTotalPrice(List<CartItem> items)

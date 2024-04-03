@@ -37,6 +37,12 @@ namespace FruitsShopBackend.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUserPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsSeller")
                         .HasColumnType("bit");
 

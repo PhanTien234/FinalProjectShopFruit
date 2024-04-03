@@ -4,7 +4,7 @@
     {
         Buyer,
         Seller,
-        Admin
+        Admin,
 
     }
 }

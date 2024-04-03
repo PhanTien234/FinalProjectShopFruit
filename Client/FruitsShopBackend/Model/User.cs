@@ -18,6 +18,8 @@ namespace FruitsShopBackend.Model
         public DateTime CreatedAt { get; set; }
         public DateTime? LastLoginAt { get; set; }
         public int NumFollowers { get; set; }
+        public string ImageId { get; set; }
+        public string ImageUserPath { get; set; }
         public bool IsSeller { get; set; }
         public RoleType Role { get; set; }
 
