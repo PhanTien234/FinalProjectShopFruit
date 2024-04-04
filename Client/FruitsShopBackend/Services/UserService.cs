@@ -54,6 +54,7 @@ namespace FruitsShopBackend.Services
                 LastName = userDto.LastName,
                 Email = userDto.Email,
                 DoB = userDto.DoB,
+
                 PhoneNumber = userDto.PhoneNumber,
                 PasswordHash = passwordHash,
                 Role = userDto.Role,

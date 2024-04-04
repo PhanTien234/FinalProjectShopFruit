@@ -8,7 +8,7 @@ namespace FruitsShopBackend.Interfaces.IServices
     {
         Task<CartDto> GetUserCart(string userId);
         Task AddToCart(string userId, string productId);
-        Task UpdateCart(CartDto cartDto);
+        Task UpdateCart(string userId, UpdateCartDto updateCartItemDto);
         Task RemoveFromCart(string userId, string productId);
     }
 }

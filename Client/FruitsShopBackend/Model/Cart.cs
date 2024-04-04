@@ -1,7 +1,6 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using System.Collections.Generic;
-using FruitsShopBackend.Dtos;
 
 namespace FruitsShopBackend.Model
 {
@@ -14,5 +13,15 @@ namespace FruitsShopBackend.Model
         public string UserId { get; set; }
         public List<CartItem> Items { get; set; }
         public decimal TotalPrice { get; set; }
+    }
+    public class CartItem
+    {
+        public string ProductId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public decimal Price { get; set; }
+        public int Quantity { get; set; }
+        public string ImageUrl { get; set; }
+        public decimal TotalPrice { get { return Price * Quantity; } }
     }
 }

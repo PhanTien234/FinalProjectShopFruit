@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Security.Claims;
-using FruitsShopBackend.Model;
+
 
 namespace FruitsShopBackend.Controllers
 {
@@ -41,20 +41,30 @@ namespace FruitsShopBackend.Controllers
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
             await _cartService.AddToCart(userId, addToCartDto.ProductId);
-            return Ok();
-        }
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateCart([FromBody] CartDto cartDto)
-        {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
-            if (cartDto.UserId != userId)
+            // Retrieve the updated cart after adding the item
+            var cart = await _cartService.GetUserCart(userId);
+            if (cart == null)
             {
-                return Forbid(); // Return 403 Forbidden if the cart does not belong to the user
+                return NotFound();
             }
 
-            await _cartService.UpdateCart(cartDto);
-            return Ok();
+            return Ok(cart);
+        }
+
+        [HttpPut("updateCartItem")]
+        public async Task<IActionResult> UpdateCartItem([FromBody] UpdateCartDto updateCartItemDto)
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
+            await _cartService.UpdateCart(userId, updateCartItemDto);
+
+            // Retrieve the updated cart after updating the cart item
+            var updatedCart = await _cartService.GetUserCart(userId);
+            if (updatedCart == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(updatedCart);
         }
 
         [HttpDelete("remove/{productId}")]

@@ -72,10 +72,20 @@ namespace FruitsShopBackend.Services
             await _cartRepository.UpdateCart(cart);
         }
 
-        public async Task UpdateCart(CartDto cartDto)
+        public async Task UpdateCart(string userId, UpdateCartDto updateCartItemDto)
         {
-            var cart = _mapper.Map<Cart>(cartDto);
-            await _cartRepository.UpdateCart(cart);
+            var cart = await _cartRepository.GetCartByUserId(userId);
+
+            if (cart != null)
+            {
+                var cartItem = cart.Items.FirstOrDefault(item => item.ProductId == updateCartItemDto.ProductId);
+
+                if (cartItem != null)
+                {
+                    cartItem.Quantity = updateCartItemDto.Quantity;
+                    await _cartRepository.UpdateCart(cart);
+                }
+            }
         }
 
         public async Task RemoveFromCart(string userId, string productId)

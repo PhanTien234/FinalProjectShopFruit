@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FruitsShopBackend.Migrations
 {
     [DbContext(typeof(UserSQLDbContext))]
-    [Migration("20240403193918_InitDbUser")]
-    partial class InitDbUser
+    [Migration("20240404070450_InitUserDb")]
+    partial class InitUserDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,6 +37,9 @@ namespace FruitsShopBackend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gender")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageId")
