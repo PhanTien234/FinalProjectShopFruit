@@ -22,6 +22,13 @@ namespace FruitsShopBackend.Mappings
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<CreateOrderDto, Order>();
+            CreateMap<UpdateOrderDto, Order>();
+            CreateMap<Order, OrderDto>();
+            CreateMap<OrderItem, OrderItemDto>();
+            CreateMap<UserAddress, AddressDto>().ReverseMap();
+            CreateMap<CreateAddressDto, UserAddress>();
+            CreateMap<UpdateAddressDto, UserAddress>();
         }
 
         private decimal CalculateTotalPrice(List<CartItem> items)

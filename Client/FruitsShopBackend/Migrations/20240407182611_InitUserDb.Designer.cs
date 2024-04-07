@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FruitsShopBackend.Migrations
 {
     [DbContext(typeof(UserSQLDbContext))]
-    [Migration("20240404070450_InitUserDb")]
+    [Migration("20240407182611_InitUserDb")]
     partial class InitUserDb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -77,10 +77,9 @@ namespace FruitsShopBackend.Migrations
 
             modelBuilder.Entity("FruitsShopBackend.Model.UserAddress", b =>
                 {
-                    b.Property<int>("AddressId")
+                    b.Property<string>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");

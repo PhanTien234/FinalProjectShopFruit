@@ -75,10 +75,9 @@ namespace FruitsShopBackend.Migrations
 
             modelBuilder.Entity("FruitsShopBackend.Model.UserAddress", b =>
                 {
-                    b.Property<int>("AddressId")
+                    b.Property<string>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
