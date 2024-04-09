@@ -11,7 +11,7 @@ namespace FruitsShopBackend.Dtos
 
         public DateTime OrderDate { get; set; }
 
-        public string ShippingAddress { get; set; }
+        public AddressDto ShippingAddress { get; set; }
 
         public decimal AmountPaid { get; set; }
 

@@ -4,6 +4,7 @@ using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Model;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FruitsShopBackend.Mappings
 {
@@ -24,8 +25,14 @@ namespace FruitsShopBackend.Mappings
             CreateMap<UserUpdateDto, User>();
             CreateMap<CreateOrderDto, Order>();
             CreateMap<UpdateOrderDto, Order>();
-            CreateMap<Order, OrderDto>();
+            CreateMap<CreateOrderDto, OrderDto>();
+            CreateMap<UpdateOrderDto, OrderDto>();
+            CreateMap<Order, OrderDto>()
+                .ForMember(dest => dest.TotalOrderValue, opt => opt.MapFrom(src => CalculateTotalOrderValue(src.OrderItems)))
+                .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => CalculateAmountPaid(src.OrderItems, src.DiscountAmount)));
             CreateMap<OrderItem, OrderItemDto>();
+            CreateMap<CreateOrderItemDto, OrderItemDto>();
+            CreateMap<CreateOrderItemDto, OrderItem>();
             CreateMap<UserAddress, AddressDto>().ReverseMap();
             CreateMap<CreateAddressDto, UserAddress>();
             CreateMap<UpdateAddressDto, UserAddress>();
@@ -40,5 +47,22 @@ namespace FruitsShopBackend.Mappings
             }
             return totalPrice;
         }
+
+        private decimal CalculateTotalOrderValue(List<OrderItem> orderItems)
+        {
+            decimal totalOrderValue = 0;
+            foreach (var orderItem in orderItems)
+            {
+                totalOrderValue += orderItem.Quantity * orderItem.PricePerUnit;
+            }
+            return totalOrderValue;
+        }
+
+        private decimal CalculateAmountPaid(List<OrderItem> orderItems, decimal discountAmount)
+        {
+            decimal totalOrderValue = CalculateTotalOrderValue(orderItems);
+            return totalOrderValue - discountAmount;
+        }
+
     }
 }

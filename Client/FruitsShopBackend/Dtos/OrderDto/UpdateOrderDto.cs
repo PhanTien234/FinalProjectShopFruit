@@ -6,10 +6,8 @@ namespace FruitsShopBackend.Dtos
 {
     public class UpdateOrderDto
     {
-        public string ShippingAddress { get; set; }
-        public decimal AmountPaid { get; set; }
+        public string ShippingAddressId { get; set; }
         public decimal DiscountAmount { get; set; }
-        public decimal TotalOrderValue { get; set; }
         public OrderStatus OrderStatus { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
         public DateTime? PaymentDate { get; set; }

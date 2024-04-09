@@ -1,6 +1,8 @@
-﻿using FruitsShopBackend.Data;
+﻿using AutoMapper;
+using FruitsShopBackend.Data;
 using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IRepositories;
+using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
 using MongoDB.Driver;
 using System;
@@ -14,13 +16,17 @@ namespace FruitsShopBackend.Repositories
     {
         private readonly MongoDbContext _context;
         private readonly IMongoCollection<Order> _ordersCollection;
-        private readonly IProductRepository _productRepository; // Injecting the product repository
+        private readonly IProductRepository _productRepository; 
+        private readonly IUserAddressService _userAddressService;
+        private readonly IMapper _mapper;
 
-        public OrderRepository(MongoDbContext context, IProductRepository productRepository)
+        public OrderRepository(MongoDbContext context, IProductRepository productRepository, IUserAddressService userAddressService, IMapper mapper)
         {
             _context = context;
             _ordersCollection = _context.Orders;
             _productRepository = productRepository; // Assigning the injected product repository
+            _userAddressService = userAddressService;
+            _mapper = mapper;
         }
 
         public async Task<List<Order>> GetAllOrdersByUserId(string userId)
@@ -39,6 +45,10 @@ namespace FruitsShopBackend.Repositories
                 {
                     throw new Exception($"Product with ID '{orderItemDto.ProductId}' not found.");
                 }
+                if(orderItemDto.Quantity <= 0) // Check if quantity is less than or equal to 0
+                {
+                    continue; // Skip this product and move to the next one
+                }
 
                 if (orderItemDto.Quantity > product.AvailableQuantity)
                 {
@@ -53,18 +63,32 @@ namespace FruitsShopBackend.Repositories
                 {
                     ProductId = orderItemDto.ProductId,
                     Quantity = orderItemDto.Quantity,
-                    PricePerUnit = product.Price,
+                    PricePerUnit = product.Price
                 });
             }
+
+
+            // Fetch the entire shipping address using only the AddressId
+            var shippingAddress = await _userAddressService.GetAddressByIdAsync(userId, orderDto.ShippingAddressId);
+            if (shippingAddress == null)
+            {
+                throw new Exception("Shipping address not found.");
+            }
+
+            // Calculate TotalOrderValue
+            decimal totalOrderValue = orderItems.Sum(oi => oi.Quantity * oi.PricePerUnit);
+
+            // Calculate AmountPaid
+            decimal amountPaid = totalOrderValue - orderDto.DiscountAmount;
 
             var order = new Order
             {
                 UserId = userId,
                 OrderDate = DateTime.Now,
-                ShippingAddress = orderDto.ShippingAddress,
-                AmountPaid = orderDto.AmountPaid,
+                ShippingAddress = shippingAddress,
                 DiscountAmount = orderDto.DiscountAmount,
-                TotalOrderValue = orderDto.TotalOrderValue,
+                TotalOrderValue = totalOrderValue,
+                AmountPaid = amountPaid,
                 OrderStatus = orderDto.OrderStatus,
                 PaymentStatus = orderDto.PaymentStatus,
                 PaymentDate = orderDto.PaymentDate,
@@ -92,12 +116,16 @@ namespace FruitsShopBackend.Repositories
                 // Handle case where order is not found
                 throw new Exception($"Order with ID '{orderId}' not found for user '{userId}'.");
             }
+            // Fetch the entire shipping address using only the AddressId
+            var shippingAddress = await _userAddressService.GetAddressByIdAsync(userId, orderDto.ShippingAddressId);
+            if (shippingAddress == null)
+            {
+                throw new Exception("Shipping address not found.");
+            }
 
             // Update order details
-            order.ShippingAddress = orderDto.ShippingAddress;
-            order.AmountPaid = orderDto.AmountPaid;
+            order.ShippingAddress = shippingAddress;
             order.DiscountAmount = orderDto.DiscountAmount;
-            order.TotalOrderValue = orderDto.TotalOrderValue;
             order.OrderStatus = orderDto.OrderStatus;
             order.PaymentStatus = orderDto.PaymentStatus;
             order.PaymentDate = orderDto.PaymentDate;
@@ -124,6 +152,13 @@ namespace FruitsShopBackend.Repositories
                 }
             }
 
+            // Calculate TotalOrderValue
+            decimal totalOrderValue = orderDto.OrderItems.Sum(oi => oi.Quantity * oi.PricePerUnit);
+
+            // Calculate AmountPaid
+            decimal amountPaid = totalOrderValue - orderDto.DiscountAmount;
+            order.TotalOrderValue = totalOrderValue;
+            order.AmountPaid = amountPaid;
             // Update the order in the database
             var options = new FindOneAndReplaceOptions<Order>
             {

@@ -54,7 +54,7 @@ namespace FruitsShopBackend.Controllers
         }
 
         [HttpPut("{orderId}")]
-        public async Task<ActionResult<Order>> UpdateOrder(string orderId, UpdateOrderDto orderDto)
+        public async Task<ActionResult<Order>> UpdateOrder( string orderId, UpdateOrderDto orderDto)
         {
 
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);

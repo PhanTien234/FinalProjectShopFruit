@@ -3,6 +3,7 @@ using MongoDB.Bson;
 using System.Collections.Generic;
 using System;
 using FruitsShopBackend.Constants;
+using FruitsShopBackend.Dtos;
 
 namespace FruitsShopBackend.Model
 {
@@ -16,7 +17,7 @@ namespace FruitsShopBackend.Model
 
         public DateTime OrderDate { get; set; }
 
-        public string ShippingAddress { get; set; }
+        public AddressDto ShippingAddress { get; set; }
 
         public decimal AmountPaid { get; set; }
 
