@@ -1,9 +1,12 @@
-﻿using FruitsShopBackend.Dtos;
+﻿using FruitsShopBackend.Constants;
+using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IRepositories;
 using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
 using FruitsShopBackend.Repositories;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FruitsShopBackend.Services
@@ -55,6 +58,62 @@ namespace FruitsShopBackend.Services
 
             // Call the repository method to delete the order
             await _orderRepository.DeleteOrder(orderId, userId);
+        }
+
+        public async Task<bool> UpdateOrderStatus(string orderId, string userId, OrderStatus status)
+        {
+            var order = await _orderRepository.GetOrderById(orderId, userId);
+            if (order == null) return false;
+
+            var updateOrderDto = new UpdateOrderDto
+            {
+                ShippingAddressId = order.ShippingAddress.AddressId, // Assuming ShippingAddress has an AddressId
+                DiscountAmount = order.DiscountAmount,
+                OrderStatus = status,
+                PaymentStatus = order.PaymentStatus,
+                PaymentDate = order.PaymentDate,
+                PaymentMethod = order.PaymentMethod,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    ProductId = oi.ProductId,
+                    Quantity = oi.Quantity,
+                    UserId = oi.UserId // Assuming each OrderItem has a UserId
+                }).ToList()
+            };
+
+            if (status == OrderStatus.Received && order.PaymentMethod == PaymentMethod.PayAfterReceivedProduct)
+            {
+                updateOrderDto.PaymentStatus = PaymentStatus.Paid;
+                updateOrderDto.PaymentDate = DateTime.UtcNow;
+            }
+
+            await _orderRepository.UpdateOrder(orderId, userId, updateOrderDto);
+            return true;
+        }
+
+        public async Task<bool> ProcessRefund(string orderId, string userId)
+        {
+            var order = await _orderRepository.GetOrderById(orderId, userId);
+            if (order == null || order.PaymentStatus != PaymentStatus.Paid) return false;
+
+            var updateOrderDto = new UpdateOrderDto
+            {
+                ShippingAddressId = order.ShippingAddress.AddressId,
+                DiscountAmount = order.DiscountAmount,
+                OrderStatus = order.OrderStatus,
+                PaymentStatus = PaymentStatus.Refund,
+                PaymentDate = order.PaymentDate,
+                PaymentMethod = order.PaymentMethod,
+                OrderItems = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    ProductId = oi.ProductId,
+                    Quantity = oi.Quantity,
+                    UserId = oi.UserId
+                }).ToList()
+            };
+
+            await _orderRepository.UpdateOrder(orderId, userId, updateOrderDto);
+            return true;
         }
 
     }

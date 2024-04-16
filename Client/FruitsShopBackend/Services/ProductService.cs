@@ -34,13 +34,19 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<List<ProductDto>>(products);
         }
 
-        public async Task<ProductDto> GetProductById(string productId)
+        public async Task<List<ProductDto>> GetAllProductsByUserId(string userId)
         {
-            var product = await _productRepository.GetProductById(productId);
+            var products = await _productRepository.GetAllProductsByUserId(userId);
+            return _mapper.Map<List<ProductDto>>(products);
+        }
+
+        public async Task<ProductDto> GetProductById(string userId, string productId)
+        {
+            var product = await _productRepository.GetProductById(userId, productId);
             return _mapper.Map<ProductDto>(product);
         }
 
-        public async Task<ProductDto> CreateProduct(ProductCreateUpdateDto productDto)
+        public async Task<ProductDto> CreateProduct(string userId, ProductCreateUpdateDto productDto)
         {
             if (productDto.Image != null)
             {
@@ -75,14 +81,16 @@ namespace FruitsShopBackend.Services
 
             // Assign category to the product
             product.Category = category;
-            var createdProduct = await _productRepository.CreateProduct(product);
+            // Set the user ID for the product
+            product.UserId = userId;
+            var createdProduct = await _productRepository.CreateProduct(userId, product);
             return _mapper.Map<ProductDto>(createdProduct);
         }
 
-        public async Task<ProductDto> UpdateProduct(string productId, ProductCreateUpdateDto productDto)
+        public async Task<ProductDto> UpdateProduct(string userId, string productId, ProductCreateUpdateDto productDto)
         {
             // Fetch the existing product by ID
-            var existingProduct = await _productRepository.GetProductById(productId);
+            var existingProduct = await _productRepository.GetProductById(userId, productId);
             if (existingProduct == null)
             {
                 // Handle case where the product with the given ID does not exist
@@ -133,15 +141,15 @@ namespace FruitsShopBackend.Services
             existingProduct.Category = category;
 
             // Update the product in the repository
-            var updatedProduct = await _productRepository.UpdateProduct(productId, existingProduct);
+            var updatedProduct = await _productRepository.UpdateProduct(userId, productId, existingProduct);
 
             // Map the updated product to DTO and return
             return _mapper.Map<ProductDto>(updatedProduct);
         }
 
-        public async Task DeleteProduct(string productId)
+        public async Task DeleteProduct(string userId, string productId)
         {
-            await _productRepository.DeleteProduct(productId);
+            await _productRepository.DeleteProduct(userId, productId);
         }
     }
 }

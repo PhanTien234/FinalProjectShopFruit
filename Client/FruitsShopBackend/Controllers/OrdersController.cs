@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System;
 using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Http;
+using FruitsShopBackend.Constants;
 
 namespace FruitsShopBackend.Controllers
 {
@@ -68,6 +69,24 @@ namespace FruitsShopBackend.Controllers
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
                 await _orderService.DeleteOrder(orderId, userId);
                 return NoContent();
+        }
+
+        [HttpPut("updateStatus/{orderId}")]
+        public async Task<IActionResult> UpdateOrderStatus(string orderId, [FromBody] StatusUpdateDto updateDto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            bool success = await _orderService.UpdateOrderStatus(orderId, userId, updateDto.Status);
+            if (!success) return NotFound("Order not found or unable to update status.");
+            return Ok(new { Message = "Update Order Status successfully!"});
+        }
+
+        [HttpPost("refund/{orderId}")]
+        public async Task<IActionResult> ProcessRefund(string orderId)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            bool success = await _orderService.ProcessRefund(orderId, userId);
+            if (!success) return NotFound("Refund failed. Order not found or not eligible for refund.");
+            return Ok(new { Message = "Refurn Order to Buyer successfully!" });
         }
     }
 }

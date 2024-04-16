@@ -26,5 +26,6 @@ namespace FruitsShopBackend.Data
         public IMongoCollection<CloudImage> CloudImages => _database.GetCollection<CloudImage>("CloudImages");
         public IMongoCollection<Cart> Carts => _database.GetCollection<Cart>("Carts");
         public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
+        public IMongoCollection<PaymentTransaction> PaymentTransactions => _database.GetCollection<PaymentTransaction>("PaymentTransactions");
     }
 }

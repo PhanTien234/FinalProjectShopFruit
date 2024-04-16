@@ -24,6 +24,13 @@ namespace FruitsShopBackend.Model
         public bool IsSeller { get; set; }
         public RoleType Role { get; set; }
 
+        // PayPal related fields
+/*        public string PayPalFirstName { get; set; }
+        public string PayPalLastName { get; set; }
+        public string PayPalEmail { get; set; }
+        public bool IsPaypalLinked { get; set; }
+
+*/
         public List<UserAddress> Addresses { get; set; }
         public List<UserPayment> Payments { get; set; }
     }

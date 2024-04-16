@@ -40,7 +40,7 @@ namespace FruitsShopBackend.Repositories
 
             foreach (var orderItemDto in orderDto.OrderItems)
             {
-                var product = await _productRepository.GetProductById(orderItemDto.ProductId);
+                var product = await _productRepository.GetProductById(orderItemDto.UserId,orderItemDto.ProductId);
                 if (product == null)
                 {
                     throw new Exception($"Product with ID '{orderItemDto.ProductId}' not found.");
@@ -57,13 +57,15 @@ namespace FruitsShopBackend.Repositories
 
                 // Deduct ordered quantity from available quantity
                 product.AvailableQuantity -= orderItemDto.Quantity;
-                await _productRepository.UpdateProduct(product.ProductId, product); // Update product quantity in the database
+                await _productRepository.UpdateProduct(product.UserId,product.ProductId, product); // Update product quantity in the database
 
                 orderItems.Add(new OrderItem
                 {
+                    OrderItemId = Guid.NewGuid().ToString(),
                     ProductId = orderItemDto.ProductId,
                     Quantity = orderItemDto.Quantity,
-                    PricePerUnit = product.Price
+                    PricePerUnit = product.Price,
+                    UserId = orderItemDto.UserId
                 });
             }
 
@@ -122,7 +124,6 @@ namespace FruitsShopBackend.Repositories
             {
                 throw new Exception("Shipping address not found.");
             }
-
             // Update order details
             order.ShippingAddress = shippingAddress;
             order.DiscountAmount = orderDto.DiscountAmount;
@@ -131,34 +132,38 @@ namespace FruitsShopBackend.Repositories
             order.PaymentDate = orderDto.PaymentDate;
             order.PaymentMethod = orderDto.PaymentMethod;
 
+            decimal totalOrderValue = 0;
             // Update order items
             foreach (var updatedOrderItem in orderDto.OrderItems)
             {
-                var existingOrderItem = order.OrderItems.FirstOrDefault(oi => oi.ProductId == updatedOrderItem.ProductId);
+                var existingOrderItem = order.OrderItems.FirstOrDefault(oi => oi.OrderItemId == updatedOrderItem.OrderItemId);
                 if (existingOrderItem != null)
                 {
                     // Deduct the difference in quantity from the available quantity of the product
-                    var product = await _productRepository.GetProductById(existingOrderItem.ProductId);
+                    var product = await _productRepository.GetProductById(existingOrderItem.UserId, existingOrderItem.ProductId);
                     var quantityDifference = updatedOrderItem.Quantity - existingOrderItem.Quantity;
                     if (quantityDifference > product.AvailableQuantity)
                     {
                         throw new Exception($"Insufficient stock for product '{product.Name}'. Available quantity: {product.AvailableQuantity}");
                     }
                     product.AvailableQuantity -= quantityDifference;
-                    await _productRepository.UpdateProduct(product.ProductId, product);
+                    await _productRepository.UpdateProduct(product.UserId, product.ProductId, product);
 
                     // Update the order item's quantity
                     existingOrderItem.Quantity = updatedOrderItem.Quantity;
+
+                    // Update totalOrderValue
+                    totalOrderValue += existingOrderItem.Quantity * existingOrderItem.PricePerUnit;
                 }
             }
 
-            // Calculate TotalOrderValue
-            decimal totalOrderValue = orderDto.OrderItems.Sum(oi => oi.Quantity * oi.PricePerUnit);
-
             // Calculate AmountPaid
             decimal amountPaid = totalOrderValue - orderDto.DiscountAmount;
+
+            // Update totalOrderValue and amountPaid
             order.TotalOrderValue = totalOrderValue;
             order.AmountPaid = amountPaid;
+
             // Update the order in the database
             var options = new FindOneAndReplaceOptions<Order>
             {
@@ -182,11 +187,11 @@ namespace FruitsShopBackend.Repositories
                 // Order successfully deleted, handle inventory adjustment
                 foreach (var orderItem in order.OrderItems)
                 {
-                    var product = await _productRepository.GetProductById(orderItem.ProductId);
+                    var product = await _productRepository.GetProductById(userId, orderItem.ProductId);
                     if (product != null)
                     {
                         product.AvailableQuantity += orderItem.Quantity;
-                        await _productRepository.UpdateProduct(product.ProductId, product);
+                        await _productRepository.UpdateProduct(userId, product.ProductId, product);
                     }
                 }
             }

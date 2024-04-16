@@ -6,6 +6,7 @@
         Shipping,
         Shipped,
         Received,
-        Complete
+        Complete,
+        Cancel
     }
 }
