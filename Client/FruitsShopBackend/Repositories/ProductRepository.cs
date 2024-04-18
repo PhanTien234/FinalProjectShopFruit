@@ -31,10 +31,10 @@ namespace FruitsShopBackend.Repositories
         {
             return await _context.Products.Find(_ => true).ToListAsync();
         }
-        public async Task<Product> GetProductById(string userId, string productId)
+        public async Task<Product> GetProductById(string productId)
         {
             // Implement your authorization logic here if required...
-            var product = await _context.Products.Find(p => p.UserId == userId && p.ProductId == productId).FirstOrDefaultAsync();
+            var product = await _context.Products.Find(p =>p.ProductId == productId).FirstOrDefaultAsync();
 
             // If the product does not belong to the user, return null or handle as needed
             if (product == null)

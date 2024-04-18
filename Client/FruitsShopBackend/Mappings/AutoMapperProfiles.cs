@@ -36,6 +36,9 @@ namespace FruitsShopBackend.Mappings
             CreateMap<UserAddress, AddressDto>().ReverseMap();
             CreateMap<CreateAddressDto, UserAddress>();
             CreateMap<UpdateAddressDto, UserAddress>();
+            CreateMap<Supplier, SupplierDto>().ReverseMap();
+            CreateMap<SupplierCreateDto, Supplier>();
+            CreateMap<SupplierUpdateDto, Supplier>();
         }
 
         private decimal CalculateTotalPrice(List<CartItem> items)

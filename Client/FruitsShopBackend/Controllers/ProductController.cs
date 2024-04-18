@@ -22,7 +22,7 @@ namespace FruitsShopBackend.Controllers
             _productService = productService;
             _cloudinaryService = cloudinaryService;
         }
-
+        [AllowAnonymous]
         [HttpGet("getallproducts")]
         public async Task<ActionResult<List<Product>>> GetAllProducts()
         {
@@ -41,8 +41,8 @@ namespace FruitsShopBackend.Controllers
         [HttpGet("{productId}")]
         public async Task<ActionResult<ProductDto>> GetProductById(string productId)
         {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
-            var product = await _productService.GetProductById(userId, productId);
+            
+            var product = await _productService.GetProductById(productId);
             if (product == null)
             {
                 return NotFound();

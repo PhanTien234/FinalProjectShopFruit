@@ -16,16 +16,18 @@ namespace FruitsShopBackend.Services
         private readonly IMapper _mapper;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ICategoryService _categoryService;
+        private readonly ISupplierService _supplierService;
         private readonly MongoDbContext _context;
 
 
-        public ProductService(IProductRepository productRepository, IMapper mapper, ICloudinaryService cloudinaryService, ICategoryService categoryService, MongoDbContext context)
+        public ProductService(IProductRepository productRepository, IMapper mapper, ICloudinaryService cloudinaryService, ICategoryService categoryService, MongoDbContext context, ISupplierService supplierService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _cloudinaryService = cloudinaryService;
             _categoryService = categoryService;
             _context = context;
+            _supplierService = supplierService;
         }
 
         public async Task<List<ProductDto>> GetAllProducts()
@@ -40,9 +42,9 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<List<ProductDto>>(products);
         }
 
-        public async Task<ProductDto> GetProductById(string userId, string productId)
+        public async Task<ProductDto> GetProductById(string productId)
         {
-            var product = await _productRepository.GetProductById(userId, productId);
+            var product = await _productRepository.GetProductById(productId);
             return _mapper.Map<ProductDto>(product);
         }
 
@@ -76,6 +78,14 @@ namespace FruitsShopBackend.Services
                 // You can return an error response or handle it as per your application's logic
                 return null;
             }
+            // Fetch supplier details based on SupplierId
+            var supplier = await _supplierService.GetSupplierById(productDto.SupplierId);
+            if (supplier == null)
+            {
+                // Handle case where supplier is not found
+                // You can return an error response or handle it as per your application's logic
+                return null;
+            }
             // Map DTO to Model
             var product = _mapper.Map<Product>(productDto);
 
@@ -90,7 +100,7 @@ namespace FruitsShopBackend.Services
         public async Task<ProductDto> UpdateProduct(string userId, string productId, ProductCreateUpdateDto productDto)
         {
             // Fetch the existing product by ID
-            var existingProduct = await _productRepository.GetProductById(userId, productId);
+            var existingProduct = await _productRepository.GetProductById(productId);
             if (existingProduct == null)
             {
                 // Handle case where the product with the given ID does not exist
@@ -136,7 +146,14 @@ namespace FruitsShopBackend.Services
                 // You can return an error response or handle it as per your application's logic
                 return null;
             }
-
+            // Fetch supplier details based on SupplierId
+            var supplier = await _supplierService.GetSupplierById(productDto.SupplierId);
+            if (supplier == null)
+            {
+                // Handle case where supplier is not found
+                // You can return an error response or handle it as per your application's logic
+                return null;
+            }
             // Assign the category to the product
             existingProduct.Category = category;
 

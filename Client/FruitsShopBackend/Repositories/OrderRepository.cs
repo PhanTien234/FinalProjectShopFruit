@@ -40,7 +40,7 @@ namespace FruitsShopBackend.Repositories
 
             foreach (var orderItemDto in orderDto.OrderItems)
             {
-                var product = await _productRepository.GetProductById(orderItemDto.UserId,orderItemDto.ProductId);
+                var product = await _productRepository.GetProductById(orderItemDto.ProductId);
                 if (product == null)
                 {
                     throw new Exception($"Product with ID '{orderItemDto.ProductId}' not found.");
@@ -65,7 +65,7 @@ namespace FruitsShopBackend.Repositories
                     ProductId = orderItemDto.ProductId,
                     Quantity = orderItemDto.Quantity,
                     PricePerUnit = product.Price,
-                    UserId = orderItemDto.UserId
+                    UserId = product.UserId,
                 });
             }
 
@@ -140,7 +140,7 @@ namespace FruitsShopBackend.Repositories
                 if (existingOrderItem != null)
                 {
                     // Deduct the difference in quantity from the available quantity of the product
-                    var product = await _productRepository.GetProductById(existingOrderItem.UserId, existingOrderItem.ProductId);
+                    var product = await _productRepository.GetProductById(existingOrderItem.ProductId);
                     var quantityDifference = updatedOrderItem.Quantity - existingOrderItem.Quantity;
                     if (quantityDifference > product.AvailableQuantity)
                     {
@@ -187,11 +187,11 @@ namespace FruitsShopBackend.Repositories
                 // Order successfully deleted, handle inventory adjustment
                 foreach (var orderItem in order.OrderItems)
                 {
-                    var product = await _productRepository.GetProductById(userId, orderItem.ProductId);
+                    var product = await _productRepository.GetProductById(orderItem.ProductId);
                     if (product != null)
                     {
                         product.AvailableQuantity += orderItem.Quantity;
-                        await _productRepository.UpdateProduct(userId, product.ProductId, product);
+                        await _productRepository.UpdateProduct(product.UserId, product.ProductId, product);
                     }
                 }
             }

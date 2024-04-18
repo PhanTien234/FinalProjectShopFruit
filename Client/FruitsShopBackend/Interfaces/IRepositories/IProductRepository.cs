@@ -8,7 +8,7 @@ namespace FruitsShopBackend.Interfaces.IRepositories
     {
         Task<List<Product>> GetAllProductsByUserId(string userId);
         Task<List<Product>> GetAllProducts();
-        Task<Product> GetProductById(string userId, string productId);
+        Task<Product> GetProductById(string productId);
         Task<Product> CreateProduct(string userId, Product product);
         Task<Product> UpdateProduct(string userId, string productId, Product product);
         Task DeleteProduct(string userId, string productId);

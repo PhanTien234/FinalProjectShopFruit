@@ -40,7 +40,7 @@ namespace FruitsShopBackend.Services
             }
 
             // Fetch product details from the Product API based on the productId
-            var product = await _productService.GetProductById(userId, productId);
+            var product = await _productService.GetProductById(productId);
 
             if (product == null)
             {

@@ -71,7 +71,7 @@ namespace FruitsShopBackend.Controllers
                 return NoContent();
         }
 
-        [HttpPut("updateStatus/{orderId}")]
+/*        [HttpPut("updateStatus/{orderId}")]
         public async Task<IActionResult> UpdateOrderStatus(string orderId, [FromBody] StatusUpdateDto updateDto)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -87,6 +87,6 @@ namespace FruitsShopBackend.Controllers
             bool success = await _orderService.ProcessRefund(orderId, userId);
             if (!success) return NotFound("Refund failed. Order not found or not eligible for refund.");
             return Ok(new { Message = "Refurn Order to Buyer successfully!" });
-        }
+        }*/
     }
 }

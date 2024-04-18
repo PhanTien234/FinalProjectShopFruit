@@ -60,7 +60,7 @@ namespace FruitsShopBackend.Services
             await _orderRepository.DeleteOrder(orderId, userId);
         }
 
-        public async Task<bool> UpdateOrderStatus(string orderId, string userId, OrderStatus status)
+       /* public async Task<bool> UpdateOrderStatus(string orderId, string userId, OrderStatus status)
         {
             var order = await _orderRepository.GetOrderById(orderId, userId);
             if (order == null) return false;
@@ -114,7 +114,7 @@ namespace FruitsShopBackend.Services
 
             await _orderRepository.UpdateOrder(orderId, userId, updateOrderDto);
             return true;
-        }
+        }*/
 
     }
 }
