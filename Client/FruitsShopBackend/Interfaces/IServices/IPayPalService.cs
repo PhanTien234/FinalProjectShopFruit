@@ -1,4 +1,5 @@
 ﻿using FruitsShopBackend.Dtos;
+using FruitsShopBackend.Model;
 using PayPalCheckoutSdk.Orders;
 using System.Threading.Tasks;
 
@@ -6,9 +7,10 @@ namespace FruitsShopBackend.Interfaces.IServices
 {
     public interface IPayPalService
     {
-        Task<string> CreateOrder(Order order);
-        Task<bool> CapturePayment(string orderId);
-        Task<bool> SetupSellerPayPalAccount(SetAccountSellerPayPalRequestDto accountRequest);
-        Task<bool> SendPaymentToSeller(string sellerPayPalEmail, decimal amount);
+        Task<PayPalOrderResponse> CreateOrder(decimal amount);
+        Task CaptureOrder(string orderId);
+        Task SetupSellerPayPalAccount(SellerPayPalAccountDto accountDto);
+        Task SendPayment(string recipientEmail, decimal amount);
+        Task<User> GetSellerPayPalByUserId(string userId);
     }
 }

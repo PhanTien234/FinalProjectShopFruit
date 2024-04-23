@@ -46,6 +46,9 @@ namespace FruitsShopBackend.Migrations
                     b.Property<string>("ImageUserPath")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsPaypalLinked")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsSeller")
                         .HasColumnType("bit");
 
@@ -59,6 +62,15 @@ namespace FruitsShopBackend.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayPalEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayPalFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayPalLastName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")

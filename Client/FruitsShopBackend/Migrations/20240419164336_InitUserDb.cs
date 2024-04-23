@@ -25,7 +25,11 @@ namespace FruitsShopBackend.Migrations
                     ImageId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ImageUserPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     IsSeller = table.Column<bool>(type: "bit", nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PayPalFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PayPalLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PayPalEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsPaypalLinked = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -56,6 +56,8 @@ namespace FruitsShopBackend
                     cloudinarySettings.ApiKey,
                     cloudinarySettings.ApiSecret));
             });
+            // Configure PayPalSettings from appsettings.json
+            services.Configure<PayPalSettings>(Configuration.GetSection("PayPalSettings"));
 
             // Register AutoMapper and specify the profile class
             services.AddTransient<IMapper>(_ => new Mapper(new MapperConfiguration(cfg =>
@@ -86,6 +88,7 @@ namespace FruitsShopBackend
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserAddressService, UserAddressService>();
             services.AddScoped<ISupplierService, SupplierService>();
+            services.AddHttpClient<IPayPalService, PayPalService>();
 
             // Add other custom services here
 

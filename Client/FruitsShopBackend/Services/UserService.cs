@@ -59,8 +59,12 @@ namespace FruitsShopBackend.Services
                 PasswordHash = passwordHash,
                 Role = userDto.Role,
                 IsSeller = isSeller,
-                // Map other properties as needed
-            };
+                PayPalFirstName = null,
+                PayPalLastName= null,
+                PayPalEmail = null,
+                IsPaypalLinked = false
+        // Map other properties as needed
+    };
 
             // Optionally handle image upload to Cloudinary
             if (userDto.Image != null)

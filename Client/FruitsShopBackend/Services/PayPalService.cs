@@ -8,140 +8,156 @@ using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
 using FruitsShopBackend.Interfaces.IRepositories;
+using System.Net.Http.Headers;
+using FruitsShopBackend.Model;
 
 namespace FruitsShopBackend.Services
 {
     public class PayPalService : IPayPalService
     {
-        private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient;
-        private readonly string _baseUrl;
         private readonly IUserRepository _userRepository;
+        private readonly HttpClient _httpClient;
+        private readonly string _clientId;
+        private readonly string _clientSecret;
 
-        public PayPalService(IConfiguration configuration, HttpClient httpClient, IUserRepository userRepository)
+        public PayPalService(IUserRepository userRepository, HttpClient httpClient, IConfiguration configuration)
         {
-            _configuration = configuration;
-            _httpClient = httpClient;
-            _baseUrl = _configuration["PayPalSettings:BaseUrl"];
             _userRepository = userRepository;
+            _httpClient = httpClient;
+            _clientId = configuration["PayPalSettings:ClientId"];
+            _clientSecret = configuration["PayPalSettings:ClientSecret"];
         }
 
-        public async Task<string> CreateOrder(Order order)
+        public async Task<PayPalOrderResponse> CreateOrder(decimal amount)
         {
-            try
+            // Construct request body
+            var requestBody = new
             {
-                // Construct request body for creating order
-                var requestContent = new StringContent(BuildOrderRequestBody(order), Encoding.UTF8, "application/json");
-
-                // Call PayPal API to create order
-                var response = await _httpClient.PostAsync($"{_baseUrl}/orders/create", requestContent);
-                response.EnsureSuccessStatusCode(); // Throw if HTTP error
-
-                // Parse response to get order ID
-                var orderId = await response.Content.ReadAsStringAsync();
-                return orderId;
-            }
-            catch (Exception ex)
-            {
-                // Log or handle error
-                throw new Exception("Error creating PayPal order", ex);
-            }
-        }
-
-        public async Task<bool> CapturePayment(string orderId)
-        {
-            try
-            {
-                // Construct request body for capturing payment
-                var requestContent = new StringContent(BuildCapturePaymentRequestBody(orderId), Encoding.UTF8, "application/json");
-
-                // Call PayPal API to capture payment
-                var response = await _httpClient.PostAsync($"{_baseUrl}/payments/capture", requestContent);
-                response.EnsureSuccessStatusCode(); // Throw if HTTP error
-                return true; // Payment captured successfully
-            }
-            catch (Exception ex)
-            {
-                // Log or handle error
-                throw new Exception("Error capturing PayPal payment", ex);
-            }
-        }
-
-        public async Task<bool> SetupSellerPayPalAccount(SetAccountSellerPayPalRequestDto accountRequest)
-        {
-            try
-            {
-                // Construct request body for setting up seller's PayPal account
-                var requestBody = new
+                intent = "CAPTURE",
+                purchase_units = new[]
                 {
-                    PayPalFirstName = accountRequest.PayPalFirstName,
-                    PayPalLastName = accountRequest.PayPalLastName,
-                    PayPalEmail = accountRequest.PayPalEmail
+                    new
+                    {
+                        amount = new
+                        {
+                            currency_code = "USD",
+                            value = amount.ToString("0.00")
+                        }
+                    }
+                }
+            };
+
+            // Serialize request body
+            var requestBodyJson = JsonConvert.SerializeObject(requestBody);
+
+            // Construct request
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.paypal.com/v2/checkout/orders");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
+            request.Content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
+
+            // Send request
+            var response = await _httpClient.SendAsync(request);
+
+            // Handle response
+            response.EnsureSuccessStatusCode();
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var payPalOrderResponse = JsonConvert.DeserializeObject<PayPalOrderResponse>(responseContent);
+
+            return payPalOrderResponse;
+        }
+
+        public async Task CaptureOrder(string orderId)
+        {
+            // Construct request
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.paypal.com/v2/checkout/orders/{orderId}/capture");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
+
+            // Send request
+            var response = await _httpClient.SendAsync(request);
+
+            // Handle response
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task SetupSellerPayPalAccount(SellerPayPalAccountDto accountDto)
+        {
+            // Update user's PayPal account details in the database
+            var user = await _userRepository.GetUserById(accountDto.UserId);
+            if (user != null)
+            {
+                user.PayPalFirstName = accountDto.PayPalFirstName;
+                user.PayPalLastName = accountDto.PayPalLastName;
+                user.PayPalEmail = accountDto.PayPalEmail;
+                user.IsPaypalLinked = true;
+
+                await _userRepository.UpdateUser(user);
+            }
+            else
+            {
+                // Handle case where user is not found
+                throw new Exception($"User with ID '{accountDto.UserId}' not found.");
+            }
+        }
+
+        public async Task<User> GetSellerPayPalByUserId(string userId)
+        {
+            // Retrieve user by user ID
+            var user = await _userRepository.GetUserById(userId);
+
+            // Check if the user is a seller and has a linked PayPal account
+            if (user != null && user.IsSeller && user.IsPaypalLinked)
+            {
+                // Construct seller PayPal account DTO
+                var sellerPayPalAccountDto = new SellerPayPalAccountDto
+                {
+                    UserId = userId,
+                    PayPalFirstName = user.PayPalFirstName,
+                    PayPalLastName = user.PayPalLastName,
+                    PayPalEmail = user.PayPalEmail
                 };
 
-                // Serialize the request body to JSON
-                var jsonRequestBody = JsonConvert.SerializeObject(requestBody);
-
-                // Construct HTTP request
-                var requestContent = new StringContent(jsonRequestBody, Encoding.UTF8, "application/json");
-
-                // Call PayPal API to set up seller's PayPal account
-                var response = await _httpClient.PostAsync($"{_baseUrl}/seller/paypal/account/setup", requestContent);
-                response.EnsureSuccessStatusCode(); // Throw if HTTP error
-
-                return true; // Return true if setup is successful
+                return user;
             }
-            catch (Exception ex)
+            else
             {
-                // Log or handle error
-                throw new Exception("Error setting up seller's PayPal account", ex);
+                // Handle case where user is not found, not a seller, or does not have a linked PayPal account
+                throw new Exception($"Seller PayPal account not found for user with ID '{userId}'.");
             }
         }
 
-        public async Task<bool> SendPaymentToSeller(string sellerPayPalEmail, decimal amount)
+        public async Task SendPayment(string recipientEmail, decimal amount)
         {
-            try
-            {
-                // Construct request body for sending payment
-                var requestContent = new StringContent(BuildSendPaymentRequestBody(sellerPayPalEmail, amount), Encoding.UTF8, "application/json");
+            // Calculate commission (5%)
+            decimal commission = amount * 0.05m;
+            decimal amountAfterCommission = amount - commission;
 
-                // Call PayPal API to send payment
-                var response = await _httpClient.PostAsync($"{_baseUrl}/payments/send", requestContent);
-                response.EnsureSuccessStatusCode(); // Throw if HTTP error
-                return true; // Payment sent successfully
-            }
-            catch (Exception ex)
-            {
-                // Log or handle error
-                throw new Exception("Error sending payment to seller", ex);
-            }
-        }
-
-        private string BuildOrderRequestBody(Order order)
-        {
-            // Implement logic to build request body
-            return JsonConvert.SerializeObject(order);
-        }
-
-        private string BuildCapturePaymentRequestBody(string orderId)
-        {
-            // Implement logic to build request body
+            // Construct request body
             var requestBody = new
             {
-                orderId
+                recipient_type = "EMAIL",
+                receiver = recipientEmail,
+                amount = new
+                {
+                    value = amountAfterCommission.ToString("0.00"),
+                    currency = "USD"
+                },
+                note = "Payment from FruitsShop",
+                sender_item_id = Guid.NewGuid().ToString()
             };
-            return JsonConvert.SerializeObject(requestBody);
-        }
 
-        private string BuildSendPaymentRequestBody(string receiverEmail, decimal amount)
-        {
-            // Implement logic to build request body
-            var requestBody = new
-            {
-                receiverEmail,
-                amount
-            };
-            return JsonConvert.SerializeObject(requestBody);
+            // Serialize request body
+            var requestBodyJson = JsonConvert.SerializeObject(requestBody);
+
+            // Construct request
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.paypal.com/v2/payments/payouts");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
+            request.Content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
+
+            // Send request
+            var response = await _httpClient.SendAsync(request);
+
+            // Handle response
+            response.EnsureSuccessStatusCode();
         }
     }
 }
