@@ -18,8 +18,11 @@ const ProductGrid = () => {
   }, []);
 
   const formatCurrency = (price) => {
-    // Implement currency formatting logic here
-    return `$${price.toFixed(2)}`;
+    if (typeof price === 'number') {
+      return `$${price.toFixed(2)}`;
+    } else {
+      return 'Price not available';
+    }
   };
 
   return (
