@@ -7,6 +7,7 @@ namespace FruitsShopBackend.Dtos
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public decimal DiscountPrice { get; set; }
         public decimal Price { get; set; }
         public double OverallRating { get; set; }
         public string CategoryId { get; set; } // Change to CategoryId

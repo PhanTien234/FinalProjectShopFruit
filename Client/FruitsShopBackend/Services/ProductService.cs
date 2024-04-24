@@ -110,6 +110,7 @@ namespace FruitsShopBackend.Services
             // Update product properties with new data
             existingProduct.Name = productDto.Name;
             existingProduct.Description = productDto.Description;
+            existingProduct.DiscountPrice = productDto.DiscountPrice;
             existingProduct.Price = productDto.Price;
             existingProduct.OverallRating = productDto.OverallRating;
             existingProduct.AvailableQuantity = productDto.AvailableQuantity;

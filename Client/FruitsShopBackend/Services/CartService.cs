@@ -62,6 +62,7 @@ namespace FruitsShopBackend.Services
                     ProductId = productId,
                     Name = product.Name,
                     Description = product.Description,
+                    DiscountPrice = product.DiscountPrice,
                     Price = product.Price,
                     Quantity = 1,
                     ImageUrl = product.CloudImage.ImagePath // Assuming CloudImage contains image information

@@ -77,6 +77,7 @@ namespace FruitsShopBackend.Repositories
             var update = Builders<Product>.Update
                 .Set(p => p.Name, product.Name)
                 .Set(p => p.Description, product.Description)
+                .Set(p => p.DiscountPrice, product.DiscountPrice)
                 .Set(p => p.Price, product.Price)
                 .Set(p => p.OverallRating, product.OverallRating)
                 .Set(p => p.Category, product.Category)
