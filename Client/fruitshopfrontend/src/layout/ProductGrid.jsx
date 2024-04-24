@@ -7,7 +7,7 @@ const ProductGrid = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://localhost:5001/api/Product');
+        const response = await axios.get('https://localhost:5001/api/Product/getallproducts');
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);

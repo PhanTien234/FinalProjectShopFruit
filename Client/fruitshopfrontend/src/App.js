@@ -11,6 +11,7 @@ import CreateCategoryForm from './components/CreateCategoryForm';
 import Categories from './components/Categories'; 
 import UpdateCategoryForm from './components/UpdateCategoryForm'; 
 import ProfilePage from './components/Profile';
+import SellerRegistrationPage from './components/SellerRegistrationPage';
 import { AuthProvider } from './components/AuthContext';
 
 
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/categories" element={<Categories />} /> 
           <Route path="/profile" element={<ProfilePage />} /> 
           <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
+          <Route path="/sellerRegistration" element={<SellerRegistrationPage/>}   />
         </Routes>
       </Router>
     </AuthProvider>
