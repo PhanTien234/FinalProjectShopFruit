@@ -29,7 +29,7 @@ namespace FruitsShopBackend.Repositories
             {
                 throw new ArgumentException("User ID cannot be null or empty.");
             }
-            return await _suppliers.Find(s => true).ToListAsync();
+            return await _suppliers.Find(o => o.UserId == userId).ToListAsync();
         }
 
 
@@ -45,6 +45,7 @@ namespace FruitsShopBackend.Repositories
             {
                 throw new ArgumentException("User ID cannot be null or empty.");
             }
+
             await _suppliers.InsertOneAsync(supplier);
         }
 

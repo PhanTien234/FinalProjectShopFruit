@@ -66,6 +66,7 @@ namespace FruitsShopBackend.Services
 
             // Map DTO to Model
             var supplier = _mapper.Map<Supplier>(supplierDto);
+            supplier.UserId = userId;
             supplier.CertificateProductUrl = imageUrl;
 
             await _supplierRepository.CreateSupplier(userId, supplier);
