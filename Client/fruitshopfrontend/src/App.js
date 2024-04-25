@@ -12,6 +12,7 @@ import Categories from './components/Categories';
 import UpdateCategoryForm from './components/UpdateCategoryForm'; 
 import ProfilePage from './components/Profile';
 import SellerRegistrationPage from './components/SellerRegistrationPage';
+import ProductDetailPage from './components/ProductDetailPage';
 import { AuthProvider } from './components/AuthContext';
 
 
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/create-product" element={<CreateProductForm />} />
+          <Route path="/product/productId" element={<ProductDetailPage/>} />
           <Route path="/products" element={<Products />} />
           <Route path="/update-product/:productId" element={<UpdateProductForm />} />
           <Route path="/create-category" element={<CreateCategoryForm />} /> 
