@@ -1,17 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const images = [
-  // Array of image URLs; you will replace these with the actual image paths
-  '/path/to/image1.jpg',
-  '/path/to/image2.jpg',
-  // ...
-];
+const ProductGallery = ({ productId }) => {
+  const [selectedImage, setSelectedImage] = useState('');
 
-const ProductGallery = () => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+  useEffect(() => {
+    const fetchProductImage = async () => {
+      try {
+        // Fetch product details to get the image path
+        const response = await axios.get(`https://localhost:5001/api/Product/${productId}`);
+        const productData = response.data;
+
+        // Assuming productData.cloudImage is the image path
+        if (productData.cloudImage && productData.cloudImage.imagePath) {
+          setSelectedImage(productData.cloudImage.imagePath); // Set the image path
+        }
+      } catch (error) {
+        console.error('Error fetching product image:', error);
+      }
+    };
+
+    fetchProductImage();
+  }, [productId]);
 
   return (
-    <div className="flex flex-col items-center md:flex-row">
+    <div className="flex  ">
       <div className="w-full md:w-2/3">
         <img
           src={selectedImage}
@@ -19,19 +32,7 @@ const ProductGallery = () => {
           className="w-full h-auto object-contain"
         />
       </div>
-      <div className="flex justify-center md:flex-col md:w-1/3 mt-4 md:mt-0">
-        {images.map((image, index) => (
-          <img
-            key={index}
-            src={image}
-            alt={`Product view ${index + 1}`}
-            className={`w-20 h-20 object-contain cursor-pointer ${
-              selectedImage === image ? 'ring-2 ring-blue-500' : 'ring-1 ring-gray-300'
-            }`}
-            onClick={() => setSelectedImage(image)}
-          />
-        ))}
-      </div>
+      {/* Assuming there's no need for a thumbnail gallery if there's only one image */}
     </div>
   );
 };

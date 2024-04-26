@@ -25,7 +25,6 @@ const App = () => {
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/create-product" element={<CreateProductForm />} />
-          <Route path="/product/productId" element={<ProductDetailPage/>} />
           <Route path="/products" element={<Products />} />
           <Route path="/update-product/:productId" element={<UpdateProductForm />} />
           <Route path="/create-category" element={<CreateCategoryForm />} /> 
@@ -33,6 +32,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} /> 
           <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
           <Route path="/sellerRegistration" element={<SellerRegistrationPage/>}   />
+          <Route path="/product/:productId" element={<ProductDetailPage />} />
         </Routes>
       </Router>
     </AuthProvider>
