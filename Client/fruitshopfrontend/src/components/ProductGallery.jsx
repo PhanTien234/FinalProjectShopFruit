@@ -24,7 +24,7 @@ const ProductGallery = ({ productId }) => {
   }, [productId]);
 
   return (
-    <div className="flex  ">
+    <div className="flex flex-col items-center md:flex-row">  
       <div className="w-full md:w-2/3">
         <img
           src={selectedImage}

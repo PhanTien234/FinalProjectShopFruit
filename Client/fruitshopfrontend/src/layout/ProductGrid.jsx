@@ -22,7 +22,7 @@ const ProductGrid = () => {
 
   const formatCurrency = (price) => {
     if (typeof price === 'number') {
-      return `$${price.toFixed(2)}`;
+      return `${price.toFixed(2)} USD`;
     } else {
       return 'Price not available';
     }

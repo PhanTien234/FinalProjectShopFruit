@@ -37,7 +37,7 @@ namespace FruitsShopBackend.Controllers
             var suppliers = await _supplierService.GetAllSuppliersByUser(userId);
             return Ok(suppliers);
         }
-
+        [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<ActionResult<SupplierDto>> GetSupplierById(string id)
         {

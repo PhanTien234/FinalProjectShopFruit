@@ -42,8 +42,8 @@ const ProductInfo = ({ productId }) => {
           <h1 className="text-2xl font-bold">{product.name}</h1>
           <div className="flex items-center space-x-2">
             {/* Display Discount Price and Price separately */}
-            <span className="text-xl font-semibold text-red-600 line-through">{product.discountPrice}đ</span>
-            <span className="text-xl font-semibold text-gray-500">{product.price}đ</span>
+            <span className="text-xl font-semibold text-red-600 line-through">{product.discountPrice} USD</span>
+            <span className="text-xl font-semibold text-gray-500">{product.price} USD</span>
           </div>
           <div className="flex items-center">
             <div className="text-sm bg-red-200 text-red-600 py-1 px-2 rounded-full">8% GIẢM</div>

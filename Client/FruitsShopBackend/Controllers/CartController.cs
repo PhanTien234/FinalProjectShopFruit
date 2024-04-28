@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using System.Security.Claims;
+using FruitsShopBackend.Services;
 
 
 namespace FruitsShopBackend.Controllers
@@ -29,11 +30,10 @@ namespace FruitsShopBackend.Controllers
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
             var cart = await _cartService.GetUserCart(userId);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-            return Ok(cart);
+            // Retrieve cart count
+            var cartCount = cart.Items.Count;
+            return Ok(new { Cart = cart, CartItemCount = cartCount });
+
         }
 
         [HttpPost("add")]
@@ -43,12 +43,9 @@ namespace FruitsShopBackend.Controllers
             await _cartService.AddToCart(userId, addToCartDto.ProductId);
             // Retrieve the updated cart after adding the item
             var cart = await _cartService.GetUserCart(userId);
-            if (cart == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(cart);
+            // Retrieve cart count
+            var cartCount = cart.Items.Count;
+            return Ok(new { Cart = cart, CartItemCount = cartCount });
         }
 
         [HttpPut("updateCartItem")]
@@ -64,7 +61,10 @@ namespace FruitsShopBackend.Controllers
                 return NotFound();
             }
 
-            return Ok(updatedCart);
+            // Retrieve cart count
+            var cartCount = updatedCart.Items.Count;
+
+            return Ok(new { Cart = updatedCart, CartItemCount = cartCount });
         }
 
         [HttpDelete("remove/{productId}")]
@@ -72,7 +72,17 @@ namespace FruitsShopBackend.Controllers
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
             await _cartService.RemoveFromCart(userId, productId);
-            return NoContent();
+            // Retrieve the updated cart after removing the item
+            var updatedCart = await _cartService.GetUserCart(userId);
+            if (updatedCart == null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve cart count
+            var cartCount = updatedCart.Items.Count; // Assuming each item in the cart counts as one
+
+            return Ok(new { Cart = updatedCart, CartItemCount = cartCount });
         }
     }
 }

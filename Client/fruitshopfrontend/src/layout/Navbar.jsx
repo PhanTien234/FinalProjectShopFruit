@@ -1,10 +1,63 @@
-import React from 'react';
-import { SearchIcon, ShoppingCartIcon, BellIcon, GlobeAltIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
-import FruitShopLogo from '../assets/images/Fruitshoplogo.png'; // Import your logo image
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ShoppingCartIcon, SearchIcon, BellIcon, GlobeAltIcon, QuestionMarkCircleIcon } from '@heroicons/react/outline';
+import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 import { useAuth } from '../components/AuthContext';
+import axios from 'axios';
+
 
 const Navbar = () => {
-  const { isAuthenticated, user, logout } = useAuth(); // Use the context
+  const navigate = useNavigate();
+  const location = useLocation(); // Get current location
+  const { isAuthenticated, user, accessToken, logout } = useAuth();
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const fetchCartItemCount = async () => {
+      try {
+        if (isAuthenticated) {
+          const response = await axios.get('https://localhost:5001/api/Cart', {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
+          const { cartItemCount } = response.data;
+          setCartItemCount(cartItemCount);
+        }
+      } catch (error) {
+        console.error('Error fetching cart items:', error.response || error.message);
+      }
+    };
+
+    fetchCartItemCount();
+  }, [isAuthenticated, accessToken]);
+
+  const handleCartButtonClick = () => {
+    if (isAuthenticated) {
+      navigate('/cart');
+    } else {
+      navigate('/login');
+    }
+  };
+
+  useEffect(() => {
+    const handleCartItemCountUpdate = (event) => {
+      setCartItemCount(event.detail);
+    };
+
+    window.addEventListener('cartItemCountUpdate', handleCartItemCountUpdate);
+
+    return () => {
+      window.removeEventListener('cartItemCountUpdate', handleCartItemCountUpdate);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Reset cartItemCount to 0 when user logs out
+    if (!isAuthenticated) {
+      setCartItemCount(0);
+    }
+  }, [isAuthenticated]);
 
   return (
     <nav className="bg-red-600">
@@ -65,10 +118,17 @@ const Navbar = () => {
               <span className="ml-1 hidden md:inline">Help</span>
             </button>
 
-            {/* Shopping Cart Icon */}
-            <button className="text-white flex items-center ml-6 focus:outline-none">
-              <ShoppingCartIcon className="h-6 w-6" aria-hidden="true" />
-            </button>
+            {/* Shopping Cart Icon - Hide on Cart Page */}
+            {location.pathname !== '/cart' && (
+              <button onClick={handleCartButtonClick} className="text-white flex items-center ml-6 relative focus:outline-none">
+                <ShoppingCartIcon className="h-8 w-8" aria-hidden="true" />
+                {cartItemCount > 0 && (
+                  <span className="absolute top-0 right-0 bg-green-500 text-white rounded-full px-2 py-1 text-xs -mt-1 -mr-1">
+                    {cartItemCount}
+                  </span>
+                )}
+              </button>
+            )}
 
             {/* Auth Buttons or User Info */}
             {!isAuthenticated ? (
@@ -79,8 +139,8 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <img src={user.Avatar} alt={`${user.firstName} ${user.lastName}`} className="h-8 w-8 rounded-full mx-4" />
-                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{user.firstName} {user.lastName}</span>
+                <img src={user?.Avatar} alt={`${user?.firstName} ${user?.lastName}`} className="h-8 w-8 rounded-full mx-4" />
+                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{user?.firstName} {user?.lastName}</span>
                 <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
               </>
             )}
