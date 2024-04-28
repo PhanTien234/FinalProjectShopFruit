@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
-import Navbar from '../layout/Navbar';
+import NavbarCart from '../layout/NavbarCart';
 import Footer from '../layout/Footer';
+import {SearchIcon} from '@heroicons/react/outline';
+import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -40,7 +42,43 @@ const CartPage = () => {
 
   return (
     <>
-      <Navbar />
+      <NavbarCart />
+        {/* Sub-navigation bar with search */}
+      <div className="bg-white shadow py-5"> {/* Increased padding for overall height */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between"> {/* Removed h-40 */}
+            {/* Brand Logo and Cart Indicator */}
+            <div className="flex items-center">
+              {/* Brand Logo */}
+              <div className="flex-shrink-0">
+                <img className="h-16 w-auto" src={FruitShopLogo} alt="FruitShop Logo" /> {/* Adjusted logo height */}
+              </div>
+              <div className="ml-3 flex items-center">
+                <span className="text-red-600 font-bold text-3xl">|</span> {/* Single separator with increased size */}
+                <span className="text-red-600 font-bold text-3xl ml-3">Giỏ hàng</span> {/* Increased text size for "Giỏ hàng" */}
+              </div>
+            </div>
+            {/* Search input */}
+            <div className="flex justify-center flex-grow lg:max-w-2xl"> {/* Made search bar grow to use available space */}
+              <label htmlFor="search-cart" className="sr-only">Search</label>
+              <div className="relative w-full">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                  <SearchIcon className="h-8 w-8 text-red-600" aria-hidden="true" /> {/* Icon size is appropriate */}
+                </span>
+                <input 
+                  id="search-cart" 
+                  name="search-cart"
+                  className="block w-full py-2 text-xl text-red-600 placeholder-red-600 bg-transparent border-b-4 border-red-600 rounded-md pl-12 focus:outline-none focus:border-red-700" 
+                  placeholder="Tìm kiếm sản phẩm, danh mục hay thương hiệu mong muốn..." 
+                  autoComplete="off" 
+                /> {/* Extended placeholder to make it more visible */}
+              </div>
+            </div>
+            {/* Icons and User Info - Hidden in CartPage */}
+          </div>
+        </div>
+      </div>
+      {/* Add your code here*/}
         <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-semibold mb-4">Your Cart</h1>
         {cartItems.length === 0 ? (
