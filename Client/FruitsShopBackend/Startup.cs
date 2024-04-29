@@ -46,7 +46,6 @@ namespace FruitsShopBackend
             services.AddSingleton<MongoDbContext>();
 
             // Configure Cloudinary
-            // Configure Cloudinary
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddSingleton(x =>
             {
