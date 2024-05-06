@@ -40,9 +40,11 @@ namespace FruitsShopBackend.Services
             var address = new UserAddress
             {
                 UserId = userId,
+                FullName = addressDto.FullName,
+                PhoneNumberAddress = addressDto.PhoneNumberAddress,
                 Address = addressDto.Address,
                 City = addressDto.City,
-                State = addressDto.State
+                AddressType = addressDto.AddressType,
             };
             await _repository.CreateAsync(address);
             return _mapper.Map<AddressDto>(address);
