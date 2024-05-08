@@ -11,6 +11,11 @@ const Navbar = () => {
   const location = useLocation(); // Get current location
   const { isAuthenticated, user, accessToken, logout } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [userInfo, setUserInfo] = useState({
+    firstName: '',
+    lastName: '',
+    imageUserPath: 'default-avatar-path.svg'
+  });
 
   useEffect(() => {
     const fetchCartItemCount = async () => {
@@ -66,21 +71,41 @@ const Navbar = () => {
     }
   };
 
+  useEffect(() => {
+    if (user && user.userId) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:5001/api/Users/${user.userId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          if (response.data) {
+            setUserInfo({
+              firstName: response.data.firstName,
+              lastName: response.data.lastName,
+              imageUserPath: response.data.imageUserPath || 'default-avatar-path.svg'
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [user, accessToken]);
+
   return (
     <nav className="bg-red-600">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex flex-wrap justify-between items-center">
-          {/* Top Row: Logo, Primary Links, and Authentication */}
+          {/* Top Row: Primary Links, and Authentication */}
           <div className="w-full flex justify-between items-center py-2">
             <div className="flex items-center">
-              <img className="h-12 w-auto" src={FruitShopLogo} alt="FruitShop Logo"/>
-              <div className="ml-6 flex space-x-4">
               <button onClick={handleSellerRegistrationClick} className="text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-300 ease-in-out">Become a Seller</button>
                 <a href="#" className="flex items-center text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-red-700 transition-colors duration-300 ease-in-out">
                   <img src={facebookIcon} className="h-6 w-6 mr-2" alt="Facebook"/>
                   Connection
                 </a>
-              </div>
             </div>
             <div className="flex items-center">
               <button className="text-white flex items-center focus:outline-none">
@@ -103,17 +128,20 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <img src={user?.Avatar} alt={`${user?.firstName} ${user?.lastName}`} className="h-8 w-8 rounded-full mx-4" />
-                  <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{user?.firstName} {user?.lastName}</span>
+                  <img src={userInfo.imageUserPath} alt="User avatar" className="h-8 w-8 rounded-full mx-4" />
+                  <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{userInfo.firstName} {userInfo.lastName}</span>
                   <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
                 </>
               )}
             </div>
           </div>
-          {/* Bottom Row: Search and Cart */}
-          <div className="w-full flex justify-between items-center py-2">
-            <div className="w-full flex justify-center">
-              <div className="relative w-1/2">
+          {/* Bottom Row: Logo, Search and Cart */}
+          <div className="flex items-center justify-start py-2 w-full">
+            <div className="flex items-center mr-4">
+              <img className="h-16 w-auto mr-2" src={FruitShopLogo} alt="FruitShop Logo"/> {/* Reduced margin */}
+              <span className="text-white text-lg font-bold mr-8 ">Fruit Shop</span> {/* Reduced margin */}
+            </div>
+            <div className="flex-grow relative">
                 <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
                   <SearchIcon className="h-5 w-5 text-white" aria-hidden="true" />
                 </span>
@@ -122,7 +150,6 @@ const Navbar = () => {
                   placeholder="Search..."
                   autoComplete="off"
                 />
-              </div>
             </div>
             <div>
               {/* Shopping Cart Icon - Hide on Cart Page */}

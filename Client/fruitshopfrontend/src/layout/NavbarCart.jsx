@@ -5,11 +5,16 @@ import { useAuth } from '../components/AuthContext';
 import axios from 'axios';
 
 
-const Navbar = () => {
+const NavbarCart = () => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current location
   const { isAuthenticated, user, accessToken, logout } = useAuth();
   const [cartItemCount, setCartItemCount] = useState(0);
+  const [userInfo, setUserInfo] = useState({
+    firstName: '',
+    lastName: '',
+    imageUserPath: 'default-avatar-path.svg'  // Default image path
+  });
 
   useEffect(() => {
     const fetchCartItemCount = async () => {
@@ -30,6 +35,29 @@ const Navbar = () => {
 
     fetchCartItemCount();
   }, [isAuthenticated, accessToken]);
+
+  useEffect(() => {
+    if (user && user.userId) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:5001/api/Users/${user.userId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          if (response.data) {
+            setUserInfo({
+              firstName: response.data.firstName,
+              lastName: response.data.lastName,
+              imageUserPath: response.data.imageUserPath || 'default-avatar-path.svg'
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [user, accessToken]);
 
   const handleCartButtonClick = () => {
     if (isAuthenticated) {
@@ -116,8 +144,8 @@ const Navbar = () => {
               </>
             ) : (
               <>
-                <img src={user?.Avatar} alt={`${user?.firstName} ${user?.lastName}`} className="h-8 w-8 rounded-full mx-4" />
-                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{user?.firstName} {user?.lastName}</span>
+                <img src={userInfo.imageUserPath} alt="User Avatar" className="h-8 w-8 rounded-full mx-4" />
+                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{userInfo.firstName} {userInfo.lastName}</span>
                 <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
               </>
             )}
@@ -128,4 +156,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarCart;

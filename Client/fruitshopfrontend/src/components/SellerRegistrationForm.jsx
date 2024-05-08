@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusIcon } from '@heroicons/react/outline';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 import VietNamAddress from '../components/VietNamAddress';
 import { useAuth } from '../components/AuthContext';
 
@@ -12,10 +13,12 @@ const SellerRegistrationForm = ({ onRegister }) => {
   });
 
   const [showModal, setShowModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [createdFullName, setCreatedFullName] = useState('');
   const [createdPhoneNumber, setCreatedPhoneNumber] = useState('');
   const [createdAddress, setCreatedAddress] = useState('');
   const [createdCity, setCreatedCity] = useState('');
+  const navigate = useNavigate();
   const { user, accessToken } = useAuth();
 
   useEffect(() => {
@@ -40,6 +43,11 @@ const SellerRegistrationForm = ({ onRegister }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
+  };
+
+  const handleSuccessModal = () => {
+    setSuccessModal(false);
+    navigate('/sellerpage'); // Navigate to the seller page
   };
 
   const handleAddressChange = (province, district, ward) => {
@@ -82,6 +90,7 @@ const SellerRegistrationForm = ({ onRegister }) => {
         },
       });
       console.log('Update response:', response.data);
+      setSuccessModal(true);
       onRegister();
     } catch (error) {
       console.error('Error updating user:', error);
@@ -92,12 +101,12 @@ const SellerRegistrationForm = ({ onRegister }) => {
     <div>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md mx-auto max-w-lg">
         <div className="mb-6">
-          <label htmlFor="shopName" className="text-gray-700 font-semibold block mb-2">Tên Shop *</label>
-          <input type="text" id="shopName" name="shopName" value={userData.firstName} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
+          <label htmlFor="firstName" className="text-gray-700 font-semibold block mb-2">Tên Shop *</label>
+          <input type="text" id="firstName" name="firstName" required value={userData.firstName} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div className="mb-6">
           <label htmlFor="email" className="text-gray-700 font-semibold block mb-2">Email *</label>
-          <input type="email" id="email" name="email" required value={userData.email} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
+          <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div className="mb-6">
           <label htmlFor="phoneNumber" className="text-gray-700 font-semibold block mb-2">Số điện thoại *</label>
@@ -112,8 +121,8 @@ const SellerRegistrationForm = ({ onRegister }) => {
         </div>
         <button type="submit" className="mx-auto display-block bg-red-500 text-white py-3 px-4 rounded-md font-semibold hover:bg-red-600 transition duration-300">Lưu</button>
       </form>
-    {/* Modal for address input */}
-    {showModal && (
+      {/* Modal for address input */}
+      {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
           <div className="bg-white p-4 rounded-lg shadow-lg space-y-4">
             <h2 className="font-bold text-lg">Thêm Địa Chỉ Mới</h2>
@@ -128,7 +137,15 @@ const SellerRegistrationForm = ({ onRegister }) => {
           </div>
         </div>
       )}
-
+      {/* Success Modal */}
+      {successModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg space-y-4 flex flex-col items-center">
+            <h2 className="font-bold text-lg">You're registered for the role Seller successfully</h2>
+            <button onClick={handleSuccessModal} className="bg-green-500 text-white p-2 rounded hover:bg-green-700">OK</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
