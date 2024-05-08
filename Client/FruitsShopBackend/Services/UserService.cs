@@ -95,6 +95,14 @@ namespace FruitsShopBackend.Services
                 // Handle case where user with given ID is not found
                 return null;
             }
+            // Update the user properties with values from the DTO
+            existingUser.FirstName = userDto.FirstName;
+            existingUser.LastName = userDto.LastName;
+            existingUser.Email = userDto.Email;
+            existingUser.DoB = userDto.DoB;
+            existingUser.Gender = userDto.Gender;
+            existingUser.PhoneNumber = userDto.PhoneNumber;
+            existingUser.Role = userDto.Role;
 
             // Map DTO updates to Model
             _mapper.Map(userDto, existingUser);
@@ -115,8 +123,12 @@ namespace FruitsShopBackend.Services
                 };
             }
 
+            // Update the user in the repository
             await _userRepository.UpdateUser(existingUser);
-            return _mapper.Map<UserDto>(existingUser);
+
+            // Map the updated user to a DTO and return it
+            var updatedUserDto = _mapper.Map<UserDto>(existingUser);
+            return updatedUserDto;
         }
 
         public async Task DeleteUser(string userId)

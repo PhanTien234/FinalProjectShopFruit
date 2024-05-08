@@ -23,6 +23,8 @@ namespace FruitsShopBackend.Mappings
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<UserCreateDto, User>();
             CreateMap<UserUpdateDto, User>();
+            CreateMap<UserCreateDto, UserDto>();
+            CreateMap<UserUpdateDto, UserDto>();
             CreateMap<CreateOrderDto, Order>();
             CreateMap<UpdateOrderDto, Order>();
             CreateMap<CreateOrderDto, OrderDto>();

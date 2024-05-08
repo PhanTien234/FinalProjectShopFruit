@@ -48,6 +48,7 @@ namespace FruitsShopBackend.Controllers
             return Ok(new { Message = "User created successfully.", Data = userDto });
         }
 
+
         [HttpPut("{userId}")]
         public async Task<ActionResult<UserDto>> UpdateUser(string userId, [FromForm] UserUpdateDto userUpdateDto)
         {
@@ -56,6 +57,7 @@ namespace FruitsShopBackend.Controllers
             {
                 return NotFound();
             }
+
             var userDto = _mapper.Map<UserDto>(updatedUser);
             return Ok(new { Message = "User updated successfully.", Data = userDto });
         }

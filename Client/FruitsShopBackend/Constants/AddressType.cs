@@ -2,9 +2,9 @@
 {
     public enum AddressType
     {
-        Default = 0,
-        PickUpAddress = 1,
-        DeliveryAddress = 2
+        Default,
+        PickUpAddress,
+        DeliveryAddress
 
     }
 }

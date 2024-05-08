@@ -31,7 +31,7 @@ namespace FruitsShopBackend.Controllers
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
             var cart = await _cartService.GetUserCart(userId);
             // Retrieve cart count
-            var cartCount = cart.Items.Count;
+            var cartCount = cart?.Items?.Count ?? 0;
             return Ok(new { Cart = cart, CartItemCount = cartCount });
 
         }
@@ -44,7 +44,8 @@ namespace FruitsShopBackend.Controllers
             // Retrieve the updated cart after adding the item
             var cart = await _cartService.GetUserCart(userId);
             // Retrieve cart count
-            var cartCount = cart.Items.Count;
+            // Calculate cart count
+            var cartCount = cart?.Items?.Count ?? 0;
             return Ok(new { Cart = cart, CartItemCount = cartCount });
         }
 
@@ -62,7 +63,7 @@ namespace FruitsShopBackend.Controllers
             }
 
             // Retrieve cart count
-            var cartCount = updatedCart.Items.Count;
+            var cartCount = updatedCart?.Items?.Count ?? 0;
 
             return Ok(new { Cart = updatedCart, CartItemCount = cartCount });
         }
@@ -80,7 +81,7 @@ namespace FruitsShopBackend.Controllers
             }
 
             // Retrieve cart count
-            var cartCount = updatedCart.Items.Count; // Assuming each item in the cart counts as one
+            var cartCount = updatedCart?.Items?.Count ?? 0; // Assuming each item in the cart counts as one
 
             return Ok(new { Cart = updatedCart, CartItemCount = cartCount });
         }
