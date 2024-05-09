@@ -18,7 +18,7 @@ namespace FruitsShopBackend.Controllers
         }
 
         [HttpPost("create-order")]
-        public async Task<IActionResult> CreateOrder([FromBody] decimal amount)
+        public async Task<IActionResult> CreateOrder([FromForm] decimal amount)
         {
             try
             {
