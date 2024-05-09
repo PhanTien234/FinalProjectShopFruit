@@ -16,6 +16,9 @@ import ProductDetailPage from './components/ProductDetailPage';
 import CartPage from './components/CartPage';
 import SellerPage from './components/SellerPage';
 import OrderPage from './components/OrderPage';
+import Supplier from './components/pages/supplier/Supplier';
+import CreateSupplier from './components/pages/supplier/CreateSupplierForm'
+import UpdateSupplier from './components/pages/supplier/UpdateSupplierForm'
 import { AuthProvider } from './components/AuthContext';
 
 
@@ -39,6 +42,10 @@ const App = () => {
           <Route path="/cart" element={<CartPage />} />
           <Route path="/sellerpage" element={<SellerPage />} />
           <Route path="/orderpage" element={<OrderPage />} />
+          <Route path="/suppliers" element={<Supplier />} />
+          <Route path="/create-supplier" element={<CreateSupplier />} />
+          <Route path="/update-supplier/:supplierId" element={<UpdateSupplier />} />
+
 
         </Routes>
       </Router>
