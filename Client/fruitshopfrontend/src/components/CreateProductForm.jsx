@@ -1,25 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate} from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 const CreateProductForm = () => {
   const navigate = useNavigate();
+  const { accessToken } = useAuth(); 
   const [showModal, setShowModal] = useState(false);
   const [productData, setProductData] = useState({
     name: '',
     description: '',
     price: 0,
+    discountPrice: 0,
     overallRating: 0,
     categoryId: '',
     availableQuantity: 0,
     supplierId: '',
     image: null,
-    isCertificate: false,
   });
   const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
   
   useEffect(() => {
     fetchCategories();
+    fetchSuppliers();
   }, []);
 
   const fetchCategories = async () => {
@@ -28,6 +32,19 @@ const CreateProductForm = () => {
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get('https://localhost:5001/api/Supplier/getallsuppliersbyuser', {
+        headers: {
+          Authorization: `Bearer ${accessToken}` // Include the access token in the request headers
+        }
+      });
+      setSuppliers(response.data);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
     }
   };
 
@@ -40,11 +57,6 @@ const CreateProductForm = () => {
     setProductData({ ...productData, image: e.target.files[0] });
   };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setProductData({ ...productData, [name]: checked });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -55,6 +67,7 @@ const CreateProductForm = () => {
     try {
       const response = await axios.post('https://localhost:5001/api/Product', formData, {
         headers: {
+          Authorization: `Bearer ${accessToken}`, // Include the access token in the request headers
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -87,6 +100,10 @@ const CreateProductForm = () => {
           <input type="number" name="price" value={productData.price} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
         <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Discount Price:</label> {/* Add Discount Price field */}
+          <input type="number" name="discountPrice" value={productData.discountPrice} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+        </div>
+        <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Overall Rating:</label>
           <input type="number" name="overallRating" value={productData.overallRating} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
@@ -104,14 +121,19 @@ const CreateProductForm = () => {
           <input type="number" name="availableQuantity" value={productData.availableQuantity} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Supplier ID:</label>
-          <input type="text" name="supplierId" value={productData.supplierId} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+          <label className="block text-gray-700 text-sm font-bold mb-2">Supplier:</label>
+          <select name="supplierId" value={productData.supplierId} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full">
+            <option value="">Select supplier</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.supplierId} value={supplier.supplierId}>{supplier.name}</option>
+            ))}
+          </select>
         </div>
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Is Certificate:</label>
           <input type="checkbox" name="isCertificate" checked={productData.isCertificate} onChange={handleCheckboxChange} className="mr-2" />
           <span className="text-gray-700">Yes</span>
-        </div>
+        </div> */}
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
           <input type="file" accept="image/*" name="image" onChange={handleImageChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />

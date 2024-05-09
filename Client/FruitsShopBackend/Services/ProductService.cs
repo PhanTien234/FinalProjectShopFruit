@@ -86,6 +86,17 @@ namespace FruitsShopBackend.Services
                 // You can return an error response or handle it as per your application's logic
                 return null;
             }
+
+
+
+            if (!string.IsNullOrEmpty(productDto.SupplierId))
+            {
+                productDto.IsCertificate = true;
+            }
+            else
+            {
+                productDto.IsCertificate = false;
+            }
             // Map DTO to Model
             var product = _mapper.Map<Product>(productDto);
 
@@ -115,7 +126,6 @@ namespace FruitsShopBackend.Services
             existingProduct.OverallRating = productDto.OverallRating;
             existingProduct.AvailableQuantity = productDto.AvailableQuantity;
             existingProduct.SupplierId = productDto.SupplierId;
-            existingProduct.IsCertificate = productDto.IsCertificate;
 
             // Check if a new image is provided
             if (productDto.Image != null)
@@ -154,6 +164,16 @@ namespace FruitsShopBackend.Services
                 // Handle case where supplier is not found
                 // You can return an error response or handle it as per your application's logic
                 return null;
+            }
+
+            // Check if SupplierId is provided
+            if (!string.IsNullOrEmpty(productDto.SupplierId))
+            {
+                productDto.IsCertificate = true;
+            }
+            else
+            {
+                productDto.IsCertificate = false;
             }
             // Assign the category to the product
             existingProduct.Category = category;

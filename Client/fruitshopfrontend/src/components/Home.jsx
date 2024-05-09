@@ -11,7 +11,9 @@ const Home = () => {
         <Navbar />
         < Banner />
         <ProductGrid />
+        <div>
         <Footer />
+        </div>
     </div>
   );
 };

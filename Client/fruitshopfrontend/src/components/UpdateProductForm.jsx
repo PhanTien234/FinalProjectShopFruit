@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../components/AuthContext';
 
 const UpdateProductForm = () => {
+  const { accessToken } = useAuth();
   const navigate = useNavigate();
   const { productId } = useParams();
   const [showModal, setShowModal] = useState(false);
@@ -11,6 +13,7 @@ const UpdateProductForm = () => {
     name: '',
     description: '',
     price: 0,
+    discountPrice: 0,
     overallRating: 0,
     categoryId: '',
     availableQuantity: 0,
@@ -18,18 +21,23 @@ const UpdateProductForm = () => {
     cloudImage: null,
     imagePath: '',
     image: null,
-    isCertificate: false,
   });
   const [categories, setCategories] = useState([]);
+  const [suppliers, setSuppliers] = useState([]);
 
   useEffect(() => {
     fetchProduct();
     fetchCategories();
+    fetchSuppliers();
   }, []);
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`https://localhost:5001/api/Product/${productId}`);
+      const response = await axios.get(`https://localhost:5001/api/Product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}` // Include the access token in the request headers
+        }
+      });
       setProductData(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -45,6 +53,19 @@ const UpdateProductForm = () => {
     }
   };
 
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get('https://localhost:5001/api/Supplier/getallsuppliersbyuser', {
+        headers: {
+          Authorization: `Bearer ${accessToken}` // Include the access token in the request headers
+        }
+      });
+      setSuppliers(response.data);
+    } catch (error) {
+      console.error('Error fetching suppliers:', error);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData({ ...productData, [name]: value });
@@ -52,11 +73,6 @@ const UpdateProductForm = () => {
 
   const handleImageChange = (e) => {
     setProductData({ ...productData, image: e.target.files[0] });
-  };
-
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-    setProductData({ ...productData, [name]: checked });
   };
 
   const handleSubmit = async (e) => {
@@ -69,6 +85,7 @@ const UpdateProductForm = () => {
     try {
       await axios.put(`https://localhost:5001/api/Product/${productId}`, formData, {
         headers: {
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'multipart/form-data',
         },
       });
@@ -100,6 +117,10 @@ const UpdateProductForm = () => {
           <input type="number" name="price" value={productData.price} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
         <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Discount Price:</label> {/* Add Discount Price field */}
+          <input type="number" name="discountPrice" value={productData.discountPrice} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+        </div>
+        <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Overall Rating:</label>
           <input type="number" name="overallRating" value={productData.overallRating} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
@@ -117,13 +138,13 @@ const UpdateProductForm = () => {
           <input type="number" name="availableQuantity" value={productData.availableQuantity} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Supplier ID:</label>
-          <input type="text" name="supplierId" value={productData.supplierId} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Is Certificate:</label>
-          <input type="checkbox" name="isCertificate" checked={productData.isCertificate} onChange={handleCheckboxChange} className="mr-2" />
-          <span className="text-gray-700">Yes</span>
+          <label className="block text-gray-700 text-sm font-bold mb-2">Supplier:</label>
+          <select name="supplierId" value={productData.supplierId} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full">
+            <option value="">Select supplier</option>
+            {suppliers.map((supplier) => (
+              <option key={supplier.supplierId} value={supplier.supplierId}>{supplier.name}</option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Image:</label>

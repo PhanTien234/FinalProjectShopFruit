@@ -45,15 +45,15 @@ const ProductGrid = () => {
                // Add onClick event handler to redirect to ProductDetails component
                onClick={() => handleProductClick(product.productId)}
                // Add style to change border color based on hover
-               style={{ border: hoveredProductId === product.productId ? '2px solid red' : '2px solid transparent', cursor: 'pointer' }}>
+               style={{ boxShadow: hoveredProductId === product.productId ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : '0px 2px 4px rgba(0, 0, 0, 0.1)', cursor: 'pointer' }}>
             <img src={product.cloudImage.imagePath} alt={product.name} className="w-full h-48 object-cover" />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
               <p className="text-gray-700 mb-4">{product.description}</p>
               {product.discountPrice > 0 && (
                 <div className="flex items-baseline mb-2">
-                  <span className="text-sm line-through text-gray-500">{formatCurrency(product.price)}</span>
-                  <span className="ml-2 text-lg font-bold">{formatCurrency(product.discountPrice)}</span>
+                  <span className="text-sm line-through text-gray-500">{formatCurrency(product.discountPrice)}</span>
+                  <span className="ml-2 text-lg font-bold">{formatCurrency(product.price)}</span>
                 </div>
               )}
               {product.discountPrice === 0 && <p className="text-lg font-bold mb-2">{formatCurrency(product.price)}</p>}

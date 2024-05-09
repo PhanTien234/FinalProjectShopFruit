@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { configureAlerts, ToastContainer } from '../alert/alert';
+import { useAuth } from '../components/AuthContext';
 
 const Products = () => {
+  const { accessToken } = useAuth(); 
   const [products, setProducts] = useState([]);
   const { success, alertError } = configureAlerts();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://localhost:5001/api/Product');
+        const response = await axios.get('https://localhost:5001/api/Product/getallproductsbyuser', {
+          headers: {
+            Authorization: `Bearer ${accessToken}` // Include the access token in the request headers
+          }
+        });
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -17,11 +23,15 @@ const Products = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [accessToken]);
 
   const handleDelete = async (productId) => {
     try {
-      await axios.delete(`https://localhost:5001/api/Product/${productId}`);
+      await axios.delete(`https://localhost:5001/api/Product/${productId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}` // Include the access token in the request headers
+        }
+      });
       // After successful deletion, filter out the deleted product from the state
       setProducts(products.filter(product => product.productId !== productId));
       success('Delete Product Successfully!');
@@ -51,6 +61,7 @@ const Products = () => {
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Description</th>
               <th className="px-4 py-2">Price</th>
+              <th className="px-4 py-2">Discount Price</th>
               <th className="px-4 py-2">Overall Rating</th>
               <th className="px-4 py-2">Supplier ID</th>
               <th className="px-4 py-2">Is Certificate</th>
@@ -67,6 +78,7 @@ const Products = () => {
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">{product.description}</td>
                 <td className="border px-4 py-2">${product.price}</td>
+                <td className="border px-4 py-2">${product.discountPrice}</td>
                 <td className="border px-4 py-2">{product.overallRating}</td>
                 <td className="border px-4 py-2">{product.supplierId}</td>
                 <td className="border px-4 py-2">{product.isCertificate ? 'Yes' : 'No'}</td>
