@@ -122,9 +122,9 @@ const Navbar = () => {
               </button>
               {!isAuthenticated ? (
                 <>
-                  <Link to="/register" className="text-white px-3 py-2 rounded-md text-sm font-medium ml-6">Đăng ký</Link>
+                  <Link to="/register" className="text-white px-3 py-2 rounded-md text-sm font-medium ml-6">Register</Link>
                   <span className="text-white mx-2">|</span>
-                  <Link to="/login" className="text-white px-3 py-2 rounded-md text-sm font-medium">Đăng nhập</Link>
+                  <Link to="/login" className="text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
                 </>
               ) : (
                 <>

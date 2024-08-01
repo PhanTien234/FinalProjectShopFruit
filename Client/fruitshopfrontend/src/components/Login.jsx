@@ -3,6 +3,8 @@ import { Link, useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import { configureAlerts, ToastContainer } from '../alert/alert';
 import backgroundImage from '../assets/images/backgroundimage.png';
+import googleIcon from '../assets/icons/Googleicon.png';
+import facebookIcon from '../assets/icons/facebookicon.png';
 import { useAuth } from '../components/AuthContext';
 
 const LoginForm = () => {
@@ -58,7 +60,7 @@ const handleSubmit = async (event) => {
       style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}
     >
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-8">Login</h2>
+        <h2 className="text-2xl font-bold mb-8 text-center">Login</h2>
         <div className="mb-4">
           <input
             type="text"
@@ -87,9 +89,13 @@ const handleSubmit = async (event) => {
           <span className="p-2 text-gray-500">OR</span>
           <hr className="w-1/2" />
         </div>
-        <div className="flex justify-between mb-4">
-          <button className="w-1/2 bg-blue-500 text-white p-3 rounded mr-2">Facebook</button>
-          <button className="w-1/2 bg-green-500 text-white p-3 rounded ml-2">Google</button>
+        <div className="flex justify-center mb-4 gap-6">
+          <a href="/auth/facebook" className="mr-2">
+            <img src={facebookIcon} alt="Facebook" className="h-10 w-10" />
+          </a>
+          <a href="/auth/google" className="ml-2">
+            <img src={googleIcon} alt="Google" className="h-10 w-10" />
+          </a>
         </div>
         <div className="text-center mt-4">
           <span className="text-sm text-gray-600">Don't have an account? </span>

@@ -101,7 +101,7 @@ const SellerRegistrationForm = ({ onRegister }) => {
     <div>
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md mx-auto max-w-lg">
         <div className="mb-6">
-          <label htmlFor="firstName" className="text-gray-700 font-semibold block mb-2">Tên Shop *</label>
+          <label htmlFor="firstName" className="text-gray-700 font-semibold block mb-2">Name of Shop *</label>
           <input type="text" id="firstName" name="firstName" required value={userData.firstName} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div className="mb-6">
@@ -109,30 +109,30 @@ const SellerRegistrationForm = ({ onRegister }) => {
           <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div className="mb-6">
-          <label htmlFor="phoneNumber" className="text-gray-700 font-semibold block mb-2">Số điện thoại *</label>
+          <label htmlFor="phoneNumber" className="text-gray-700 font-semibold block mb-2">Phone Number *</label>
           <input type="tel" id="phoneNumber" name="phoneNumber" required value={userData.phoneNumber} onChange={handleChange} className="w-full border-gray-300 rounded-md shadow-sm" />
         </div>
         <div className="mb-6 flex items-center">
-          <label htmlFor="pickupAddress" className="text-gray-700 font-semibold mr-2">Địa chỉ lấy hàng *</label>
+          <label htmlFor="pickupAddress" className="text-gray-700 font-semibold mr-2">Address Pickup *</label>
           <button type="button" onClick={() => setShowModal(true)} className="p-1 rounded-full bg-gray-200 hover:bg-gray-300 transition duration-150">
             <PlusIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
           </button>
           <textarea id="pickupAddress" name="pickupAddress" required rows="3" value={`${createdFullName} | ${createdPhoneNumber} ${createdAddress} ${createdCity}`} className="w-full border-gray-300 rounded-md shadow-sm ml-2"></textarea>
         </div>
-        <button type="submit" className="mx-auto display-block bg-red-500 text-white py-3 px-4 rounded-md font-semibold hover:bg-red-600 transition duration-300">Lưu</button>
+        <button type="submit" className="mx-auto display-block bg-red-500 text-white py-3 px-4 rounded-md font-semibold hover:bg-red-600 transition duration-300">Save</button>
       </form>
       {/* Modal for address input */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex justify-center items-center">
           <div className="bg-white p-4 rounded-lg shadow-lg space-y-4">
-            <h2 className="font-bold text-lg">Thêm Địa Chỉ Mới</h2>
-            <input placeholder="Họ & Tên" onChange={(e) => setCreatedFullName(e.target.value)} className="border p-2 w-full" /> 
-            <input placeholder="Số điện thoại" onChange={(e) => setCreatedPhoneNumber(e.target.value)} className="border p-2 w-full"  /> 
-            <input placeholder="Địa chỉ chi tiết" onChange={(e) => setCreatedAddress(e.target.value)} className="border p-2 w-full" />
+            <h2 className="font-bold text-lg">Add New Address</h2>
+            <input placeholder="Full Name" onChange={(e) => setCreatedFullName(e.target.value)} className="border p-2 w-full" /> 
+            <input placeholder="Phone Number" onChange={(e) => setCreatedPhoneNumber(e.target.value)} className="border p-2 w-full"  /> 
+            <input placeholder="Address Detail" onChange={(e) => setCreatedAddress(e.target.value)} className="border p-2 w-full" />
             <VietNamAddress onAddressChange={handleAddressChange} />
             <div className="flex justify-between">
-              <button onClick={() => setShowModal(false)} className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700">Hủy</button>
-              <button onClick={handleCreateAddress} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Lưu</button>
+              <button onClick={() => setShowModal(false)} className="bg-gray-500 text-white p-2 rounded hover:bg-gray-700">Cancel</button>
+              <button onClick={handleCreateAddress} className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Save</button>
             </div>
           </div>
         </div>

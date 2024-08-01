@@ -7,7 +7,8 @@ namespace FruitsShopBackend.Interfaces.IRepositories
     public interface IUserAddressRepository
     {
         Task<UserAddress> GetByIdAsync(string userId, string addressId);
-        Task<IEnumerable<UserAddress>> GetAllAsync(string userId);
+        Task<List<UserAddress>> GetAllAsync();
+        Task<List<UserAddress>> GetAllAsyncByUserId(string userId);
         Task<UserAddress> CreateAsync(UserAddress address);
         Task<UserAddress> UpdateAsync(UserAddress address);
         Task<bool> DeleteAsync(string addressId);

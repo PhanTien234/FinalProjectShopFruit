@@ -17,12 +17,17 @@ namespace FruitsShopBackend.Repositories
             _context = context;
         }
 
+        public async Task<List<UserAddress>> GetAllAsync()
+        {
+            return await _context.UserAddresses.Where(_=>true).ToListAsync();
+        }
+
         public async Task<UserAddress> GetByIdAsync(string userId, string addressId)
         {
             return await _context.UserAddresses.FirstOrDefaultAsync(a => a.UserId == userId && a.AddressId == addressId);
         }
 
-        public async Task<IEnumerable<UserAddress>> GetAllAsync(string userId)
+        public async Task<List<UserAddress>> GetAllAsyncByUserId(string userId)
         {
             return await _context.UserAddresses.Where(a => a.UserId == userId).ToListAsync();
         }

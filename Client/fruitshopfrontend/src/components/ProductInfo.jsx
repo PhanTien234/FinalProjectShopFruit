@@ -53,12 +53,12 @@ const ProductInfo = ({ productId }) => {
             <button onClick={decreaseQuantity} className="px-3 py-1 bg-blue-500 text-white rounded-md">
               -
             </button>
-            <span className="px-3 py-1">{quantity}</span>
+            <span className="px-3 py-1">{quantity} KG</span>
             <button onClick={increaseQuantity} className="px-3 py-1 bg-blue-500 text-white rounded-md">
               +
             </button>
             {/* Display available quantity separately */}
-            <span className="ml-2 text-sm text-gray-500">Available: {availableQuantity}</span>
+            <span className="ml-2 text-sm text-gray-500">Available: {availableQuantity} KG</span>
           </div>
         </>
       )}

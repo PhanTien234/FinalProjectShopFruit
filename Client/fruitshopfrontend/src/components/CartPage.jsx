@@ -107,7 +107,7 @@ const CartPage = () => {
               </div>
               <div className="ml-3 flex items-center">
                 <span className="text-red-600 font-bold text-3xl">|</span> {/* Single separator with increased size */}
-                <span className="text-red-600 font-bold text-3xl ml-3">Giỏ hàng</span> {/* Increased text size for "Giỏ hàng" */}
+                <span className="text-red-600 font-bold text-3xl ml-3">Shopping Cart</span> {/* Increased text size for "Giỏ hàng" */}
               </div>
             </div>
             {/* Search input */}
@@ -121,7 +121,7 @@ const CartPage = () => {
                   id="search-cart" 
                   name="search-cart"
                   className="block w-full py-2 text-xl text-red-600 placeholder-red-600 bg-transparent border-b-4 border-red-600 rounded-md pl-12 focus:outline-none focus:border-red-700" 
-                  placeholder="Tìm kiếm sản phẩm, danh mục hay thương hiệu mong muốn..." 
+                  placeholder="Search Product..." 
                   autoComplete="off" 
                 /> {/* Extended placeholder to make it more visible */}
               </div>
@@ -146,19 +146,19 @@ const CartPage = () => {
                       onChange={(e) => selectAllItems(e.target.checked)}
                       className="mr-2 leading-tight"
                     />
-                    Sản phẩm
+                    Product
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Đơn giá
+                    PricePerUnit
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Số lượng
+                    Quantity
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Số Tiền
+                    Price
                   </th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Thao Tác
+                    Action
                   </th>
                 </tr>
               </thead>
@@ -180,21 +180,21 @@ const CartPage = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{item.price}</div>
+                      <div className="text-sm text-gray-900">{item.price} USD</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <button onClick={() => handleQuantityChange(item.productId, -1)} className="text-indigo-600 hover:text-indigo-900">
                           <MinusIcon className="h-5 w-5" />
                         </button>
-                        <div className="mx-2 text-sm text-gray-900">{item.quantity}</div>
+                        <div className="mx-2 text-sm text-gray-900">{item.quantity}KG</div>
                         <button onClick={() => handleQuantityChange(item.productId, 1)} className="text-indigo-600 hover:text-indigo-900">
                           <PlusIcon className="h-5 w-5" />
                         </button>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{(item.price * item.quantity).toLocaleString()}</div>
+                      <div className="text-sm text-gray-900">{(item.price * item.quantity).toLocaleString()} USD</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button onClick={() => handleRemoveFromCart(item.productId)} className="text-red-600 hover:text-red-900">
@@ -214,7 +214,7 @@ const CartPage = () => {
                       onClick={handleCheckout}
                       className="inline-flex items-center px-6 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     >
-                      Mua Hàng
+                      Make Order
                       <ShoppingCartIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
                     </button>
                   </td>

@@ -19,6 +19,20 @@ namespace FruitsShopBackend.Services
             _mapper = mapper;
         }
 
+        public async Task<List<AddressDto>> GetAllAddressesAsync()
+        {
+            var address = await _repository.GetAllAsync();
+            return _mapper.Map<List<AddressDto>>(address);
+        }
+
+
+        public async Task<List<AddressDto>> GetAllAddressesAsyncByUserId(string userId)
+        {
+            var address = await _repository.GetAllAsyncByUserId(userId);
+            return _mapper.Map<List<AddressDto>>(address);
+        }
+
+
         public async Task<AddressDto> GetAddressByIdAsync(string userId, string addressId)
         {
             // Ensure the address belongs to the user before retrieving
@@ -29,11 +43,6 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<AddressDto>(address);
         }
 
-        public async Task<IEnumerable<AddressDto>> GetAllAddressesAsync(string userId)
-        {
-            var addresses = await _repository.GetAllAsync(userId);
-            return _mapper.Map<IEnumerable<AddressDto>>(addresses);
-        }
 
         public async Task<AddressDto> CreateAddressAsync(string userId, CreateAddressDto addressDto)
         {

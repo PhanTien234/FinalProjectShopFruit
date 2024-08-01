@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../components/AuthContext';
 import FruitShopLogo from '../assets/images/Fruitshoplogo.png'; 
 // import ChatIcon from './chat-icon.svg';
 import SellerRegistrationForm from './SellerRegistrationForm';
+import axios from 'axios';
 
 // Inside your SellerRegistrationPage component:
 
 
 const SellerRegistrationPage = () => {
   const [showForm, setShowForm] = useState(false);
-  const { user } = useAuth();
+  const { isAuthenticated, user, accessToken, logout } = useAuth();
+  const [userInfo, setUserInfo] = useState({
+    firstName: '',
+    lastName: '',
+    imageUserPath: 'default-avatar-path.svg'
+  });
 
 // Function to handle form registration
   const handleRegister = (formData) => {
@@ -19,6 +25,29 @@ const SellerRegistrationPage = () => {
   const toggleFormDisplay = () => {
     setShowForm(!showForm);
   };
+
+  useEffect(() => {
+    if (user && user.userId) {
+      const fetchUserData = async () => {
+        try {
+          const response = await axios.get(`https://localhost:5001/api/Users/${user.userId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          if (response.data) {
+            setUserInfo({
+              firstName: response.data.firstName,
+              lastName: response.data.lastName,
+              imageUserPath: response.data.imageUserPath || 'default-avatar-path.svg'
+            });
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [user, accessToken]);
 
 
   return (
@@ -31,12 +60,12 @@ const SellerRegistrationPage = () => {
             <div className="flex items-center space-x-4">
               {/* Replace with your own logo */}
               <img src={FruitShopLogo} alt="Logo" className="h-12 w-12" />
-              <span className="text-xl font-bold">Đăng ký trở thành Người bán Shopee</span>
+              <span className="text-xl font-bold">Register to become a Seller</span>
             </div>
             {/* User avatar and name */}
             <div className="flex items-center space-x-2">
-              <img src={user?.Avatar} alt="User avatar" className="h-10 w-10 rounded-full" />
-              <span className="font-medium">{user?.firstName} {user?.lastName}</span>
+              <img src={userInfo.imageUserPath} alt="User avatar" className="h-10 w-10 rounded-full" />
+              <span className="font-medium">{userInfo.firstName} {userInfo.lastName}</span>
             </div>
           </div>
         </div>
@@ -49,11 +78,11 @@ const SellerRegistrationPage = () => {
             {/* Seller Registration Card */}
             <div className="flex flex-col items-center">
               {/* Replace with your illustration image */}
-              <img className="mb-6 w-40 h-40 object-cover rounded-full" src="path-to-your-illustration.svg" alt="Welcome to Shopee" />
-              <h2 className="mb-3 text-3xl text-gray-700 text-center font-bold">Chào mừng đến với Shopee!</h2>
-              <p className="text-gray-600 text-center mb-8">Vui lòng cung cấp thông tin để thành lập tài khoản người bán trên Shopee</p>
+              <img className="mb-6 w-40 h-40 object-cover rounded-full" src={userInfo.imageUserPath} alt="Welcome to Shopee" />
+              <h2 className="mb-3 text-3xl text-gray-700 text-center font-bold">Welcome to Fruit Shop!</h2>
+              <p className="text-gray-600 text-center mb-8">Please provide more information to become a Seller</p>
               <button onClick={toggleFormDisplay} className="w-full bg-red-500 text-white py-3 rounded-md font-semibold hover:bg-red-600 transition duration-300">
-                Bắt đầu đăng ký
+                Start Register
               </button>
             </div>
           </div>

@@ -21,7 +21,7 @@ const SellerInfo = ({ productId }) => {
 
   return (
     <div className="p-4 border-t border-b my-4">
-      <h3 className="text-lg font-bold">Thông tin người bán</h3>
+      <h3 className="text-lg font-bold">Seller Information</h3>
       {seller && (
         <div className="flex items-center">
           <img src={seller.imageUserPath} alt="Seller avatar" className="w-10 h-10 rounded-full" />

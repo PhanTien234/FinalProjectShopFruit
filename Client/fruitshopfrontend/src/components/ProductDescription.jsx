@@ -35,16 +35,16 @@ const ProductDescription = ({ productId }) => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-bold">Chi tiết sản phẩm</h3>
+      <h3 className="text-lg font-bold">Detail Product</h3>
       {supplierInfo && (
         <>
-          <p>Tên nhà cung cấp: {supplierInfo.name}</p>
-          <p>Địa chỉ: {supplierInfo.location}</p>
-          <p>Mô tả nhà cung cấp: {supplierInfo.description}</p>
+          <p>Supplier Name: {supplierInfo.name}</p>
+          <p>Location: {supplierInfo.location}</p>
+          <p>Describe: {supplierInfo.description}</p>
           <img src={supplierInfo.certificateUrl} alt="Certificate" /> {/* Assuming this is an image URL */}
         </>
       )}
-      <h3 className="text-lg font-bold">Mô tả sản phẩm</h3>
+      <h3 className="text-lg font-bold">Describe Product</h3>
       <p>{productDescription}</p>
     </div>
   );

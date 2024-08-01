@@ -4,8 +4,6 @@ using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-
 namespace FruitsShopBackend.Services
 {
     public class CloudinaryService : ICloudinaryService

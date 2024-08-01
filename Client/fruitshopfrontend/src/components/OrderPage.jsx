@@ -9,7 +9,6 @@ import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 import Footer from '../layout/Footer';
 
 const OrderPage = () => {
-  const address = "Số 505, Đường Ngô Quyền, Phường An Hải Bắc, Quận Sơn Trà, Đà Nẵng";
   const orderItem = {
     name: "Dầu gội đầu Clear",
     description: "Dành bay gàu & nhờn ngứa, sáng khoái",
@@ -47,7 +46,7 @@ const OrderPage = () => {
         </div>
       </div>
       <div className="container mx-auto mt-8 space-y-4">
-        <AddressComponent address={address} />
+        <AddressComponent/>
         <OrderItemInfo item={orderItem} />
         <DiscountComponent />
         <PaymentMethod />

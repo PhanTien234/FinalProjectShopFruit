@@ -4,6 +4,8 @@ import axios from 'axios';
 import FadeLoader from "react-spinners/FadeLoader";
 import { configureAlerts, ToastContainer } from '../alert/alert';
 import backgroundImage from '../assets/images/backgroundimage.png';
+import googleIcon from '../assets/icons/Googleicon.png';
+import facebookIcon from '../assets/icons/facebookicon.png';
 import { useAuth } from '../components/AuthContext';
 
 const RegisterForm = () => {
@@ -74,8 +76,8 @@ const { login } = useAuth();
   return (
     <div  className="min-h-screen flex justify-center items-center"
     style={{ backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover' }}>
-      <div className="bg-white p-8 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-8">Register</h2>
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-8 text-center">Register</h2>
         <div className="mb-4">
           <input
             type="text"
@@ -177,16 +179,21 @@ const { login } = useAuth();
           <span className="p-2 text-gray-500">Or</span>
           <hr className="w-1/2" />
         </div>
-        <div className="flex justify-between mb-4">
-          <button className="w-1/2 bg-blue-500 text-white p-3 rounded mr-2">Facebook</button>
-          <button className="w-1/2 bg-green-500 text-white p-3 rounded ml-2">Google</button>
+        <div className="flex justify-center mb-4 gap-6">
+          <a href="/auth/facebook" className="mr-2">
+            <img src={facebookIcon} alt="Facebook" className="h-10 w-10" />
+          </a>
+          <a href="/auth/google" className="ml-2">
+            <img src={googleIcon} alt="Google" className="h-10 w-10" />
+          </a>
         </div>
-        <div className="text-center text-sm">
-          <p>By registering, you agree to Shop Fruit terms</p>
-          <p>Terms of Service & Privacy Policy</p>
+        <div className="text-center text-xs">
+          <p>By registering, you agree to Shop Fruit</p>
+          <Link to="/#" className="text-xs text-blue-600">Terms of Service & Privacy Policy</Link>
         </div>
         <div className="text-center mt-4">
-          <Link to="/login" className="text-sm text-blue-600">Do you already have an account? Login</Link>
+          <span className="text-sm text-gray-600">Do you already have an account? </span>
+          <Link to="/login" className="text-sm text-blue-600">Login</Link>
         </div>
       </div>
     </div>

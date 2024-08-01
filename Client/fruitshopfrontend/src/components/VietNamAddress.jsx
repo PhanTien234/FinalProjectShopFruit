@@ -53,7 +53,7 @@ const VietnamAddress = ({ onAddressChange }) => {
         value={selectedProvince}
         className="border p-2 flex-1"
       >
-        <option value="">Chọn Tỉnh/Thành phố</option>
+        <option value="">Choose city/provinces</option>
         {Object.keys(provincesData).map((province) => (
           <option key={province} value={province}>
             {province}
@@ -66,7 +66,7 @@ const VietnamAddress = ({ onAddressChange }) => {
         className="border p-2 flex-1"
         disabled={!selectedProvince}
       >
-        <option value="">Chọn Quận/Huyện</option>
+        <option value="">Choose districts</option>
         {districts.map((district) => (
           <option key={district} value={district}>
             {district}
@@ -78,7 +78,7 @@ const VietnamAddress = ({ onAddressChange }) => {
         className="border p-2 flex-1"
         disabled={!selectedDistrict}
       >
-        <option value="">Chọn Phường/Xã</option>
+        <option value="">Choose wards</option>
         {wards.map((ward) => (
           <option key={ward} value={ward}>
             {ward}

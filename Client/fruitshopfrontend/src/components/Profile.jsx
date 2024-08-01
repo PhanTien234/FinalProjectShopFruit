@@ -71,19 +71,19 @@ const ProfilePage = () => {
 
   return (
     <div className="container mx-auto mt-10">
-      <h2 className="text-xl font-semibold mb-4">Hồ Sơ Của Tôi</h2>
+      <h2 className="text-xl font-semibold mb-4">My Profile</h2>
       {/* Horizontal Dash */}
       <div className="w-full border-t-2 border-red-500 mb-4"></div>
       <form onSubmit={handleSubmit} className="flex flex-wrap justify-center">
         <div className="lg:flex-1 px-4">
           <div className="mb-4">
-            <label htmlFor="name" className="text-sm font-semibold">Tên</label>
+            <label htmlFor="name" className="text-sm font-semibold">Name</label>
             <input
               id="name"
               type="text"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Nhập tên của bạn"
+              placeholder="Input your name"
               className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
             />
           </div>
@@ -99,7 +99,7 @@ const ProfilePage = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="phone" className="text-sm font-semibold">Số điện thoại</label>
+            <label htmlFor="phone" className="text-sm font-semibold">Phone Number</label>
             <input
               id="phone"
               type="tel"
@@ -110,7 +110,7 @@ const ProfilePage = () => {
             />
           </div>
           <div className="mb-4">
-            <span className="text-sm font-semibold">Giới tính</span>
+            <span className="text-sm font-semibold">Gender</span>
             <div className="mt-2">
               <label className="inline-flex items-center">
                 <input
@@ -121,7 +121,7 @@ const ProfilePage = () => {
                   onChange={(e) => setGender(e.target.value)}
                   className="form-radio"
                 />
-                <span className="ml-2">Nam</span>
+                <span className="ml-2">Male</span>
               </label>
               <label className="inline-flex items-center ml-6">
                 <input
@@ -132,7 +132,7 @@ const ProfilePage = () => {
                   onChange={(e) => setGender(e.target.value)}
                   className="form-radio"
                 />
-                <span className="ml-2">Nữ</span>
+                <span className="ml-2">Female</span>
               </label>
               <label className="inline-flex items-center ml-6">
                 <input
@@ -143,12 +143,12 @@ const ProfilePage = () => {
                   onChange={(e) => setGender(e.target.value)}
                   className="form-radio"
                 />
-                <span className="ml-2">Khác</span>
+                <span className="ml-2">Other</span>
               </label>
             </div>
           </div>
           <button type="submit" className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-            Lưu
+            Save
           </button>
         </div>
         {/* Vertical Dash */}
@@ -162,7 +162,7 @@ const ProfilePage = () => {
             )}
           </div>
           <label className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-            Chọn Ảnh
+            Choose Image
             <input type="file" className="hidden" onChange={handleAvatarChange} />
           </label>
         </div>

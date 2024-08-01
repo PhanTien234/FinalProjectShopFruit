@@ -2,6 +2,7 @@
 using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
+using FruitsShopBackend.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -24,6 +25,22 @@ namespace FruitsShopBackend.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
+        [HttpGet("getalladdresss")]
+        public async Task<ActionResult<List<Product>>> GetAllAddresses()
+        {
+            var addresses = await _addressService.GetAllAddressesAsync();
+            return Ok(addresses);
+        }
+
+        [HttpGet("getalladdressbyuser")]
+        public async Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddressesByUserId()
+        {
+            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
+            var addresses = await _addressService.GetAllAddressesAsyncByUserId(userId);
+            return Ok(addresses);
+        }
+
         [HttpGet("{addressId}")]
         public async Task<ActionResult<AddressDto>> GetAddressById(string addressId)
         {
@@ -33,14 +50,6 @@ namespace FruitsShopBackend.Controllers
                 return NotFound();
 
             return Ok(address);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddresses()
-        {
-            var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
-            var addresses = await _addressService.GetAllAddressesAsync(userId);
-            return Ok(addresses);
         }
 
         [HttpPost]
