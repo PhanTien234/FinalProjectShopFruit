@@ -6,7 +6,7 @@ import facebookIcon from '../assets/icons/facebookicon.png';
 import { useAuth } from '../components/AuthContext';
 import axios from 'axios';
 
-const Navbar = () => {
+const Navbar = ({ setSearchQuery }) => {
   const navigate = useNavigate();
   const location = useLocation(); // Get current location
   const { isAuthenticated, user, accessToken, logout } = useAuth();
@@ -16,6 +16,8 @@ const Navbar = () => {
     lastName: '',
     imageUserPath: 'default-avatar-path.svg'
   });
+
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     const fetchCartItemCount = async () => {
@@ -94,6 +96,10 @@ const Navbar = () => {
     }
   }, [user, accessToken]);
 
+  const handleSearch = () => {
+    setSearchQuery(searchInput);
+  };
+
   return (
     <nav className="bg-red-600">
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
@@ -142,14 +148,16 @@ const Navbar = () => {
               <span className="text-white text-lg font-bold mr-8 ">Fruit Shop</span> {/* Reduced margin */}
             </div>
             <div className="flex-grow relative">
-                <span className="absolute inset-y-0 left-0 pl-3 flex items-center">
-                  <SearchIcon className="h-5 w-5 text-white" aria-hidden="true" />
-                </span>
                 <input
                   className="py-2 w-full text-sm text-white placeholder-white bg-red-700 rounded-md pl-10 focus:outline-none focus:bg-red-800 focus:text-white"
                   placeholder="Search..."
                   autoComplete="off"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
                 />
+                <button onClick={handleSearch} className="absolute inset-y-0 right-0 px-3 flex items-center text-white focus:outline-none">
+                  <SearchIcon className="h-5 w-5" aria-hidden="true" />
+                </button>
             </div>
             <div>
               {/* Shopping Cart Icon - Hide on Cart Page */}

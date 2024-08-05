@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const ProductGrid = () => {
+const ProductGrid = ({ searchQuery }) => {
   const [products, setProducts] = useState([]);
   const [hoveredProductId, setHoveredProductId] = useState(null); // Define hoveredProductId state variable
   const navigate = useNavigate(); // Initialize useNavigate
@@ -34,10 +34,17 @@ const ProductGrid = () => {
     navigate(`/product/${productId}`);
   };
 
+  // Log searchQuery to verify it's being received correctly
+  console.log('Search Query:', searchQuery);
+
+  const filteredProducts = searchQuery && searchQuery.trim() !== ""
+    ? products.filter(product => product.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    : products;
+
   return (
     <div className="container mx-auto py-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map(product => (
+        {filteredProducts.map(product => (
           <div key={product.productId} className="bg-white shadow overflow-hidden rounded-lg" 
                // Add onMouseEnter and onMouseLeave event handlers to change border color on hover
                onMouseEnter={() => setHoveredProductId(product.productId)}
