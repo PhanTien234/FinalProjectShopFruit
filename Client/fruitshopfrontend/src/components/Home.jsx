@@ -7,13 +7,14 @@ import Footer from '../layout/Footer';
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState(' ')
+  const [currentPage, setCurrentPage] = useState(1);
 
 
   return (
     <div>
         <Navbar setSearchQuery= {setSearchQuery}/>
         < Banner />
-        <ProductGrid searchQuery={searchQuery}/>
+        <ProductGrid searchQuery={searchQuery} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
         <div>
         <Footer />
         </div>
