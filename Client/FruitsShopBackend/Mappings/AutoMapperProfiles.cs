@@ -41,6 +41,9 @@ namespace FruitsShopBackend.Mappings
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<SupplierCreateDto, Supplier>();
             CreateMap<SupplierUpdateDto, Supplier>();
+            CreateMap<UnitFruit, UnitFruitDto>().ReverseMap();
+            CreateMap<UnitFruitCreateUpdateDto, UnitFruit>();
+
         }
 
         private decimal CalculateTotalPrice(List<CartItem> items)

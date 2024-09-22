@@ -17,10 +17,11 @@ namespace FruitsShopBackend.Services
         private readonly ICloudinaryService _cloudinaryService;
         private readonly ICategoryService _categoryService;
         private readonly ISupplierService _supplierService;
+        private readonly IUnitFruitService _unitFruitService;
         private readonly MongoDbContext _context;
 
 
-        public ProductService(IProductRepository productRepository, IMapper mapper, ICloudinaryService cloudinaryService, ICategoryService categoryService, MongoDbContext context, ISupplierService supplierService)
+        public ProductService(IProductRepository productRepository, IMapper mapper, ICloudinaryService cloudinaryService, ICategoryService categoryService, MongoDbContext context, ISupplierService supplierService, IUnitFruitService unitFruitService)
         {
             _productRepository = productRepository;
             _mapper = mapper;
@@ -28,6 +29,7 @@ namespace FruitsShopBackend.Services
             _categoryService = categoryService;
             _context = context;
             _supplierService = supplierService;
+            _unitFruitService = unitFruitService;
         }
 
         public async Task<List<ProductDto>> GetAllProducts()
@@ -86,8 +88,14 @@ namespace FruitsShopBackend.Services
                 // You can return an error response or handle it as per your application's logic
                 return null;
             }
-
-
+            // Fetch unit details based on UnitFruitId
+            var unit = await _unitFruitService.GetUnitFruitById(productDto.UnitFruitId);
+            if (unit == null)
+            {
+                // Handle case where unit is not found
+                // You can return an error response or handle it as per your application's logic
+                return null;
+            }
 
             if (!string.IsNullOrEmpty(productDto.SupplierId))
             {
@@ -102,6 +110,7 @@ namespace FruitsShopBackend.Services
 
             // Assign category to the product
             product.Category = category;
+            product.UnitFruit = unit;
             // Set the user ID for the product
             product.UserId = userId;
             var createdProduct = await _productRepository.CreateProduct(userId, product);
@@ -165,6 +174,14 @@ namespace FruitsShopBackend.Services
                 // You can return an error response or handle it as per your application's logic
                 return null;
             }
+            // Fetch unit details based on UnitFruitId
+            var unit = await _unitFruitService.GetUnitFruitById(productDto.UnitFruitId);
+            if (unit == null)
+            {
+                // Handle case where unit is not found
+                // You can return an error response or handle it as per your application's logic
+                return null;
+            }
 
             // Check if SupplierId is provided
             if (!string.IsNullOrEmpty(productDto.SupplierId))
@@ -177,6 +194,7 @@ namespace FruitsShopBackend.Services
             }
             // Assign the category to the product
             existingProduct.Category = category;
+            existingProduct.UnitFruit = unit;
 
             // Update the product in the repository
             var updatedProduct = await _productRepository.UpdateProduct(userId, productId, existingProduct);

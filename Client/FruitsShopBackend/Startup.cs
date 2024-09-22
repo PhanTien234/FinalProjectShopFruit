@@ -75,6 +75,7 @@ namespace FruitsShopBackend
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserAddressRepository, UserAddressRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<IUnitFruitRepository, UnitFruitRepository>();
             // Register Services
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IEmailVerificationService, EmailVerificationService>();
@@ -86,6 +87,7 @@ namespace FruitsShopBackend
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IUserAddressService, UserAddressService>();
+            services.AddScoped<IUnitFruitService, UnitFruitServices>();
             services.AddScoped<ISupplierService, SupplierService>();
             services.AddHttpClient<IPayPalService, PayPalService>();
 

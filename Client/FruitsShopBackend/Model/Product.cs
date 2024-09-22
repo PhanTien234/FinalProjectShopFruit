@@ -26,6 +26,7 @@ namespace FruitsShopBackend.Model
         public string SupplierId { get; set; }
 
         public CloudImage CloudImage{ get; set; }
+        public UnitFruitDto UnitFruit { get; set; }
 
         public bool IsCertificate { get; set; }
     }

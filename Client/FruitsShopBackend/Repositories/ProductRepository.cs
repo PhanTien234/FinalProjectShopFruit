@@ -84,6 +84,7 @@ namespace FruitsShopBackend.Repositories
                 .Set(p => p.AvailableQuantity, product.AvailableQuantity)
                 .Set(p => p.SupplierId, product.SupplierId)
                 .Set(p=> p.CloudImage, product.CloudImage)
+                .Set(p => p.UnitFruit, product.UnitFruit)
                 .Set(p => p.IsCertificate, product.IsCertificate);
 
             await _context.Products.UpdateOneAsync(filter, update);

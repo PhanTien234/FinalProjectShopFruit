@@ -28,5 +28,6 @@ namespace FruitsShopBackend.Data
         public IMongoCollection<Order> Orders => _database.GetCollection<Order>("Orders");
         public IMongoCollection<PaymentTransaction> PaymentTransactions => _database.GetCollection<PaymentTransaction>("PaymentTransactions");
         public IMongoCollection<Supplier> Suppliers => _database.GetCollection<Supplier>("Suppliers");
+        public IMongoCollection<UnitFruit> UnitFruits => _database.GetCollection<UnitFruit>("UnitFruits");
     }
 }
