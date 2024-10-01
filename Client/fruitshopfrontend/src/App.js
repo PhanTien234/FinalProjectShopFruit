@@ -22,6 +22,9 @@ import OrderPage from './components/OrderPage';
 import Supplier from './components/pages/supplier/Supplier';
 import CreateSupplier from './components/pages/supplier/CreateSupplierForm'
 import UpdateSupplier from './components/pages/supplier/UpdateSupplierForm'
+import UnitFruits from './components/UnitFruits';
+import CreateUnit from './components/CreateUnitFruit';
+import UpdateUnit from './components/UpdateUnitFruit';
 
 import { AuthProvider } from './components/AuthContext';
 
@@ -39,6 +42,9 @@ const App = () => {
           <Route path="/update-product/:productId" element={<UpdateProductForm />} />
           <Route path="/create-category" element={<CreateCategoryForm />} /> 
           <Route path="/categories" element={<Categories />} /> 
+          <Route path="/unitfruits" element={<UnitFruits />} />
+          <Route path="/create-unit" element={<CreateUnit />} />
+          <Route path="/update-unit/:unitFruitId" element={<UpdateUnit />} />
           <Route path="/addressListe" element={<AddressList />} />
           <Route path="/profile" element={<ProfilePage />} /> 
           <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
