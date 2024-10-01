@@ -16,7 +16,7 @@ namespace FruitsShopBackend.Dtos
         public int AvailableQuantity { get; set; }
         public string SupplierId { get; set; }
         public CloudImage CloudImage { get; set; }
-        public string UnitFruitId { get; set; }
+        public UnitFruitDto UnitFruit { get; set; }
         public bool IsCertificate { get; set; }
     }
 }

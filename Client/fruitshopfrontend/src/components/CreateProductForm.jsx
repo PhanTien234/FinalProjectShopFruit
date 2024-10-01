@@ -17,12 +17,15 @@ const CreateProductForm = () => {
     availableQuantity: 0,
     supplierId: '',
     image: null,
+    unitFruitId: '',
   });
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+  const [units, setUnits] = useState([]);
   
   useEffect(() => {
     fetchCategories();
+    fetchUnits();
     fetchSuppliers();
   }, []);
 
@@ -32,6 +35,15 @@ const CreateProductForm = () => {
       setCategories(response.data);
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchUnits = async () => {
+    try {
+      const response = await axios.get('https://localhost:5001/api/UnitFruits');
+      setUnits(response.data);
+    } catch (error) {
+      console.error('Error fetching Units:', error);
     }
   };
 
@@ -119,6 +131,15 @@ const CreateProductForm = () => {
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Available Quantity:</label>
           <input type="number" name="availableQuantity" value={productData.availableQuantity} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Unit:</label>
+          <select name="unitFruitId" value={productData.unitFruitId} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full">
+            <option value="">Select Unit Type</option>
+            {units.map((unit) => (
+              <option key={unit.id} value={unit.id}>{unit.name}</option>
+            ))}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Supplier:</label>
