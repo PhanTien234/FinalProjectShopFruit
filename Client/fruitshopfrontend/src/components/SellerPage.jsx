@@ -10,8 +10,8 @@ const SellerPage = () => {
   const [activeComponent, setActiveComponent] = useState('home');
   const navigate = useNavigate();
 
-  const handleComponentChange = (component, path) => {
-    navigate(path); // Change the URL
+  const handleComponentChange = (component) => {
+    // navigate(path); // Change the URL
     setActiveComponent(component); // Update the active component
   };
 

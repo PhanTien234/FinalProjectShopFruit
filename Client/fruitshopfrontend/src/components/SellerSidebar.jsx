@@ -62,72 +62,76 @@ const SellerSidebar = ({ handleComponentChange }) => {
           )}
         </div>
         <div className="mb-4">
-            <button 
-              onClick={() => setSupplierDropdownOpen(!isSupplierDropdownOpen)} 
-              className="w-full text-left font-bold flex items-center"
-            >
-              <FaUsers className="mr-2" /> Supplier Management
-            </button>
-            {isSupplierDropdownOpen && (
-              <div className="ml-6">
-                <SidebarLink to="/suppliers">All Suppliers</SidebarLink>
-                <SidebarLink to="/create-supplier">Add Supplier</SidebarLink>
-              </div>
-            )}
-          </div>
-            <div className="mb-4">
-              <button 
-                onClick={() => setMarketingDropdownOpen(!isMarketingDropdownOpen)} 
-                className="w-full text-left font-bold flex items-center"
-              >
-                <FaChartLine className="mr-2" /> Marketing Channel
-              </button>
-              {isMarketingDropdownOpen && (
-                <div className="ml-6">
-                  <SidebarLink to="/marketing">Banner Managements</SidebarLink>
-                </div>
-              )}
+          <button
+            onClick={() => setSupplierDropdownOpen(!isSupplierDropdownOpen)}
+            className="w-full text-left font-bold flex items-center"
+          >
+            <FaUsers className="mr-2" /> Supplier Management
+          </button>
+          {isSupplierDropdownOpen && (
+           <div className="ml-6">
+           <SidebarLink onClick={() => handleComponentChange('suppliers')}>
+             All Suppliers
+           </SidebarLink>
+           <SidebarLink onClick={() => handleComponentChange('create-supplier')}>
+             Add Supplier
+           </SidebarLink>
+         </div>
+          )}
+        </div>
+        <div className="mb-4">
+          <button 
+            onClick={() => setMarketingDropdownOpen(!isMarketingDropdownOpen)} 
+            className="w-full text-left font-bold flex items-center"
+          >
+            <FaChartLine className="mr-2" /> Marketing Channel
+          </button>
+          {isMarketingDropdownOpen && (
+            <div className="ml-6">
+              <SidebarLink to="/marketing">Banner Managements</SidebarLink>
             </div>
-            <div className="mb-4">
-              <button 
-                onClick={() => setFinancialDropdownOpen(!isFinancialDropdownOpen)} 
-                className="w-full text-left font-bold flex items-center"
-              >
-                <FaDollarSign className="mr-2" /> Financial Management
-              </button>
-              {isFinancialDropdownOpen && (
-                <div className="ml-6">
-                  <SidebarLink to="/totalMoneyPaid">Total Revenue</SidebarLink>
-                </div>
-              )}
+          )}
+        </div>
+        <div className="mb-4">
+          <button 
+            onClick={() => setFinancialDropdownOpen(!isFinancialDropdownOpen)} 
+            className="w-full text-left font-bold flex items-center"
+          >
+            <FaDollarSign className="mr-2" /> Financial Management
+          </button>
+          {isFinancialDropdownOpen && (
+            <div className="ml-6">
+              <SidebarLink to="/totalMoneyPaid">Total Revenue</SidebarLink>
             </div>
-            <div className="mb-4">
-              <button 
-                onClick={() => setDataDropdownOpen(!isDataDropdownOpen)} 
-                className="w-full text-left font-bold flex items-center"
-              >
-                <FaDatabase className="mr-2" /> Data Management
-              </button>
-              {isDataDropdownOpen && (
-                <div className="ml-6">
-                  <SidebarLink to="/statisticsell">Sales Analysis</SidebarLink>
-                  <SidebarLink to="/effectiveSell">Operational Efficiency</SidebarLink>
-                </div>
-              )}
+          )}
+        </div>
+        <div className="mb-4">
+          <button 
+            onClick={() => setDataDropdownOpen(!isDataDropdownOpen)} 
+            className="w-full text-left font-bold flex items-center"
+          >
+            <FaDatabase className="mr-2" /> Data Management
+          </button>
+          {isDataDropdownOpen && (
+            <div className="ml-6">
+              <SidebarLink to="/statisticsell">Sales Analysis</SidebarLink>
+              <SidebarLink to="/effectiveSell">Operational Efficiency</SidebarLink>
             </div>
-            <div className="mb-4">
-              <button 
-                onClick={() => setShopInfoDropdownOpen(!isShopInfoDropdownOpen)} 
-                className="w-full text-left font-bold flex items-center"
-              >
-                <FaStore className="mr-2" /> Shop Management
-              </button>
-              {isShopInfoDropdownOpen && (
-                <div className="ml-6">
-                  <SidebarLink to="/shopinformation">Shop Information</SidebarLink>
-                </div>
-              )}
+          )}
+        </div>
+        <div className="mb-4">
+          <button 
+            onClick={() => setShopInfoDropdownOpen(!isShopInfoDropdownOpen)} 
+            className="w-full text-left font-bold flex items-center"
+          >
+            <FaStore className="mr-2" /> Shop Management
+          </button>
+          {isShopInfoDropdownOpen && (
+            <div className="ml-6">
+              <SidebarLink to="/shopinformation">Shop Information</SidebarLink>
             </div>
+          )}
+        </div>
       </div>
     </nav>
   );
