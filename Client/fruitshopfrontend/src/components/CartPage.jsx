@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import { Link } from 'react-router-dom';
 import NavbarCart from '../layout/NavbarCart';
 import Footer from '../layout/Footer';
 import {SearchIcon, PlusIcon, MinusIcon, ShoppingCartIcon} from '@heroicons/react/outline';
@@ -102,9 +103,9 @@ const CartPage = () => {
             {/* Brand Logo and Cart Indicator */}
             <div className="flex items-center">
               {/* Brand Logo */}
-              <div className="flex-shrink-0">
+              <Link to="/" className="flex-shrink-0">
                 <img className="h-16 w-auto" src={FruitShopLogo} alt="FruitShop Logo" /> {/* Adjusted logo height */}
-              </div>
+              </Link>
               <div className="ml-3 flex items-center">
                 <span className="text-red-600 font-bold text-3xl">|</span> {/* Single separator with increased size */}
                 <span className="text-red-600 font-bold text-3xl ml-3">Shopping Cart</span> {/* Increased text size for "Giỏ hàng" */}

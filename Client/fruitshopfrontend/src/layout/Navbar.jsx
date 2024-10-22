@@ -65,6 +65,11 @@ const Navbar = ({ setSearchQuery }) => {
     }
   };
 
+  const handleAvatarClick = () => {
+    // Navigate to the profile page with the user's ID
+    navigate(`/profile/${user.userId}`);
+  };
+
   const handleSellerRegistrationClick = () => {
     if (isAuthenticated) {
       navigate('/sellerRegistration');
@@ -134,8 +139,16 @@ const Navbar = ({ setSearchQuery }) => {
                 </>
               ) : (
                 <>
-                  <img src={userInfo.imageUserPath} alt="User avatar" className="h-8 w-8 rounded-full mx-4" />
-                  <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{userInfo.firstName} {userInfo.lastName}</span>
+                  <div className="flex items-center cursor-pointer" onClick={handleAvatarClick}>
+                    <img
+                      src={userInfo.imageUserPath}
+                      alt="User avatar"
+                      className="h-8 w-8 rounded-full mx-4"
+                    />
+                    <span className="text-white px-3 py-2 rounded-md text-sm font-medium">
+                      {userInfo.firstName} {userInfo.lastName}
+                    </span>
+                  </div>
                   <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
                 </>
               )}
@@ -144,8 +157,10 @@ const Navbar = ({ setSearchQuery }) => {
           {/* Bottom Row: Logo, Search and Cart */}
           <div className="flex items-center justify-start py-2 w-full">
             <div className="flex items-center mr-4">
-              <img className="h-16 w-auto mr-2" src={FruitShopLogo} alt="FruitShop Logo"/> {/* Reduced margin */}
-              <span className="text-white text-lg font-bold mr-8 ">Fruit Shop</span> {/* Reduced margin */}
+            <Link to="/" className="flex items-center">
+              <img className="h-16 w-auto mr-2" src={FruitShopLogo} alt="FruitShop Logo" /> {/* Reduced margin */}
+              <span className="text-white text-lg font-bold mr-8">Fruit Shop</span> {/* Reduced margin */}
+            </Link>
             </div>
             <div className="flex-grow relative">
                 <input

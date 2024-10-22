@@ -46,7 +46,7 @@ const App = () => {
           <Route path="/create-unit" element={<CreateUnit />} />
           <Route path="/update-unit/:unitFruitId" element={<UpdateUnit />} />
           <Route path="/addressListe" element={<AddressList />} />
-          <Route path="/profile" element={<ProfilePage />} /> 
+          <Route path="/profile/:userId" element={<ProfilePage />} /> 
           <Route path="/update-category/:categoryId" element={<UpdateCategoryForm />} />
           <Route path="/sellerRegistration" element={<SellerRegistrationPage/>}   />
           <Route path="/product/:productId" element={<ProductDetailPage />} />
