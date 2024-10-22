@@ -82,7 +82,7 @@ namespace FruitsShopBackend.Repositories
                 .Set(p => p.OverallRating, product.OverallRating)
                 .Set(p => p.Category, product.Category)
                 .Set(p => p.AvailableQuantity, product.AvailableQuantity)
-                .Set(p => p.SupplierId, product.SupplierId)
+                .Set(p => p.Supplier, product.Supplier)
                 .Set(p=> p.CloudImage, product.CloudImage)
                 .Set(p => p.UnitFruit, product.UnitFruit)
                 .Set(p => p.IsCertificate, product.IsCertificate);

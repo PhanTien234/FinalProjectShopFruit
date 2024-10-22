@@ -23,7 +23,7 @@ namespace FruitsShopBackend.Model
 
         public int AvailableQuantity { get; set; }
 
-        public string SupplierId { get; set; }
+        public SupplierDto Supplier { get; set; }
 
         public CloudImage CloudImage{ get; set; }
         public UnitFruitDto UnitFruit { get; set; }

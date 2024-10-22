@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import Navbar from '../layout/Navbar';  // Import the Navbar
+import Footer from '../layout/Footer';  
 
 const ProfilePage = () => {
   const { user, accessToken } = useAuth();
@@ -70,104 +72,110 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="container mx-auto mt-10">
-      <h2 className="text-xl font-semibold mb-4">My Profile</h2>
-      {/* Horizontal Dash */}
-      <div className="w-full border-t-2 border-red-500 mb-4"></div>
-      <form onSubmit={handleSubmit} className="flex flex-wrap justify-center">
-        <div className="lg:flex-1 px-4">
-          <div className="mb-4">
-            <label htmlFor="name" className="text-sm font-semibold">Name</label>
-            <input
-              id="name"
-              type="text"
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="Input your name"
-              className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="text-sm font-semibold">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="your-email@example.com"
-              className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
-            />
-          </div>
-          <div className="mb-4">
-            <label htmlFor="phone" className="text-sm font-semibold">Phone Number</label>
-            <input
-              id="phone"
-              type="tel"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
-              placeholder="0123456789"
-              className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
-            />
-          </div>
-          <div className="mb-4">
-            <span className="text-sm font-semibold">Gender</span>
-            <div className="mt-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="male"
-                  checked={gender === 'male'}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="form-radio"
-                />
-                <span className="ml-2">Male</span>
-              </label>
-              <label className="inline-flex items-center ml-6">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="female"
-                  checked={gender === 'female'}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="form-radio"
-                />
-                <span className="ml-2">Female</span>
-              </label>
-              <label className="inline-flex items-center ml-6">
-                <input
-                  type="radio"
-                  name="gender"
-                  value="other"
-                  checked={gender === 'other'}
-                  onChange={(e) => setGender(e.target.value)}
-                  className="form-radio"
-                />
-                <span className="ml-2">Other</span>
-              </label>
+    <>
+      <Navbar />
+      <div className="container mx-auto mt-4">
+        <h2 className="text-2xl font-bold my-6">My Profile</h2>
+        {/* Horizontal Dash */}
+        <div className="w-full border-t-2 border-red-500 mb-4"></div>
+        <form onSubmit={handleSubmit} className="flex flex-wrap justify-center">
+          <div className="lg:flex-1 px-4">
+            <div className="mb-4">
+              <label htmlFor="name" className="text-sm font-semibold">Name</label>
+              <input
+                id="name"
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Input your name"
+                className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
+              />
             </div>
+            <div className="mb-4">
+              <label htmlFor="email" className="text-sm font-semibold">Email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="your-email@example.com"
+                className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="phone" className="text-sm font-semibold">Phone Number</label>
+              <input
+                id="phone"
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="0123456789"
+                className="mt-1 w-full border rounded py-2 px-3 text-gray-700"
+              />
+            </div>
+            <div className="mb-4">
+              <span className="text-sm font-semibold">Gender</span>
+              <div className="mt-2">
+                <label className="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={gender === 'male'}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="form-radio"
+                  />
+                  <span className="ml-2">Male</span>
+                </label>
+                <label className="inline-flex items-center ml-6">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={gender === 'female'}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="form-radio"
+                  />
+                  <span className="ml-2">Female</span>
+                </label>
+                <label className="inline-flex items-center ml-6">
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="other"
+                    checked={gender === 'other'}
+                    onChange={(e) => setGender(e.target.value)}
+                    className="form-radio"
+                  />
+                  <span className="ml-2">Other</span>
+                </label>
+              </div>
+            </div>
+            <button type="submit" className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+              Save
+            </button>
           </div>
-          <button type="submit" className="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-            Save
-          </button>
-        </div>
-        {/* Vertical Dash */}
-        <div className="hidden lg:block w-px bg-red-300 lg:mx-4"></div>
-        <div className="lg:flex-1 flex flex-col items-center px-2">
-          <div className={`w-80 h-80 rounded-full border-4 border-gray-300 bg-gray-200 flex items-center justify-center overflow-hidden mb-4 ${imageUserPath && 'border-blue-400 border-8'}`}>
-            {imageUserPath ? (
-              <img src={imageUserPath} alt="Profile" className="object-cover w-full h-full" />
-            ) : (
-              <span className="text-gray-500">Avatar</span>
-            )}
+          {/* Vertical Dash */}
+          <div className="hidden lg:block w-px bg-red-300 lg:mx-4"></div>
+          <div className="lg:flex-1 flex flex-col items-center px-2">
+            <div className={`w-80 h-80 rounded-full border-4 border-gray-300 bg-gray-200 flex items-center justify-center overflow-hidden mb-4 ${imageUserPath && 'border-blue-400 border-8'}`}>
+              {imageUserPath ? (
+                <img src={imageUserPath} alt="Profile" className="object-cover w-full h-full" />
+              ) : (
+                <span className="text-gray-500">Avatar</span>
+              )}
+            </div>
+            <label className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+              Choose Image
+              <input type="file" className="hidden" onChange={handleAvatarChange} />
+            </label>
           </div>
-          <label className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
-            Choose Image
-            <input type="file" className="hidden" onChange={handleAvatarChange} />
-          </label>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
+      <div className="mt-8">
+        <Footer /> 
+      </div>
+    </>
   );
 };
 

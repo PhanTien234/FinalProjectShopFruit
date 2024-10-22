@@ -109,6 +109,7 @@ namespace FruitsShopBackend.Services
             var product = _mapper.Map<Product>(productDto);
 
             // Assign category to the product
+            product.Supplier = supplier;
             product.Category = category;
             product.UnitFruit = unit;
             // Set the user ID for the product
@@ -134,7 +135,6 @@ namespace FruitsShopBackend.Services
             existingProduct.Price = productDto.Price;
             existingProduct.OverallRating = productDto.OverallRating;
             existingProduct.AvailableQuantity = productDto.AvailableQuantity;
-            existingProduct.SupplierId = productDto.SupplierId;
 
             // Check if a new image is provided
             if (productDto.Image != null)
@@ -193,6 +193,7 @@ namespace FruitsShopBackend.Services
                 productDto.IsCertificate = false;
             }
             // Assign the category to the product
+            existingProduct.Supplier = supplier;
             existingProduct.Category = category;
             existingProduct.UnitFruit = unit;
 

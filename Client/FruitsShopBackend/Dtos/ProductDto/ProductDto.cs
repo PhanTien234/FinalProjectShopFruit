@@ -12,9 +12,9 @@ namespace FruitsShopBackend.Dtos
         public decimal DiscountPrice { get; set; }
         public decimal Price { get; set; }
         public double OverallRating { get; set; }
-        public string CategoryId { get; set; } // Change to CategoryId
+        public CategoryDto Category { get; set; } 
         public int AvailableQuantity { get; set; }
-        public string SupplierId { get; set; }
+        public SupplierDto Supplier { get; set; }
         public CloudImage CloudImage { get; set; }
         public UnitFruitDto UnitFruit { get; set; }
         public bool IsCertificate { get; set; }

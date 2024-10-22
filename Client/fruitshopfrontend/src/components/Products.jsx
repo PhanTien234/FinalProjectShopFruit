@@ -55,42 +55,44 @@ const Products = () => {
     <div className="overflow-x-auto bg-white rounded-lg shadow-md"> {/* Added shadow and background for better visibility */}
       <table className="table-auto w-full text-sm text-gray-600">
         <thead>
-          <tr>
-            <th className="px-4 py-2 border-b-2">Product ID</th>
-            <th className="px-4 py-2 border-b-2">Image</th>
-            <th className="px-4 py-2 border-b-2">Name</th>
-            <th className="px-4 py-2 border-b-2">Description</th>
-            <th className="px-4 py-2 border-b-2">Price</th>
-            <th className="px-4 py-2 border-b-2">Discount Price</th>
-            <th className="px-4 py-2 border-b-2">Overall Rating</th>
-            <th className="px-4 py-2 border-b-2">Supplier ID</th>
-            <th className="px-4 py-2 border-b-2">Is Certificate</th>
-            <th className="px-4 py-2 border-b-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map(product => (
-            <tr key={product.productId} className="hover:bg-gray-100">
-              <td className="border px-4 py-2">{product.productId}</td>
-              <td className="border px-4 py-2">
-                <img src={product.cloudImage.imagePath} alt={product.name} className="w-24 h-24 object-cover" />
-              </td>
-              <td className="border px-4 py-2">{product.name}</td>
-              <td className="border px-4 py-2">{product.description}</td>
-              <td className="border px-4 py-2">${product.price}</td>
-              <td className="border px-4 py-2">${product.discountPrice}</td>
-              <td className="border px-4 py-2">{product.overallRating}</td>
-              <td className="border px-4 py-2">{product.supplierId}</td>
-              <td className="border px-4 py-2">{product.isCertificate ? 'Yes' : 'No'}</td>
-              <td className="border px-4 py-2">
-              <Link to={`/update-product/${product.productId}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-                Edit
-              </Link>
-                <button onClick={() => handleDelete(product.productId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
-              </td>
+            <tr>
+              <th className="px-4 py-2 border-b-2">Product Number</th>
+              <th className="px-4 py-2 border-b-2">Image</th>
+              <th className="px-4 py-2 border-b-2">Name</th>
+              <th className="px-4 py-2 border-b-2">Description</th>
+              <th className="px-4 py-2 border-b-2">Price</th>
+              <th className="px-4 py-2 border-b-2">Discount Price</th>
+              <th className="px-4 py-2 border-b-2">Overall Rating</th>
+              <th className="px-4 py-2 border-b-2">Supplier</th>
+              <th className="px-4 py-2 border-b-2">Available Quantity</th>
+              <th className="px-4 py-2 border-b-2">Is Certificate</th>
+              <th className="px-4 py-2 border-b-2">Actions</th>
             </tr>
-          ))}
-        </tbody>
+          </thead>
+          <tbody>
+            {products.map((product, index) => (
+              <tr key={product.productId} className="hover:bg-gray-100">
+                <td className="border px-4 py-2">{index + 1}</td> {/* Displaying the index starting from 0 */}
+                <td className="border px-4 py-2">
+                  <img src={product.cloudImage.imagePath} alt={product.name} className="w-24 h-24 object-cover" />
+                </td>
+                <td className="border px-4 py-2">{product.name}</td>
+                <td className="border px-4 py-2">{product.description}</td>
+                <td className="border px-4 py-2">${product.price}</td>
+                <td className="border px-4 py-2">${product.discountPrice}</td>
+                <td className="border px-4 py-2">{product.overallRating}</td>
+                <td className="border px-4 py-2">{product.supplier.name}</td>
+                <td className="border px-4 py-2">{product.availableQuantity}</td>
+                <td className="border px-4 py-2">{product.isCertificate ? 'Yes' : 'No'}</td>
+                <td className="border px-4 py-2">
+                  <Link to={`/update-product/${product.productId}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
+                    Edit
+                  </Link>
+                  <button onClick={() => handleDelete(product.productId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
       </table>
     </div>
     <ToastContainer
