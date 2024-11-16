@@ -13,7 +13,7 @@ const ProductDescription = ({ productId }) => {
         const productData = productResponse.data;
 
         // Fetch supplier details
-        const supplierResponse = await axios.get(`https://localhost:5001/api/Supplier/${productData.supplierId}`);
+        const supplierResponse = await axios.get(`https://localhost:5001/api/Supplier/${productData.supplier.supplierId}`);
         const supplierData = supplierResponse.data;
 
         // Set state with fetched data

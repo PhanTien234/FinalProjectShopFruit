@@ -7,5 +7,6 @@ namespace FruitsShopBackend.Interfaces.IServices
     public interface ICloudinaryService
     {
         Task<CloudImage> UploadImageAsync(IFormFile file);
+        Task<CloudVideo> UploadVideoAsync(IFormFile file);
     }
 }

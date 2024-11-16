@@ -65,7 +65,8 @@ namespace FruitsShopBackend.Services
                     DiscountPrice = product.DiscountPrice,
                     Price = product.Price,
                     Quantity = 1,
-                    ImageUrl = product.CloudImage.ImagePath // Assuming CloudImage contains image information
+                    // Select the first image from the CloudImage list or null
+                    ImageUrl = product.CloudImages?.FirstOrDefault()?.ImagePath ?? null,
                 };
                 cart.Items.Add(newItem);
             }

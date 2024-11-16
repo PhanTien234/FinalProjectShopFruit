@@ -1,5 +1,6 @@
 ﻿using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace FruitsShopBackend.Dtos
 {
@@ -15,7 +16,8 @@ namespace FruitsShopBackend.Dtos
         public CategoryDto Category { get; set; } 
         public int AvailableQuantity { get; set; }
         public SupplierDto Supplier { get; set; }
-        public CloudImage CloudImage { get; set; }
+        public List<CloudImage> CloudImages { get; set; }
+        public List<CloudVideo> CloudVideos { get; set; }
         public UnitFruitDto UnitFruit { get; set; }
         public bool IsCertificate { get; set; }
     }

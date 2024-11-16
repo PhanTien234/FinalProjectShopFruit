@@ -35,5 +35,26 @@ namespace FruitsShopBackend.Services
                 ImagePath = uploadResult.SecureUrl.AbsoluteUri
             };
         }
+
+        public async Task<CloudVideo> UploadVideoAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return null;
+            }
+
+            var uploadParams = new VideoUploadParams
+            {
+                File = new FileDescription(file.FileName, file.OpenReadStream()),
+            };
+
+            var uploadResult = await _cloudinary.UploadAsync(uploadParams);
+
+            return new CloudVideo
+            {
+                VideoId = uploadResult.PublicId,
+                VideoPath = uploadResult.SecureUrl.AbsoluteUri
+            };
+        }
     }
 }

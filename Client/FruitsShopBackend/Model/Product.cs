@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using FruitsShopBackend.Dtos;
+using System.Collections.Generic;
 
 namespace FruitsShopBackend.Model
 {
@@ -25,7 +26,8 @@ namespace FruitsShopBackend.Model
 
         public SupplierDto Supplier { get; set; }
 
-        public CloudImage CloudImage{ get; set; }
+        public List<CloudImage> CloudImages { get; set; } = new List<CloudImage>(); 
+        public List<CloudVideo> CloudVideos { get; set; } = new List<CloudVideo>();
         public UnitFruitDto UnitFruit { get; set; }
 
         public bool IsCertificate { get; set; }

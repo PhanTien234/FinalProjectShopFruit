@@ -6,6 +6,7 @@ using FruitsShopBackend.Interfaces.IServices;
 using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FruitsShopBackend.Services
@@ -52,68 +53,45 @@ namespace FruitsShopBackend.Services
 
         public async Task<ProductDto> CreateProduct(string userId, ProductCreateUpdateDto productDto)
         {
-            if (productDto.Image != null)
-            {
-                // Upload image to Cloudinary
-                var cloudinaryResult = await _cloudinaryService.UploadImageAsync(productDto.Image);
-
-                // Set CloudImage details
-                productDto.CloudImage = new CloudImage
-                {
-                    ImageId = cloudinaryResult.ImageId,
-                    ImagePath = cloudinaryResult.ImagePath
-                };
-
-                var cloudImage = new CloudImage
-                {
-                    ImageId = cloudinaryResult.ImageId,
-                    ImagePath = cloudinaryResult.ImagePath
-                };
-                await _context.CloudImages.InsertOneAsync(cloudImage);
-
-            }
-            // Fetch category details based on CategoryId
-            var category = await _categoryService.GetCategoryById(productDto.CategoryId);
-            if (category == null)
-            {
-                // Handle case where category is not found
-                // You can return an error response or handle it as per your application's logic
-                return null;
-            }
-            // Fetch supplier details based on SupplierId
-            var supplier = await _supplierService.GetSupplierById(productDto.SupplierId);
-            if (supplier == null)
-            {
-                // Handle case where supplier is not found
-                // You can return an error response or handle it as per your application's logic
-                return null;
-            }
-            // Fetch unit details based on UnitFruitId
-            var unit = await _unitFruitService.GetUnitFruitById(productDto.UnitFruitId);
-            if (unit == null)
-            {
-                // Handle case where unit is not found
-                // You can return an error response or handle it as per your application's logic
-                return null;
-            }
-
-            if (!string.IsNullOrEmpty(productDto.SupplierId))
-            {
-                productDto.IsCertificate = true;
-            }
-            else
-            {
-                productDto.IsCertificate = false;
-            }
-            // Map DTO to Model
             var product = _mapper.Map<Product>(productDto);
-
-            // Assign category to the product
-            product.Supplier = supplier;
-            product.Category = category;
-            product.UnitFruit = unit;
-            // Set the user ID for the product
             product.UserId = userId;
+
+            // Upload multiple images
+            if (productDto.Images != null && productDto.Images.Any())
+            {
+                foreach (var image in productDto.Images)
+                {
+                    var result = await _cloudinaryService.UploadImageAsync(image);
+                    product.CloudImages.Add(new CloudImage
+                    {
+                        ImageId = result.ImageId,
+                        ImagePath = result.ImagePath
+                    });
+                }
+            }
+
+            // Upload multiple videos
+            if (productDto.Videos != null && productDto.Videos.Any())
+            {
+                foreach (var video in productDto.Videos)
+                {
+                    var result = await _cloudinaryService.UploadVideoAsync(video); // Assume this method exists
+                    product.CloudVideos.Add(new CloudVideo
+                    {
+                        VideoId = result.VideoId,
+                        VideoPath = result.VideoPath
+                    });
+                }
+            }
+
+            // Fetch and assign related entities
+            var category = await _categoryService.GetCategoryById(productDto.CategoryId);
+            var supplier = await _supplierService.GetSupplierById(productDto.SupplierId);
+            var unit = await _unitFruitService.GetUnitFruitById(productDto.UnitFruitId);
+            product.Category = category;
+            product.Supplier = supplier;
+            product.UnitFruit = unit;
+
             var createdProduct = await _productRepository.CreateProduct(userId, product);
             return _mapper.Map<ProductDto>(createdProduct);
         }
@@ -136,26 +114,34 @@ namespace FruitsShopBackend.Services
             existingProduct.OverallRating = productDto.OverallRating;
             existingProduct.AvailableQuantity = productDto.AvailableQuantity;
 
-            // Check if a new image is provided
-            if (productDto.Image != null)
+            // Update images
+            if (productDto.Images != null && productDto.Images.Any())
             {
-                // Upload the new image to Cloudinary
-                var cloudinaryResult = await _cloudinaryService.UploadImageAsync(productDto.Image);
-
-                // Set CloudImage details for the product
-                existingProduct.CloudImage = new CloudImage
+                existingProduct.CloudImages.Clear();
+                foreach (var image in productDto.Images)
                 {
-                    ImageId = cloudinaryResult.ImageId,
-                    ImagePath = cloudinaryResult.ImagePath
-                };
+                    var result = await _cloudinaryService.UploadImageAsync(image);
+                    existingProduct.CloudImages.Add(new CloudImage
+                    {
+                        ImageId = result.ImageId,
+                        ImagePath = result.ImagePath
+                    });
+                }
+            }
 
-                // Optionally, you can update CloudImage collection as well if needed
-                var cloudImage = new CloudImage
+            // Update videos
+            if (productDto.Videos != null && productDto.Videos.Any())
+            {
+                existingProduct.CloudVideos.Clear();
+                foreach (var video in productDto.Videos)
                 {
-                    ImageId = cloudinaryResult.ImageId,
-                    ImagePath = cloudinaryResult.ImagePath
-                };
-                await _context.CloudImages.InsertOneAsync(cloudImage);
+                    var result = await _cloudinaryService.UploadVideoAsync(video);
+                    existingProduct.CloudVideos.Add(new CloudVideo
+                    {
+                        VideoId = result.VideoId,
+                        VideoPath = result.VideoPath
+                    });
+                }
             }
 
             // Fetch category details based on CategoryId
