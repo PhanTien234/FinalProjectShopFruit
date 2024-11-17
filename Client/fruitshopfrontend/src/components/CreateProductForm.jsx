@@ -19,6 +19,9 @@ const CreateProductForm = () => {
     image: null,
     unitFruitId: '',
   });
+
+  const [images, setImages] = useState([]);
+  const [videos, setVideos] = useState([]);
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
   const [units, setUnits] = useState([]);
@@ -66,7 +69,11 @@ const CreateProductForm = () => {
   };
 
   const handleImageChange = (e) => {
-    setProductData({ ...productData, image: e.target.files[0] });
+    setImages([...e.target.files]);
+  };
+
+  const handleVideoChange = (e) => {
+    setVideos([...e.target.files]);
   };
 
   const handleSubmit = async (e) => {
@@ -74,6 +81,16 @@ const CreateProductForm = () => {
     const formData = new FormData();
     Object.entries(productData).forEach(([key, value]) => {
       formData.append(key, value);
+    });
+
+    // Append images
+    images.forEach((image) => {
+      formData.append('Images', image);
+    });
+
+    // Append videos
+    videos.forEach((video) => {
+      formData.append('Videos', video);
     });
 
     try {
@@ -156,8 +173,12 @@ const CreateProductForm = () => {
           <span className="text-gray-700">Yes</span>
         </div> */}
         <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Image:</label>
-          <input type="file" accept="image/*" name="image" onChange={handleImageChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+          <label className="block text-gray-700 text-sm font-bold mb-2">Images:</label>
+          <input type="file" accept="image/*" multiple onChange={handleImageChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Videos:</label>
+          <input type="file" accept="video/*" multiple onChange={handleVideoChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
         </div>
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Create Product</button>
       </form>

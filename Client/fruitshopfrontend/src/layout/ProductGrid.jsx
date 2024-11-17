@@ -83,7 +83,17 @@ const ProductGrid = ({ searchQuery, currentPage, setCurrentPage  }) => {
             onMouseLeave={() => setHoveredProductId(null)}
             onClick={() => handleProductClick(product.productId)}
             style={{ boxShadow: hoveredProductId === product.productId ? '0px 4px 6px rgba(0, 0, 0, 0.1)' : '0px 2px 4px rgba(0, 0, 0, 0.1)', cursor: 'pointer' }}>
-            <img src={product.cloudImage.imagePath} alt={product.name} className="w-full h-48 object-cover" />
+            <img
+                  src={
+                    product.cloudImages.length > 0
+                      ? product.cloudImages[0].imagePath
+                      : product.cloudVideos.length > 0
+                      ? product.cloudVideos[0].videoPath
+                      : "default-placeholder-image-url"
+                  }
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+            />
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
               <p className="text-gray-700 mb-4">{product.description}</p>

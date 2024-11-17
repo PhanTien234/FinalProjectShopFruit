@@ -74,7 +74,17 @@ const Products = () => {
               <tr key={product.productId} className="hover:bg-gray-100">
                 <td className="border px-4 py-2">{index + 1}</td> {/* Displaying the index starting from 0 */}
                 <td className="border px-4 py-2">
-                  <img src={product.cloudImage.imagePath} alt={product.name} className="w-24 h-24 object-cover" />
+                <img
+                  src={
+                    product.cloudImages.length > 0
+                      ? product.cloudImages[0].imagePath
+                      : product.cloudVideos.length > 0
+                      ? product.cloudVideos[0].videoPath
+                      : "default-placeholder-image-url"
+                  }
+                  alt={product.name}
+                  className="w-full h-48 object-cover"
+                />
                 </td>
                 <td className="border px-4 py-2">{product.name}</td>
                 <td className="border px-4 py-2">{product.description}</td>

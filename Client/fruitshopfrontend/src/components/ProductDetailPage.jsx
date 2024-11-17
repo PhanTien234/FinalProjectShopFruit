@@ -18,15 +18,19 @@ const ProductDetailPage = () => {
     <>
       <Navbar />
       <div className="container mx-auto p-4">
-        <div className="md:flex md:space-x-6">
-          <div className="md:w-1/2">
-            <ProductGallery productId={productId} /> 
+      <div className="md:flex md:space-x-6">
+          {/* Left Section: Product Gallery */}
+          <div className="md:w-1/2 flex flex-col items-center">
+            <div className="w-full max-w-lg">
+              <ProductGallery productId={productId} />
+            </div>
             <SocialShare />
           </div>
+          {/* Right Section: Product Info */}
           <div className="md:w-1/2 space-y-4">
-            <ProductInfo productId={productId}/>
+            <ProductInfo productId={productId} />
             <ColorOptions />
-            <ActionButtons productId={productId}/>
+            <ActionButtons productId={productId} />
           </div>
         </div>
         <div>
