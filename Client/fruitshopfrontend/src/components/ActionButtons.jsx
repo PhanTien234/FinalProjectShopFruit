@@ -30,12 +30,24 @@ const ActionButtons = ({ productId}) => {
     }
   };
 
+    // Function to handle "Make Order" button click
+    const handleMakeOrder = () => {
+      if (!isAuthenticated) {
+        navigate('/login'); // Redirect to login if not authenticated
+        return;
+      }
+      navigate(`/orderpage/${productId}`); // Navigate to OrderPage with the productId
+    };
+  
   return (
     <div className="space-x-4">
       <button className="bg-red-500 text-white py-2 px-4 rounded" onClick={handleAddToCart}>
         Add to Cart
       </button>
-      <button className="bg-blue-500 text-white py-2 px-4 rounded">Make Order</button>
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded" onClick={handleMakeOrder}>
+        Make Order
+      </button>
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center z-10 bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-lg">

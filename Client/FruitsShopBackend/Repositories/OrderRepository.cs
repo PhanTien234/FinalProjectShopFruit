@@ -65,7 +65,6 @@ namespace FruitsShopBackend.Repositories
                     ProductId = orderItemDto.ProductId,
                     Quantity = orderItemDto.Quantity,
                     PricePerUnit = product.Price,
-                    UserId = product.UserId,
                 });
             }
 

@@ -23,7 +23,7 @@ namespace FruitsShopBackend.Model
 
         public decimal DiscountAmount { get; set; }
 
-        public decimal TotalOrderValue { get; set; }
+        public decimal TotalPrices { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
 
@@ -40,12 +40,7 @@ namespace FruitsShopBackend.Model
         [BsonId]
         public string OrderItemId { get; set; }
         public string ProductId { get; set; }
-        public string UserId { get; set; }
-
         public int Quantity { get; set; }
-
-        public decimal PricePerUnit { get; set; }
-
-        public decimal TotalPrice { get { return Quantity * PricePerUnit; } }
+        public decimal Price { get; set; }
     }
 }

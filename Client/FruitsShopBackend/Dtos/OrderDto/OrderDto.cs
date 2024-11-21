@@ -34,12 +34,7 @@ namespace FruitsShopBackend.Dtos
     {
         public string OrderItemId { get; set; }
         public string ProductId { get; set; }
-        public string UserId { get; set; }
-
         public int Quantity { get; set; }
-
-        public decimal PricePerUnit { get; set; }
-
-        public decimal TotalPrice { get { return Quantity * PricePerUnit; } }
+        public decimal Price { get; set; }
     }
 }

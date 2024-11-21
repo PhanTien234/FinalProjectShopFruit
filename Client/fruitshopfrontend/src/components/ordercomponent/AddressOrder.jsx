@@ -55,22 +55,22 @@ const AddressComponent = () => {
     <div className="p-4 bg-white shadow-md rounded-lg">
       <div className="flex items-center space-x-2">
         <LocationMarkerIcon className="h-5 w-5 text-red-500" />
-        <h2 className="text-red-500 text-xl font-semibold">Địa chỉ nhận hàng</h2>
+        <h2 className="text-red-500 text-xl font-semibold">The Address for Received product</h2>
       </div>
       <div>
-        <span className="font-semibold">Họ và tên:</span> {addressInfo.fullName}
+        <span className="font-semibold">Full Name:</span> {addressInfo.fullName}
       </div>
       <div>
-        <span className="font-semibold">Số điện thoại:</span> {addressInfo.phoneNumberAddress}
+        <span className="font-semibold">Phone Number:</span> {addressInfo.phoneNumberAddress}
       </div>
       <div>
-        <span className="font-semibold">Địa chỉ chi tiết:</span> {addressInfo.address}
+        <span className="font-semibold">Detail Address:</span> {addressInfo.address}
       </div>
       <div>
-        <span className="font-semibold">Thành phố:</span> {addressInfo.city}
+        <span className="font-semibold">City:</span> {addressInfo.city}
       </div>
       <div>
-        <span className="font-semibold">Loại địa chỉ:</span> {addressInfo.addressType}
+        <span className="font-semibold">Type of Address:</span> {addressInfo.addressType}
       </div>
     </div>
   );

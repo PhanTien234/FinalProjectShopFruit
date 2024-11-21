@@ -37,7 +37,7 @@ const OrderPage = () => {
               </div>
               <div className="ml-3 flex items-center">
                 <span className="text-red-600 font-bold text-3xl">|</span> {/* Single separator with increased size */}
-                <span className="text-red-600 font-bold text-3xl ml-3">Thanh Toán</span> {/* Increased text size for "Giỏ hàng" */}
+                <span className="text-red-600 font-bold text-3xl ml-3">CHECKOUT</span> {/* Increased text size for "Giỏ hàng" */}
               </div>
             </div>
             

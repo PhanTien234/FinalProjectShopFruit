@@ -32,7 +32,7 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<CategoryDto>(category);
         }
 
-        public async Task<CategoryDto> CreateCategory(CategoryCreateDto categoryDto)
+        public async Task<CategoryDto> CreateCategory(CategoryCreateUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             category.CreatedAt = DateTime.UtcNow;
@@ -41,7 +41,7 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<CategoryDto>(createdCategory);
         }
 
-        public async Task UpdateCategory(string id, CategoryUpdateDto categoryDto)
+        public async Task UpdateCategory(string id, CategoryCreateUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
             await _categoryRepository.UpdateCategory(id, category);

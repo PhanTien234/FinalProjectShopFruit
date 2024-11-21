@@ -8,8 +8,8 @@ namespace FruitsShopBackend.Interfaces.IServices
     {
         Task<IEnumerable<CategoryDto>> GetAllCategories();
         Task<CategoryDto> GetCategoryById(string id);
-        Task<CategoryDto> CreateCategory(CategoryCreateDto categoryDto);
-        Task UpdateCategory(string id, CategoryUpdateDto categoryDto);
+        Task<CategoryDto> CreateCategory(CategoryCreateUpdateDto categoryDto);
+        Task UpdateCategory(string id, CategoryCreateUpdateDto categoryDto);
         Task DeleteCategory(string id);
     }
 }

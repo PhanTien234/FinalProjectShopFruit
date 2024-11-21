@@ -37,14 +37,14 @@ namespace FruitsShopBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CategoryCreateDto categoryDto)
+        public async Task<IActionResult> CreateCategory(CategoryCreateUpdateDto categoryDto)
         {
             var createdCategory = await _categoryService.CreateCategory(categoryDto);
             return Ok(new { Message = "Category created successfully.", Data = createdCategory });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(string id, CategoryUpdateDto categoryDto)
+        public async Task<IActionResult> UpdateCategory(string id, CategoryCreateUpdateDto categoryDto)
         {
             await _categoryService.UpdateCategory(id, categoryDto);
             return Ok(new { Message = "Category updated successfully." });

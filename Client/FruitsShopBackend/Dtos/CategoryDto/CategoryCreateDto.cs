@@ -1,6 +1,6 @@
 ﻿namespace FruitsShopBackend.Dtos
 {
-    public class CategoryCreateDto
+    public class CategoryCreateUpdateDto
     {
         public string Name { get; set; }
         public string Description { get; set; }

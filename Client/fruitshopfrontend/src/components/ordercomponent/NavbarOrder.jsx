@@ -95,9 +95,9 @@ const NavbarOrder = () => {
             {/* Navigation Links */}
             <div className="hidden sm:block sm:ml-6">
               <div className="flex space-x-4">
-                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Kênh Người Bán</a>
-                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Tải Ứng dụng</a>
-                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Kết nối</a>
+                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Seller Channel</a>
+                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Download App</a>
+                <a href="#" className="text-white px-3 py-2 rounded-md text-sm font-medium">Connection</a>
               </div>
             </div>
           </div>
@@ -127,9 +127,9 @@ const NavbarOrder = () => {
             {/* Auth Buttons or User Info */}
             {!isAuthenticated ? (
               <>
-                <a href="/register" className="text-white px-3 py-2 rounded-md text-sm font-medium ml-6">Đăng ký</a>
+                <a href="/register" className="text-white px-3 py-2 rounded-md text-sm font-medium ml-6">Register</a>
                 <span className="text-white mx-2">|</span>
-                <a href="/login" className="text-white px-3 py-2 rounded-md text-sm font-medium">Đăng nhập</a>
+                <a href="/login" className="text-white px-3 py-2 rounded-md text-sm font-medium">Login</a>
               </>
             ) : (
               <>

@@ -10,22 +10,22 @@ const OrderItemInfo = ({ item }) => {
           <div>
             <h3 className="text-lg font-semibold">{item.name}</h3>
             <p className="text-sm">{item.description}</p>
-            <p className="text-sm text-gray-600">Loại: {item.type}</p>
+            <p className="text-sm text-gray-600">Category: {item.type}</p>
           </div>
         </div>
 
         {/* Price, Quantity, and Total */}
         <div className="col-span-2 flex justify-between items-center">
           <div>
-            <p className="text-sm font-medium">Đơn giá</p>
+            <p className="text-sm font-medium">Unit Price</p>
             <p className="text-lg font-semibold">{item.price}</p>
           </div>
           <div>
-            <p className="text-sm font-medium">Số lượng</p>
+            <p className="text-sm font-medium">Quantity</p>
             <p className="text-lg font-semibold">{item.quantity}</p>
           </div>
           <div>
-            <p className="text-sm font-medium">Thành tiền</p>
+            <p className="text-sm font-medium">Price</p>
             <p className="text-lg font-semibold">{item.total}</p>
           </div>
         </div>
@@ -34,18 +34,18 @@ const OrderItemInfo = ({ item }) => {
       {/* Shipping Information */}
       <div className="flex justify-between items-center border-t border-gray-200 pt-4">
         <div>
-          <span className="font-medium">Đơn vị vận chuyển:</span>
+          <span className="font-medium">Shipping center:</span>
           <span className="ml-2 text-sm">{item.shipping}</span>
         </div>
         <div>
-          <span className="font-medium">Phí vận chuyển:</span>
+          <span className="font-medium">Shipping fee:</span>
           <span className="ml-2 text-sm">{item.shippingCost}</span>
         </div>
       </div>
 
       {/* Total Cost */}
       <div className="mt-4 text-right">
-        <p className="text-lg font-semibold">Tổng số tiền (sản phẩm + ship): {item.grandTotal}</p>
+        <p className="text-lg font-semibold">Total Price (product + ship): {item.grandTotal}</p>
       </div>
     </div>
   );
