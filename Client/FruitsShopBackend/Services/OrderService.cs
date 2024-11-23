@@ -1,4 +1,5 @@
-﻿using FruitsShopBackend.Constants;
+﻿using AutoMapper;
+using FruitsShopBackend.Constants;
 using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IRepositories;
 using FruitsShopBackend.Interfaces.IServices;
@@ -13,56 +14,117 @@ namespace FruitsShopBackend.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IProductRepository _productRepository;
         private readonly IOrderRepository _orderRepository;
+        private readonly IProductRepository _productRepository;
+        private readonly IUserAddressService _userAddressService;
+        private readonly IPaymentMethodService _paymentMethodService;
         private readonly IMailService _mailService;
         private readonly IUserService _userService;
-        public OrderService(IOrderRepository orderRepository, IMailService mailService, IUserService userService)
+        private readonly IMapper _mapper;
+
+        public OrderService(IOrderRepository orderRepository, IProductRepository productRepository, IUserAddressService userAddressService, 
+            IPaymentMethodService paymentMethodService, IMapper mapper, IMailService mailService, IUserService userService)
         {
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
+            _userAddressService = userAddressService;
+            _paymentMethodService = paymentMethodService;
             _mailService = mailService;
             _userService = userService;
-        }
-        public async Task<List<Order>> GetAllOrdersByUserId(string userId)
-        {
-            return await _orderRepository.GetAllOrdersByUserId(userId);
+            _mapper = mapper;
         }
 
-        public async Task<List<Order>> GetAllOrders()
+        public async Task<List<OrderDto>> GetAllOrdersByUserId(string userId)
         {
-            return await _orderRepository.GetAllOrders();
+            var orders = await _orderRepository.GetAllOrdersByUserId(userId);
+            return _mapper.Map<List<OrderDto>>(orders);
         }
 
-        public async Task<Order> CreateOrder(string userId, CreateOrderDto orderDto)
+        public async Task<List<OrderDto>> GetAllOrders()
         {
-            var order = await _orderRepository.CreateOrder(userId, orderDto);
-            await SendOrderNotificationToBuyer(order);
-            await SendOrderNotificationToSeller(order);
-            return order;
+            var orders = await _orderRepository.GetAllOrders();
+            return _mapper.Map<List<OrderDto>>(orders);
         }
 
-        public async Task<Order> GetOrderById(string orderId, string userId)
+        public async Task<OrderDto> CreateOrder(string userId, CreateOrderDto orderDto)
+        {
+            // Validate and process order items
+            var orderItems = new List<OrderItem>();
+            foreach (var orderItemDto in orderDto.OrderItems)
+            {
+                var product = await _productRepository.GetProductById(orderItemDto.ProductId);
+                if (product == null) throw new Exception($"Product with ID '{orderItemDto.ProductId}' not found.");
+                if (orderItemDto.Quantity <= 0) continue;
+                if (orderItemDto.Quantity > product.AvailableQuantity)
+                    throw new Exception($"Insufficient stock for product '{product.Name}'.");
+
+                product.AvailableQuantity -= orderItemDto.Quantity;
+                await _productRepository.UpdateProduct(product.UserId, product.ProductId, product);
+
+                orderItems.Add(new OrderItem
+                {
+                    OrderItemId = Guid.NewGuid().ToString(),
+                    ProductId = orderItemDto.ProductId,
+                    Quantity = orderItemDto.Quantity,
+                    Price = orderItemDto.Price,
+                });
+            }
+
+            // Fetch payment method and shipping address
+            var paymentMethod = await _paymentMethodService.GetPaymentMethodById(orderDto.PaymentMethodId)
+                                ?? throw new Exception("Payment method not found.");
+            var shippingAddress = await _userAddressService.GetAddressByIdAsync(userId, orderDto.ShippingAddressId)
+                                 ?? throw new Exception("Shipping address not found.");
+            // Determine payment status
+            var paymentStatus = paymentMethod.Name.Contains("Pay after receiving the order")
+                ? PaymentStatus.Unpaid
+                : PaymentStatus.Paid;
+
+            var order = new Order
+            {
+                UserId = userId,
+                OrderDate = DateTime.Now,
+                ShippingAddress = shippingAddress,
+                TotalPrices = orderDto.TotalPrices,
+                OrderStatus = OrderStatus.PrepareProducts,
+                PaymentStatus = PaymentStatus.Unpaid,
+                PaymentDate = paymentStatus == PaymentStatus.Paid ? orderDto.PaymentDate : null, // Set PaymentDate only if paid
+                PaymentMethod = paymentMethod,
+                OrderItems = orderItems
+            };
+
+            // Insert order into database
+            await _orderRepository.InsertOrder(order);
+            return _mapper.Map<OrderDto>(order);
+        }
+
+        public async Task<OrderDto> GetOrderById(string orderId, string userId)
         {
             var order = await _orderRepository.GetOrderById(orderId, userId);
-            await SendOrderNotificationToBuyer(order);
-            return order;
+            return _mapper.Map<OrderDto>(order);
         }
 
-        public async Task<Order> UpdateOrder(string orderId, string userId, UpdateOrderDto orderDto)
+        public async Task<OrderDto> UpdateOrder(string orderId, string userId, UpdateOrderDto orderDto)
         {
-            // Additional business logic can be added here if needed before calling the repository method
-            // For example, checking if the order can be updated based on its status
+            var existingOrder = await _orderRepository.GetOrderById(orderId, userId)
+                               ?? throw new Exception($"Order with ID '{orderId}' not found.");
 
-            // Call the repository method to update the order
-            return await _orderRepository.UpdateOrder(orderId, userId, orderDto);
+            // Update order details
+            var shippingAddress = await _userAddressService.GetAddressByIdAsync(userId, orderDto.ShippingAddressId)
+                                 ?? throw new Exception("Shipping address not found.");
+
+            existingOrder.ShippingAddress = shippingAddress;
+            existingOrder.OrderStatus = orderDto.OrderStatus;
+            existingOrder.PaymentStatus = orderDto.PaymentStatus;
+            existingOrder.PaymentDate = orderDto.PaymentDate;
+
+            // Update order in database
+            var updatedOrder = await _orderRepository.UpdateOrder(existingOrder);
+            return _mapper.Map<OrderDto>(updatedOrder);
         }
 
         public async Task DeleteOrder(string orderId, string userId)
         {
-            // Additional business logic can be added here if needed before calling the repository method
-            // For example, checking if the order can be deleted based on its status
-
-            // Call the repository method to delete the order
             await _orderRepository.DeleteOrder(orderId, userId);
         }
 
@@ -93,98 +155,41 @@ namespace FruitsShopBackend.Services
             // Replace placeholders with actual order details
             // Return the HTML content as a string
             return $@"
-                <html>
-                    <body>
-                        <h2>Order Details</h2>
-                        <p>Order ID: {order.OrderId}</p>
-                        <p>Order Date: {order.OrderDate}</p>
-                        <p>Shipping Address: {order.ShippingAddress}</p>
-                        <p>Total Order Value: {order.TotalOrderValue}</p>
-                        <p>Discount Amount: {order.DiscountAmount}</p>
-                        <p>Amount Paid: {order.AmountPaid}</p>
-                        <p>Payment Method: {order.PaymentMethod}</p>
-                    </body>
-                </html>
-            ";
+         <html>
+             <body>
+                 <h2>Order Details</h2>
+                 <p>Order ID: {order.OrderId}</p>
+                 <p>Order Date: {order.OrderDate}</p>
+                 <p>Shipping Address: {order.ShippingAddress}</p>
+                 <p>Total Order Value: {order.TotalPrices}</p>
+                 <p>Payment Method: {order.PaymentMethod}</p>
+             </body>
+         </html>
+     ";
         }
 
-        private string GenerateSellerOrderEmailBody( Order order)
+        private string GenerateSellerOrderEmailBody(Order order)
         {
             // Generate HTML body for the seller's email using order details
             // Include placeholders for orderId, orderDate, shippingAddress, etc.
             // Replace placeholders with actual order details
             // Return the HTML content as a string
             return $@"
-                <html>
-                    <body>
-                        <h2>New Order Details</h2>
-                        <p>Order ID: {order.OrderId}</p>
-                        <p>Order Date: {order.OrderDate}</p>
-                        <p>Shipping Address: {order.ShippingAddress}</p>
-                        <p>Total Order Value: {order.TotalOrderValue}</p>
-                        <p>Discount Amount: {order.DiscountAmount}</p>
-                        <p>Amount Paid: {order.AmountPaid}</p>
-                        <p>Payment Method: {order.PaymentMethod}</p>
-                    </body>
-                </html>
-            ";
+         <html>
+             <body>
+                 <h2>New Order Details</h2>
+                 <p>Order ID: {order.OrderId}</p>
+                 <p>Order Date: {order.OrderDate}</p>
+                 <p>Shipping Address: {order.ShippingAddress}</p>
+                 <p>Total Order Value: {order.TotalPrices}</p>
+                 <p>Payment Method: {order.PaymentMethod}</p>
+             </body>
+         </html>
+     ";
         }
 
-        /* public async Task<bool> UpdateOrderStatus(string orderId, string userId, OrderStatus status)
-         {
-             var order = await _orderRepository.GetOrderById(orderId, userId);
-             if (order == null) return false;
 
-             var updateOrderDto = new UpdateOrderDto
-             {
-                 ShippingAddressId = order.ShippingAddress.AddressId, // Assuming ShippingAddress has an AddressId
-                 DiscountAmount = order.DiscountAmount,
-                 OrderStatus = status,
-                 PaymentStatus = order.PaymentStatus,
-                 PaymentDate = order.PaymentDate,
-                 PaymentMethod = order.PaymentMethod,
-                 OrderItems = order.OrderItems.Select(oi => new OrderItemDto
-                 {
-                     ProductId = oi.ProductId,
-                     Quantity = oi.Quantity,
-                     UserId = oi.UserId // Assuming each OrderItem has a UserId
-                 }).ToList()
-             };
 
-             if (status == OrderStatus.Received && order.PaymentMethod == PaymentMethod.PayAfterReceivedProduct)
-             {
-                 updateOrderDto.PaymentStatus = PaymentStatus.Paid;
-                 updateOrderDto.PaymentDate = DateTime.UtcNow;
-             }
-
-             await _orderRepository.UpdateOrder(orderId, userId, updateOrderDto);
-             return true;
-         }
-
-         public async Task<bool> ProcessRefund(string orderId, string userId)
-         {
-             var order = await _orderRepository.GetOrderById(orderId, userId);
-             if (order == null || order.PaymentStatus != PaymentStatus.Paid) return false;
-
-             var updateOrderDto = new UpdateOrderDto
-             {
-                 ShippingAddressId = order.ShippingAddress.AddressId,
-                 DiscountAmount = order.DiscountAmount,
-                 OrderStatus = order.OrderStatus,
-                 PaymentStatus = PaymentStatus.Refund,
-                 PaymentDate = order.PaymentDate,
-                 PaymentMethod = order.PaymentMethod,
-                 OrderItems = order.OrderItems.Select(oi => new OrderItemDto
-                 {
-                     ProductId = oi.ProductId,
-                     Quantity = oi.Quantity,
-                     UserId = oi.UserId
-                 }).ToList()
-             };
-
-             await _orderRepository.UpdateOrder(orderId, userId, updateOrderDto);
-             return true;
-         }*/
 
     }
 }

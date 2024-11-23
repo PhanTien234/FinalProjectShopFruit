@@ -4,7 +4,6 @@
     {
         Paid,
         Unpaid,
-        Refund,
-        Complete
+        Refund
     }
 }

@@ -19,10 +19,6 @@ namespace FruitsShopBackend.Model
 
         public AddressDto ShippingAddress { get; set; }
 
-        public decimal AmountPaid { get; set; }
-
-        public decimal DiscountAmount { get; set; }
-
         public decimal TotalPrices { get; set; }
 
         public OrderStatus OrderStatus { get; set; }
@@ -31,7 +27,7 @@ namespace FruitsShopBackend.Model
 
         public DateTime? PaymentDate { get; set; }
 
-        public PaymentMethod PaymentMethod { get; set; }
+        public PaymentMethodDto PaymentMethod { get; set; }
 
         public List<OrderItem> OrderItems { get; set; }
     }

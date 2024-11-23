@@ -13,8 +13,7 @@ namespace FruitsShopBackend.Mappings
         public AutoMapperProfiles() 
         { 
             CreateMap<Category, CategoryDto>().ReverseMap();
-            CreateMap<CategoryCreateDto, Category>();
-            CreateMap<CategoryUpdateDto, Category>();
+            CreateMap<CategoryCreateUpdateDto, Category>();
             CreateMap<Product, ProductDto>().ReverseMap();
             CreateMap<ProductCreateUpdateDto, Product>();
             CreateMap<Cart, CartDto>()
@@ -29,9 +28,7 @@ namespace FruitsShopBackend.Mappings
             CreateMap<UpdateOrderDto, Order>();
             CreateMap<CreateOrderDto, OrderDto>();
             CreateMap<UpdateOrderDto, OrderDto>();
-            CreateMap<Order, OrderDto>()
-                .ForMember(dest => dest.TotalOrderValue, opt => opt.MapFrom(src => CalculateTotalOrderValue(src.OrderItems)))
-                .ForMember(dest => dest.AmountPaid, opt => opt.MapFrom(src => CalculateAmountPaid(src.OrderItems, src.DiscountAmount)));
+            CreateMap<Order, OrderDto>();
             CreateMap<OrderItem, OrderItemDto>();
             CreateMap<CreateOrderItemDto, OrderItemDto>();
             CreateMap<CreateOrderItemDto, OrderItem>();
@@ -54,22 +51,6 @@ namespace FruitsShopBackend.Mappings
                 totalPrice += item.Price * item.Quantity;
             }
             return totalPrice;
-        }
-
-        private decimal CalculateTotalOrderValue(List<OrderItem> orderItems)
-        {
-            decimal totalOrderValue = 0;
-            foreach (var orderItem in orderItems)
-            {
-                totalOrderValue += orderItem.Quantity * orderItem.PricePerUnit;
-            }
-            return totalOrderValue;
-        }
-
-        private decimal CalculateAmountPaid(List<OrderItem> orderItems, decimal discountAmount)
-        {
-            decimal totalOrderValue = CalculateTotalOrderValue(orderItems);
-            return totalOrderValue - discountAmount;
         }
 
     }

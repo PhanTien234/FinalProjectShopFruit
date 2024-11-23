@@ -1,5 +1,4 @@
-﻿using FruitsShopBackend.Constants;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 namespace FruitsShopBackend.Dtos
@@ -9,7 +8,7 @@ namespace FruitsShopBackend.Dtos
         public string ShippingAddressId { get; set; }
         public decimal TotalPrices { get; set; }
         public DateTime? PaymentDate { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
+        public string PaymentMethodId { get; set; }
         public List<CreateOrderItemDto> OrderItems { get; set; }
     }
     public class CreateOrderItemDto
