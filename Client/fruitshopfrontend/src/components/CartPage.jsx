@@ -62,7 +62,7 @@ const CartPage = () => {
       currentItems.map(item => {
         if (item.productId === productId) {
           const newQuantity = item.quantity + delta;
-          return { ...item, quantity: newQuantity >= 0 ? newQuantity : 0 };
+          return { ...item, quantity: Math.max(newQuantity, 1) }; // Ensure quantity is at least 1
         }
         return item;
       })

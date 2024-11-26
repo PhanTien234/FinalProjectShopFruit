@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import DeliveryVanIcon from '../assets/icons/delivery-van.png';
 import FreeshipLogo from '../assets/icons/freeshiplogo.jpg';
+import { QuantityContext } from '../components/ordercomponent/QuantityContext';
 import VoucherIcon from '../assets/icons/vouchericon.png';
 
 const ProductInfo = ({ productId }) => {
   const [product, setProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const { quantity, setQuantity } = useContext(QuantityContext);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -38,12 +39,12 @@ const ProductInfo = ({ productId }) => {
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">{product.name}</h1>
         <div className="flex items-center space-x-4">
-          <span className="text-2xl text-red-600 font-semibold">${product.discountPrice}</span>
-          <span className="text-xl line-through text-gray-500">${product.price}</span>
+          <span className="text-2xl text-red-600 font-semibold">{product.discountPrice} USD</span>
+          <span className="text-xl line-through text-gray-500">{product.price} USD</span>
         </div>
         <div className="flex items-center space-x-4">
           <img src={VoucherIcon} alt="Voucher" className="w-8 h-8" />
-          <span className="text-red-500">Save $2 with a voucher</span>
+          <span className="text-red-500">Save 2 USD with a voucher</span>
         </div>
         <div className="flex items-center space-x-4">
           <img src={DeliveryVanIcon} alt="Delivery" className="w-8 h-8" />

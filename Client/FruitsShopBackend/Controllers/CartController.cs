@@ -40,7 +40,7 @@ namespace FruitsShopBackend.Controllers
         public async Task<IActionResult> AddToCart([FromBody] AddToCartDto addToCartDto)
         {
             var userId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier); // Retrieve user ID from the token
-            await _cartService.AddToCart(userId, addToCartDto.ProductId);
+            await _cartService.AddToCart(userId, addToCartDto.ProductId, addToCartDto.Quantity);
             // Retrieve the updated cart after adding the item
             var cart = await _cartService.GetUserCart(userId);
             // Retrieve cart count

@@ -73,6 +73,7 @@ namespace FruitsShopBackend
             services.AddScoped<ICartRepository, CartRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentMethodRepository, PaymentMethodRepository>();
             services.AddScoped<IUserAddressRepository, UserAddressRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
             services.AddScoped<IUnitFruitRepository, UnitFruitRepository>();
@@ -86,6 +87,7 @@ namespace FruitsShopBackend
             services.AddScoped<ICloudinaryService, CloudinaryService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IPaymentMethodService, PaymentMethodService>();
             services.AddScoped<IUserAddressService, UserAddressService>();
             services.AddScoped<IUnitFruitService, UnitFruitServices>();
             services.AddScoped<ISupplierService, SupplierService>();

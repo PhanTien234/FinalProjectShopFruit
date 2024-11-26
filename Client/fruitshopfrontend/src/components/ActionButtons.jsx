@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
+import { QuantityContext } from '../components/ordercomponent/QuantityContext';
 
 const ActionButtons = ({ productId}) => {
   const navigate = useNavigate();
   const { isAuthenticated, accessToken } = useAuth();
+  const { quantity, setQuantity} = useContext(QuantityContext);
   const [showModal, setShowModal] = useState(false);
 
   
@@ -15,7 +17,7 @@ const ActionButtons = ({ productId}) => {
       return;
     }
 
-    try {const response = await axios.post('https://localhost:5001/api/Cart/add', { productId }, {
+    try {const response = await axios.post('https://localhost:5001/api/Cart/add', { productId, quantity }, {
         headers: {
           Authorization: `Bearer ${accessToken}`
         }
@@ -24,6 +26,8 @@ const ActionButtons = ({ productId}) => {
       // Update cartItemCount in Navbar
       window.dispatchEvent(new CustomEvent('cartItemCountUpdate', { detail: cartItemCount }));
       setShowModal(true);
+      // Reset quantity to default (1)
+      setQuantity(1);
     } catch (error) {
       console.error('Error adding to cart:', error.response || error.message);
       // Handle error, maybe display a message to the user
@@ -36,7 +40,7 @@ const ActionButtons = ({ productId}) => {
         navigate('/login'); // Redirect to login if not authenticated
         return;
       }
-      navigate(`/orderpage/${productId}`); // Navigate to OrderPage with the productId
+      navigate(`/orderpage/${productId}`, { state: { quantity } }); // Navigate to OrderPage with the productId
     };
   
   return (

@@ -40,6 +40,8 @@ namespace FruitsShopBackend.Mappings
             CreateMap<SupplierUpdateDto, Supplier>();
             CreateMap<UnitFruit, UnitFruitDto>().ReverseMap();
             CreateMap<UnitFruitCreateUpdateDto, UnitFruit>();
+            CreateMap<PaymentMethod, PaymentMethodDto>().ReverseMap();
+            CreateMap<PaymentMethodCreateUpdateDto, PaymentMethod>();
 
         }
 

@@ -30,7 +30,7 @@ namespace FruitsShopBackend.Services
             return _mapper.Map<CartDto>(cart);
         }
 
-        public async Task AddToCart(string userId, string productId)
+        public async Task AddToCart(string userId, string productId, int quantity)
         {
             var cart = await _cartRepository.GetCartByUserId(userId);
 
@@ -42,18 +42,13 @@ namespace FruitsShopBackend.Services
             // Fetch product details from the Product API based on the productId
             var product = await _productService.GetProductById(productId);
 
-            if (product == null)
-            {
-                // Handle case where product with the given ID does not exist
-                // You can return an error response or handle it as per your application's logic
-                return;
-            }
+            if (product == null) return;
 
             var existingItem = cart.Items.FirstOrDefault(item => item.ProductId == productId);
 
             if (existingItem != null)
             {
-                existingItem.Quantity++;
+                existingItem.Quantity += quantity; // Increment quantity based on the input
             }
             else
             {
@@ -64,7 +59,7 @@ namespace FruitsShopBackend.Services
                     Description = product.Description,
                     DiscountPrice = product.DiscountPrice,
                     Price = product.Price,
-                    Quantity = 1,
+                    Quantity = quantity,
                     // Select the first image from the CloudImage list or null
                     ImageUrl = product.CloudImages?.FirstOrDefault()?.ImagePath ?? null,
                 };
