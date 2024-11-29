@@ -1,6 +1,7 @@
 ﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
 using System;
+using System.Collections.Generic;
 
 namespace FruitsShopBackend.Model
 {
@@ -13,6 +14,7 @@ namespace FruitsShopBackend.Model
         public string Name { get; set; }
 
         public string Description { get; set; }
+        public CloudImage CloudImage { get; set; } = new CloudImage();
 
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime CreatedAt { get; set; }

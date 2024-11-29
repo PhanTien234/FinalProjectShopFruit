@@ -7,7 +7,8 @@ const CreateCategoryForm = () => {
   const [showModal, setShowModal] = useState(false);
   const [categoryData, setCategoryData] = useState({
     name: '',
-    description: ''
+    description: '',
+    image: null, // To store the selected image
   });
 
   const handleChange = (e) => {
@@ -15,11 +16,27 @@ const CreateCategoryForm = () => {
     setCategoryData({ ...categoryData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setCategoryData({ ...categoryData, image: file }); // Update the image in the state
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append('name', categoryData.name);
+    formData.append('description', categoryData.description);
+    if (categoryData.image) {
+      formData.append('image', categoryData.image); // Add the image to the form data
+    }
+
     try {
-      const response = await axios.post('https://localhost:5001/api/Category', categoryData);
+      const response = await axios.post('https://localhost:5001/api/Category', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       console.log('Category created:', response.data);
       setShowModal(true); // Show modal after successful creation
     } catch (error) {
@@ -38,20 +55,50 @@ const CreateCategoryForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-          <input type="text" name="name" value={categoryData.name} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+          <input
+            type="text"
+            name="name"
+            value={categoryData.name}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md py-2 px-3 w-full"
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-          <textarea name="description" value={categoryData.description} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full h-24 resize-none"></textarea>
+          <textarea
+            name="description"
+            value={categoryData.description}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md py-2 px-3 w-full h-24 resize-none"
+          ></textarea>
         </div>
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Create Category</button>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Category Image:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border border-gray-300 rounded-md py-2 px-3 w-full"
+          />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Create Category
+        </button>
       </form>
       {/* Modal for success message */}
       {showModal && (
         <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="bg-white p-6 rounded shadow-lg flex flex-col items-center">
             <p className="text-lg font-semibold mb-4">Category created successfully!</p>
-            <button onClick={handleModalClose} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">OK</button>
+            <button
+              onClick={handleModalClose}
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}

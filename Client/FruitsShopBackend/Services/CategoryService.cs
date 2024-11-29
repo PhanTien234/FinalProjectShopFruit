@@ -12,11 +12,13 @@ namespace FruitsShopBackend.Services
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ICloudinaryService _cloudinaryService;
         private readonly IMapper _mapper;
 
-        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
+        public CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ICloudinaryService cloudinaryService)
         {
             _categoryRepository = categoryRepository;
+            _cloudinaryService = cloudinaryService;
             _mapper = mapper;
         }
 
@@ -35,8 +37,17 @@ namespace FruitsShopBackend.Services
         public async Task<CategoryDto> CreateCategory(CategoryCreateUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
+            // Handle image upload
+            if (categoryDto.Image != null)
+            {
+                var result = await _cloudinaryService.UploadImageAsync(categoryDto.Image);
+                category.CloudImage = new CloudImage
+                {
+                    ImageId = result.ImageId,
+                    ImagePath = result.ImagePath
+                };
+            }
             category.CreatedAt = DateTime.UtcNow;
-
             var createdCategory = await _categoryRepository.CreateCategory(category);
             return _mapper.Map<CategoryDto>(createdCategory);
         }
@@ -44,6 +55,16 @@ namespace FruitsShopBackend.Services
         public async Task UpdateCategory(string id, CategoryCreateUpdateDto categoryDto)
         {
             var category = _mapper.Map<Category>(categoryDto);
+            // Handle image upload
+            if (categoryDto.Image != null)
+            {
+                var result = await _cloudinaryService.UploadImageAsync(categoryDto.Image);
+                category.CloudImage = new CloudImage
+                {
+                    ImageId = result.ImageId,
+                    ImagePath = result.ImagePath
+                };
+            }
             await _categoryRepository.UpdateCategory(id, category);
         }
 

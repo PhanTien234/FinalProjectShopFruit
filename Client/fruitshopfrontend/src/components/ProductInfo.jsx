@@ -33,14 +33,13 @@ const ProductInfo = ({ productId }) => {
       setQuantity(quantity - 1);
     }
   };
-
   return (
     product && (
       <div className="space-y-4">
         <h1 className="text-3xl font-bold">{product.name}</h1>
         <div className="flex items-center space-x-4">
-          <span className="text-2xl text-red-600 font-semibold">{product.discountPrice} USD</span>
-          <span className="text-xl line-through text-gray-500">{product.price} USD</span>
+        <span className="text-2xl text-red-600 font-semibold">{product.price} USD</span>
+          <span className="text-xl line-through text-gray-500">{product.discountPrice} USD</span>
         </div>
         <div className="flex items-center space-x-4">
           <img src={VoucherIcon} alt="Voucher" className="w-8 h-8" />

@@ -50,6 +50,7 @@ const Categories = () => {
               <th className="px-4 py-2">Category ID</th>
               <th className="px-4 py-2">Name</th>
               <th className="px-4 py-2">Description</th>
+              <th className="px-4 py-2">Image</th>
               <th className="px-4 py-2">Created At</th>
               <th className="px-4 py-2">Actions</th>
             </tr>
@@ -60,6 +61,11 @@ const Categories = () => {
                 <td className="border px-4 py-2">{category.id}</td>
                 <td className="border px-4 py-2">{category.name}</td>
                 <td className="border px-4 py-2">{category.description}</td>
+                <td className="border px-4 py-2">
+                  {category.cloudImage?.imagePath && (
+                    <img src={category.cloudImage.imagePath} alt={category.name} className="h-16 w-16 object-cover" />
+                  )}
+                </td>
                 <td className="border px-4 py-2">{new Date(category.createdAt).toLocaleString()}</td>
                 <td className="border px-4 py-2">
                   <Link to={`/update-category/${category.id}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">

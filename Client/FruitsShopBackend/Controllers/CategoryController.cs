@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using FruitsShopBackend.Dtos;
+﻿using FruitsShopBackend.Dtos;
 using FruitsShopBackend.Interfaces.IServices;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -37,14 +36,14 @@ namespace FruitsShopBackend.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory(CategoryCreateUpdateDto categoryDto)
+        public async Task<IActionResult> CreateCategory([FromForm] CategoryCreateUpdateDto categoryDto)
         {
             var createdCategory = await _categoryService.CreateCategory(categoryDto);
             return Ok(new { Message = "Category created successfully.", Data = createdCategory });
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(string id, CategoryCreateUpdateDto categoryDto)
+        public async Task<IActionResult> UpdateCategory(string id, [FromForm] CategoryCreateUpdateDto categoryDto)
         {
             await _categoryService.UpdateCategory(id, categoryDto);
             return Ok(new { Message = "Category updated successfully." });

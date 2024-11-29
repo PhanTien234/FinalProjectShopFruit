@@ -10,6 +10,8 @@ const UpdateCategoryForm = () => {
   const [categoryData, setCategoryData] = useState({
     name: '',
     description: '',
+    image: null, // To store the uploaded image file
+    imagePath: '', // To display the current image
   });
 
   useEffect(() => {
@@ -19,7 +21,13 @@ const UpdateCategoryForm = () => {
   const fetchCategory = async () => {
     try {
       const response = await axios.get(`https://localhost:5001/api/Category/${categoryId}`);
-      setCategoryData(response.data);
+      const { name, description, cloudImage } = response.data;
+      setCategoryData({
+        name,
+        description,
+        image: null, // Keep image as null initially
+        imagePath: cloudImage?.imagePath || '', // Set existing image URL
+      });
     } catch (error) {
       console.error('Error fetching category:', error);
     }
@@ -30,10 +38,26 @@ const UpdateCategoryForm = () => {
     setCategoryData({ ...categoryData, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setCategoryData({ ...categoryData, image: file });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`https://localhost:5001/api/Category/${categoryId}`, categoryData);
+      const formData = new FormData();
+      formData.append('name', categoryData.name);
+      formData.append('description', categoryData.description);
+      if (categoryData.image) {
+        formData.append('image', categoryData.image); // Append the image if it exists
+      }
+
+      await axios.put(`https://localhost:5001/api/Category/${categoryId}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       setShowModal(true); // Show modal after successful update
     } catch (error) {
       console.error('Error updating category:', error);
@@ -51,20 +75,51 @@ const UpdateCategoryForm = () => {
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Name:</label>
-          <input type="text" name="name" value={categoryData.name} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+          <input
+            type="text"
+            name="name"
+            value={categoryData.name}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md py-2 px-3 w-full"
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Description:</label>
-          <textarea name="description" value={categoryData.description} onChange={handleChange} className="border border-gray-300 rounded-md py-2 px-3 w-full h-24 resize-none"></textarea>
+          <textarea
+            name="description"
+            value={categoryData.description}
+            onChange={handleChange}
+            className="border border-gray-300 rounded-md py-2 px-3 w-full h-24 resize-none"
+          ></textarea>
         </div>
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Update Category</button>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Current Image:</label>
+          {categoryData.imagePath && (
+            <img src={categoryData.imagePath} alt="Current Category" className="w-40 h-40 mb-2 object-cover" />
+          )}
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Upload New Image:</label>
+          <input type="file" onChange={handleImageChange} className="border border-gray-300 rounded-md py-2 px-3 w-full" />
+        </div>
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+        >
+          Update Category
+        </button>
       </form>
       {/* Modal for success message */}
       {showModal && (
         <div className="fixed top-0 left-0 z-50 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-75">
           <div className="bg-white p-6 rounded shadow-lg flex flex-col items-center">
             <p className="text-lg font-semibold mb-4">Category updated successfully!</p>
-            <button onClick={handleModalClose} className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">OK</button>
+            <button
+              onClick={handleModalClose}
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+            >
+              OK
+            </button>
           </div>
         </div>
       )}
