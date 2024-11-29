@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import PaymentByPayPalModal from "../payment/PaymentByPayPalModal";
 
 const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod }) => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showPayPalModal, setShowPayPalModal] = useState(false);
 
 // Calculate total price and total payment dynamically
   const totalPriceProduct = orderItems.reduce((total, item) => total + parseFloat(item.total || 0), 0); // Sum of all item totals
@@ -38,6 +40,12 @@ const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod }) => {
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
     setPaymentMethod(method);// Update parent state when payment method changes
+    // Show PayPal modal if "PaymentByPayPal" is part of the payment method name
+    if (method.name.includes("PayPal")) {
+      setShowPayPalModal(true);
+    } else {
+      setShowPayPalModal(false);
+    }
     setIsDropdownOpen(false); // Close the dropdown after selection
   };
 
@@ -99,6 +107,13 @@ const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod }) => {
           </a>
         </p>
       </div>
+
+      {showPayPalModal && (
+        <PaymentByPayPalModal
+          totalPayment={totalPayment}
+          onClose={() => setShowPayPalModal(false)}
+        />
+      )}
     </div>
   );
 };
