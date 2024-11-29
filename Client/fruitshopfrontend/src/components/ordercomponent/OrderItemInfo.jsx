@@ -18,15 +18,15 @@ const OrderItemInfo = ({ item }) => {
         <div className="col-span-2 flex justify-between items-center">
           <div>
             <p className="text-sm font-medium">Unit Price</p>
-            <p className="text-lg font-semibold">{item.price}</p>
+            <p className="text-lg font-semibold">{item.price} USD</p>
           </div>
           <div>
             <p className="text-sm font-medium">Quantity</p>
-            <p className="text-lg font-semibold">{item.quantity}</p>
+            <p className="text-lg font-semibold">{item.quantity} {item.unit}</p>
           </div>
           <div>
             <p className="text-sm font-medium">Price</p>
-            <p className="text-lg font-semibold">{item.total}</p>
+            <p className="text-lg font-semibold">{item.total} USD</p>
           </div>
         </div>
       </div>
@@ -39,13 +39,13 @@ const OrderItemInfo = ({ item }) => {
         </div>
         <div>
           <span className="font-medium">Shipping fee:</span>
-          <span className="ml-2 text-sm">{item.shippingCost}</span>
+          <span className="ml-2 text-sm">{(item.shippingCost).toFixed(2)} USD</span>
         </div>
       </div>
 
       {/* Total Cost */}
       <div className="mt-4 text-right">
-        <p className="text-lg font-semibold">Total Price (product + ship): {item.grandTotal}</p>
+        <p className="text-lg font-semibold">Total Price (product + ship): {item.grandTotal} USD</p>
       </div>
     </div>
   );

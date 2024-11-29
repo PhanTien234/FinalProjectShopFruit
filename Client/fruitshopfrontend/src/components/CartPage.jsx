@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import NavbarCart from '../layout/NavbarCart';
 import Footer from '../layout/Footer';
 import {SearchIcon, PlusIcon, MinusIcon, ShoppingCartIcon} from '@heroicons/react/outline';
 import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
-
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
   const { accessToken } = useAuth(); // Access the access token from AuthContext
+  const [userId, setUserId] = useState(null); // Store userId
   const [selectedItems, setSelectedItems] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -21,6 +22,7 @@ const CartPage = () => {
           }
         });
         setCartItems(response.data.cart.items);
+        setUserId(response.data.cart.userId);
         // Initialize all items as selected
       const initialSelectedItems = {};
       response.data.cart.items.forEach(item => {
@@ -36,8 +38,21 @@ const CartPage = () => {
   }, [accessToken]); // Include accessToken in the dependency array
 
   const handleCheckout = () => {
-    // Implement the logic for handling checkout or navigating to the checkout page
-    console.log('Proceed to checkout with selected items:', selectedItems);
+    // Filter selected items
+    const selectedOrderItems = cartItems.filter((item) => selectedItems[item.productId]);
+
+    if (selectedOrderItems.length === 0) {
+      alert('Please select at least one item to order.');
+      return;
+    }
+
+    if (!userId) {
+      alert('Unable to fetch user details. Please try again.');
+      return;
+    }
+
+    // Navigate to OrderPage with selected items
+    navigate(`/checkoutcart/${userId}`, { state: { orderItems: selectedOrderItems } });
   };
   
   const handleRemoveFromCart = async (productId) => {
@@ -57,7 +72,7 @@ const CartPage = () => {
     }
   };
 
-  const handleQuantityChange = (productId, delta) => {
+  const handleQuantityChange = async (productId, delta) => {
     setCartItems(currentItems =>
       currentItems.map(item => {
         if (item.productId === productId) {
@@ -67,6 +82,32 @@ const CartPage = () => {
         return item;
       })
     );
+  
+    const updatedItem = cartItems.find(item => item.productId === productId);
+    const newQuantity = updatedItem.quantity + delta;
+  
+    // Ensure quantity is at least 1
+    if (newQuantity < 1) return;
+  
+    try {
+      // Call the updateCartItem API
+      await axios.put(
+        'https://localhost:5001/api/Cart/updateCartItem',
+        {
+          productId: productId,
+          quantity: newQuantity,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`, // Send the access token in the request headers
+          },
+        }
+      );
+  
+      console.log('Cart item updated successfully!');
+    } catch (error) {
+      console.error('Error updating cart item:', error.response || error.message);
+    }
   };
 
   const handleSelectItem = (productId) => {
@@ -208,7 +249,7 @@ const CartPage = () => {
               <tfoot>
                 <tr>
                   <td colSpan="4" className="text-right px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    Total Price: {getTotalPrice().toLocaleString()}
+                    Total Price: {getTotalPrice().toLocaleString()} USD
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <button

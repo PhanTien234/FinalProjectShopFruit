@@ -40,7 +40,7 @@ const ActionButtons = ({ productId}) => {
         navigate('/login'); // Redirect to login if not authenticated
         return;
       }
-      navigate(`/orderpage/${productId}`, { state: { quantity } }); // Navigate to OrderPage with the productId
+      navigate(`/checkout/${productId}`, { state: { quantity } }); // Navigate to OrderPage with the productId
     };
   
   return (

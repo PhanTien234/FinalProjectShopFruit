@@ -3,7 +3,7 @@ import { LocationMarkerIcon } from '@heroicons/react/outline';
 import axios from 'axios';
 import { useAuth } from '../../components/AuthContext';
 
-const AddressComponent = () => {
+const AddressComponent = ({ setShippingAddressId }) => {
   const [addressInfo, setAddressInfo] = useState({
     fullName: '',
     phoneNumberAddress: '',
@@ -28,15 +28,19 @@ const AddressComponent = () => {
           phoneNumberAddress: userAddress.phoneNumberAddress,
           city: userAddress.city,
           addressType: getAddressTypeText(userAddress.addressType),
-          address: userAddress.address
+          address: userAddress.address,
+          addressId: userAddress.addressId // Store AddressId
         });
+
+        // Pass AddressId to the parent
+        setShippingAddressId(userAddress.addressId);
       } catch (error) {
         console.error('Error fetching address info:', error);
       }
     };
 
     fetchAddressInfo();
-  }, [accessToken]);
+  }, [accessToken, setShippingAddressId]);
 
   const getAddressTypeText = (addressType) => {
     switch (addressType) {

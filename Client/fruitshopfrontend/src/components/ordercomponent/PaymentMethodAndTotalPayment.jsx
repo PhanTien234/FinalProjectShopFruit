@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const PaymentMethodAndTotalPayment = () => {
+const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod }) => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+// Calculate total price and total payment dynamically
+  const totalPriceProduct = orderItems.reduce((total, item) => total + parseFloat(item.total || 0), 0); // Sum of all item totals
+  const shippingCost = orderItems.reduce((total, item) => total + parseFloat(item.shippingCost || 0), 0); // Sum of all shipping costs
+  const totalPayment = totalPriceProduct + shippingCost;
 
   useEffect(() => {
     // Fetch payment methods from the API
@@ -14,7 +19,9 @@ const PaymentMethodAndTotalPayment = () => {
         const methods = response.data;
         setPaymentMethods(methods);
         if (methods.length > 0) {
-          setSelectedPaymentMethod(methods[0]); // Set the first method as default
+          const defaultMethod = methods[0];
+          setSelectedPaymentMethod(defaultMethod);// Set the first method as default
+          setPaymentMethod(defaultMethod); // Update parent state
         }
       } catch (error) {
         console.error('Error fetching payment methods:', error);
@@ -22,7 +29,7 @@ const PaymentMethodAndTotalPayment = () => {
     };
 
     fetchPaymentMethods();
-  }, []);
+  }, [setPaymentMethod]);
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -30,6 +37,7 @@ const PaymentMethodAndTotalPayment = () => {
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
+    setPaymentMethod(method);// Update parent state when payment method changes
     setIsDropdownOpen(false); // Close the dropdown after selection
   };
 
@@ -67,15 +75,15 @@ const PaymentMethodAndTotalPayment = () => {
       <div className="border-t border-gray-200 pt-4">
         <div className="flex justify-between mb-2">
           <p>Total Price Product</p>
-          <p>170.000 USD</p>
+          <p>{`${totalPriceProduct.toFixed(2)} USD`}</p>
         </div>
         <div className="flex justify-between mb-2">
           <p>Shipping fee</p>
-          <p>38.000USD</p>
+          <p>{`${shippingCost.toFixed(2)} USD`}</p>
         </div>
         <div className="flex justify-between mb-2 font-semibold">
           <p>Total payment</p>
-          <p className="text-lg text-red-600">208.000USD</p>
+          <p className="text-lg text-red-600">{`${totalPayment.toFixed(2)} USD`}</p>
         </div>
       </div>
       <div className="mt-4 flex justify-between items-center">
@@ -90,7 +98,6 @@ const PaymentMethodAndTotalPayment = () => {
             FruitShop Terms
           </a>
         </p>
-        <button className="bg-red-600 text-white px-6 py-2 rounded">Order</button>
       </div>
     </div>
   );
