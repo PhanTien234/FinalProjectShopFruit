@@ -31,17 +31,17 @@ namespace FruitsShopBackend.Controllers
             }
         }
 
-        [HttpPost("capture-order")]
-        public async Task<IActionResult> CaptureOrder([FromBody] string orderId)
+        [HttpPost("send-payment")]
+        public async Task<IActionResult> SendPayment([FromBody] SendPaymentDto paymentDto)
         {
             try
             {
-                await _payPalService.CaptureOrder(orderId);
-                return Ok("Order captured successfully.");
+                await _payPalService.SendPayment(paymentDto.RecipientEmail, paymentDto.Amount);
+                return Ok("Payment sent successfully.");
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Error capturing PayPal order: {ex.Message}");
+                return StatusCode(500, $"Error sending payment: {ex.Message}");
             }
         }
 
@@ -73,18 +73,5 @@ namespace FruitsShopBackend.Controllers
             }
         }
 
-        [HttpPost("send-payment")]
-        public async Task<IActionResult> SendPayment([FromBody] SendPaymentDto paymentDto)
-        {
-            try
-            {
-                await _payPalService.SendPayment(paymentDto.RecipientEmail, paymentDto.Amount);
-                return Ok("Payment sent successfully.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error sending payment: {ex.Message}");
-            }
-        }
     }
 }

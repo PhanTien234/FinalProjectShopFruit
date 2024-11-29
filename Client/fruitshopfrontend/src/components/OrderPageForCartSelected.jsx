@@ -162,6 +162,7 @@ const OrderPageForCartSelected = () => {
         <PaymentMethodAndTotalPayment
         orderItems={cartItems}
         setPaymentMethod={setPaymentMethod}
+        handleOrderSubmit={handleOrderSubmit} // Pass the method as a prop
         />
       </div>
       <div className="flex justify-center my-8">

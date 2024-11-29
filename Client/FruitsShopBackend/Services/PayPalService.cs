@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using FruitsShopBackend.Interfaces.IRepositories;
 using System.Net.Http.Headers;
 using FruitsShopBackend.Model;
+using Microsoft.Extensions.Options;
 
 namespace FruitsShopBackend.Services
 {
@@ -17,20 +18,37 @@ namespace FruitsShopBackend.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly HttpClient _httpClient;
-        private readonly string _clientId;
-        private readonly string _clientSecret;
+        private readonly PayPalSettings _settings;
 
-        public PayPalService(IUserRepository userRepository, HttpClient httpClient, IConfiguration configuration)
+        public PayPalService(IUserRepository userRepository, HttpClient httpClient, IOptions<PayPalSettings> options)
         {
             _userRepository = userRepository;
             _httpClient = httpClient;
-            _clientId = configuration["PayPalSettings:ClientId"];
-            _clientSecret = configuration["PayPalSettings:ClientSecret"];
+            _settings = options.Value;
+        }
+
+
+        private async Task<string> GetAccessTokenAsync()
+        {
+            var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_settings.ClientId}:{_settings.Secret}"));
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+
+            var requestContent = new StringContent("grant_type=client_credentials", Encoding.UTF8, "application/x-www-form-urlencoded");
+            var response = await _httpClient.PostAsync($"{_settings.Url}/v1/oauth2/token", requestContent);
+
+            response.EnsureSuccessStatusCode();
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var tokenResponse = JsonConvert.DeserializeObject<PayPalTokenResponse>(responseContent);
+
+            return tokenResponse.AccessToken;
         }
 
         public async Task<PayPalOrderResponse> CreateOrder(decimal amount)
         {
-            // Construct request body
+            var accessToken = await GetAccessTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
             var requestBody = new
             {
                 intent = "CAPTURE",
@@ -47,36 +65,56 @@ namespace FruitsShopBackend.Services
                 }
             };
 
-            // Serialize request body
             var requestBodyJson = JsonConvert.SerializeObject(requestBody);
+            var response = await _httpClient.PostAsync($"{_settings.Url}/v2/checkout/orders", new StringContent(requestBodyJson, Encoding.UTF8, "application/json"));
 
-            // Construct request
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.paypal.com/v2/checkout/orders");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
-            request.Content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
-
-            // Send request
-            var response = await _httpClient.SendAsync(request);
-
-            // Handle response
             response.EnsureSuccessStatusCode();
-            var responseContent = await response.Content.ReadAsStringAsync();
-            var payPalOrderResponse = JsonConvert.DeserializeObject<PayPalOrderResponse>(responseContent);
 
-            return payPalOrderResponse;
+            var responseContent = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<PayPalOrderResponse>(responseContent);
         }
 
-        public async Task CaptureOrder(string orderId)
+        public async Task SendPayment(string recipientEmail, decimal amount)
         {
-            // Construct request
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://api.paypal.com/v2/checkout/orders/{orderId}/capture");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
+            var accessToken = await GetAccessTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // Send request
-            var response = await _httpClient.SendAsync(request);
+            // Calculate commission (5%)
+            decimal commission = amount * 0.05m;
+            decimal amountAfterCommission = amount - commission;
 
-            // Handle response
-            response.EnsureSuccessStatusCode();
+            var requestBody = new
+            {
+                sender_batch_header = new
+                {
+                    email_subject = "You have a payment from FruitsShop",
+                    email_message = "Thank you for using FruitsShop."
+                },
+                items = new[]
+                {
+                    new
+                    {
+                        recipient_type = "EMAIL",
+                        receiver = recipientEmail,
+                        amount = new
+                        {
+                            value = amountAfterCommission.ToString("F2"),
+                            currency = "USD"
+                        },
+                        note = "Payment from FruitsShop",
+                        sender_item_id = Guid.NewGuid().ToString()
+                    }
+                }
+            };
+
+            var requestBodyJson = JsonConvert.SerializeObject(requestBody);
+            var response = await _httpClient.PostAsync($"{_settings.Url}/v1/payments/payouts", new StringContent(requestBodyJson, Encoding.UTF8, "application/json"));
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                throw new Exception($"PayPal API error: {errorContent}");
+            }
         }
 
         public async Task SetupSellerPayPalAccount(SellerPayPalAccountDto accountDto)
@@ -101,63 +139,14 @@ namespace FruitsShopBackend.Services
 
         public async Task<User> GetSellerPayPalByUserId(string userId)
         {
-            // Retrieve user by user ID
             var user = await _userRepository.GetUserById(userId);
 
-            // Check if the user is a seller and has a linked PayPal account
-            if (user != null && user.IsSeller && user.IsPaypalLinked)
+            if (user == null || !user.IsSeller || !user.IsPaypalLinked)
             {
-                // Construct seller PayPal account DTO
-                var sellerPayPalAccountDto = new SellerPayPalAccountDto
-                {
-                    UserId = userId,
-                    PayPalFirstName = user.PayPalFirstName,
-                    PayPalLastName = user.PayPalLastName,
-                    PayPalEmail = user.PayPalEmail
-                };
-
-                return user;
-            }
-            else
-            {
-                // Handle case where user is not found, not a seller, or does not have a linked PayPal account
                 throw new Exception($"Seller PayPal account not found for user with ID '{userId}'.");
             }
-        }
 
-        public async Task SendPayment(string recipientEmail, decimal amount)
-        {
-            // Calculate commission (5%)
-            decimal commission = amount * 0.05m;
-            decimal amountAfterCommission = amount - commission;
-
-            // Construct request body
-            var requestBody = new
-            {
-                recipient_type = "EMAIL",
-                receiver = recipientEmail,
-                amount = new
-                {
-                    value = amountAfterCommission.ToString("0.00"),
-                    currency = "USD"
-                },
-                note = "Payment from FruitsShop",
-                sender_item_id = Guid.NewGuid().ToString()
-            };
-
-            // Serialize request body
-            var requestBodyJson = JsonConvert.SerializeObject(requestBody);
-
-            // Construct request
-            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.paypal.com/v2/payments/payouts");
-            request.Headers.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_clientId}:{_clientSecret}")));
-            request.Content = new StringContent(requestBodyJson, Encoding.UTF8, "application/json");
-
-            // Send request
-            var response = await _httpClient.SendAsync(request);
-
-            // Handle response
-            response.EnsureSuccessStatusCode();
+            return user;
         }
     }
 }
