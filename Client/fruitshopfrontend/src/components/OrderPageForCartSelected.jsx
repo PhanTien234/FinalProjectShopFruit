@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import NavbarOrder from './ordercomponent/NavbarOrder';
 import AddressComponent from './ordercomponent/AddressOrder';
 import OrderItemInfo from './ordercomponent/OrderItemInfo';
@@ -12,40 +12,42 @@ import axios from 'axios';
 import { useAuth } from './AuthContext'; 
 
 const OrderPageForCartSelected = () => {
-  //const { userId } = useParams(); // Get productId from the route
   const navigate = useNavigate();
   const { accessToken } = useAuth(); 
+  const { state } = useLocation(); // Retrieve state from navigate
+  const { orderItems } = state || {}; // Get the selected items
   const [shippingAddressId, setShippingAddressId] = useState(null); // For AddressComponent
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [cartItems, setCartItems] = useState([]); // Store cart items with product details
   const [loading, setLoading] = useState(true); // State for loading indicator
-  const { quantity, setQuantity } = useContext(QuantityContext);
+  const {setQuantity} = useContext(QuantityContext);
   const [error, setError] = useState(null); // State for error handling
   const [isModalVisible, setModalVisible] = useState(false);
 
   
   useEffect(() => {
-    const fetchCartAndProducts = async () => {
+    const fetchProductDetails = async () => {
       try {
-        // Fetch cart data
-        const cartResponse = await axios.get('https://localhost:5001/api/Cart', {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        const cart = cartResponse.data.cart;
-  
-        // Fetch product details for each item in the cart
+        if (!orderItems || orderItems.length === 0) {
+          setError('No items selected for checkout.');
+          setLoading(false);
+          return;
+        }
+
         const productDetails = await Promise.all(
-          cart.items.map(async (item) => {
+          orderItems.map(async (item) => {
             const productResponse = await axios.get(
-              `https://localhost:5001/api/Product/${item.productId}`
+              `https://localhost:5001/api/Product/${item.productId}`,
+              {
+                headers: { Authorization: `Bearer ${accessToken}` },
+              }
             );
             const product = productResponse.data;
 
-            // Example shipping cost (you can replace this with actual logic if applicable)
-            const shippingCost = 5.99;
+            const shippingCost = 5.99; // Example shipping cost
             const total = product.price * item.quantity;
             const grandTotal = total + shippingCost;
-  
+
             return {
               ...item,
               name: product.name || 'No Name Available',
@@ -62,18 +64,18 @@ const OrderPageForCartSelected = () => {
             };
           })
         );
-  
+
         setCartItems(productDetails);
       } catch (err) {
-        console.error('Error fetching cart or product details:', err.response || err.message);
-        setError('Failed to load cart and product details.');
+        console.error('Error fetching product details:', err.response || err.message);
+        setError('Failed to load product details.');
       } finally {
         setLoading(false);
       }
     };
-  
-    fetchCartAndProducts();
-  }, [accessToken]);
+
+    fetchProductDetails();
+  }, [orderItems, accessToken]);
 
   // Prepare and submit the order
   const handleOrderSubmit = async () => {
@@ -108,8 +110,24 @@ const OrderPageForCartSelected = () => {
 
     // Handle modal close
     const handleModalClose = () => {
-      setModalVisible(false);
-      navigate('/'); // Navigate to Home Page
+      try {
+        // Loop through each ordered item and call the RemoveFromCart API
+        for (const item of cartItems) {
+          axios.delete(`https://localhost:5001/api/Cart/remove/${item.productId}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`, // Include the access token
+            },
+          });
+        }
+        // // Optionally, clear cart items from state to reflect changes in the UI
+        // setCartItems([]);        
+      } catch (err) {
+        console.error('Error removing items from the cart:', err.response?.data || err.message);
+        alert('Failed to remove items from the cart. Please try again.');
+      } finally {
+        setModalVisible(false);
+        navigate('/'); // Navigate to the Home Page
+      }
     };
 
   if (loading) return <p>Loading...</p>;
