@@ -67,6 +67,11 @@ const NavbarCart = () => {
     }
   };
 
+  const handleAvatarClick = () => {
+    // Navigate to the profile page with the user's ID
+    navigate(`/userprofile/${user.userId}`);
+  };
+
   useEffect(() => {
     const handleCartItemCountUpdate = (event) => {
       setCartItemCount(event.detail);
@@ -144,9 +149,11 @@ const NavbarCart = () => {
               </>
             ) : (
               <>
-                <img src={userInfo.imageUserPath} alt="User Avatar" className="h-8 w-8 rounded-full mx-4" />
-                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{userInfo.firstName} {userInfo.lastName}</span>
-                <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
+                <div className="flex items-center cursor-pointer" onClick={handleAvatarClick}>
+                  <img src={userInfo.imageUserPath} alt="User Avatar" className="h-8 w-8 rounded-full mx-4" />
+                  <span className="text-white px-3 py-2 rounded-md text-sm font-medium">{userInfo.firstName} {userInfo.lastName}</span>
+                  <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
+                </div>
               </>
             )}
           </div>

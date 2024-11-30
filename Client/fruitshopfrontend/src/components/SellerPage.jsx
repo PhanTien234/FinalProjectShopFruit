@@ -8,7 +8,7 @@ import SellerMainContent from './SellerMainContent';
 
 const SellerPage = () => {
   const [activeComponent, setActiveComponent] = useState('home');
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
   const handleComponentChange = (component) => {
     // navigate(path); // Change the URL

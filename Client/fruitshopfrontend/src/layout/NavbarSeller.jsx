@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate} from 'react-router-dom';
 import { BellIcon } from '@heroicons/react/outline';  // Import the BellIcon
 import { useAuth } from '../components/AuthContext';
 import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 
 
 const NavbarSeller = () => {
-    const { user } = useAuth();
+    const navigate = useNavigate();
+    const { user, logout } = useAuth();
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
@@ -33,6 +35,12 @@ const NavbarSeller = () => {
             fetchUserData();
         }
     }, [user]);
+
+    const handleAvatarClick = () => {
+        // Navigate to the profile page with the user's ID
+        navigate(`/userprofile/${user.userId}`);
+      };
+
     return (
         <nav className="bg-[#ef7777] py-4 shadow-md">
             <div className="max-w-7xl mx-auto px-4">
@@ -52,8 +60,11 @@ const NavbarSeller = () => {
                         {/* User avatar and name */}
                         {user ? (
                             <>
-                                <img src={userInfo.imageUserPath} alt="User avatar" className="h-10 w-10 rounded-full" />
-                                <span className="font-medium text-white">{userInfo.firstName} {userInfo.lastName}</span>
+                                <div className="flex items-center cursor-pointer" onClick={handleAvatarClick}>
+                                    <img src={userInfo.imageUserPath} alt="User avatar" className="h-10 w-10 rounded-full" />
+                                    <span className="font-medium text-white">{userInfo.firstName} {userInfo.lastName}</span>
+                                    <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
+                                </div>
                             </>
                         ) : (
                             <span className="font-medium text-white">Guest</span> // Default display if no user is logged in

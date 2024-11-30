@@ -67,7 +67,7 @@ const Navbar = ({ setSearchQuery }) => {
 
   const handleAvatarClick = () => {
     // Navigate to the profile page with the user's ID
-    navigate(`/profile/${user.userId}`);
+    navigate(`/userprofile/${user.userId}`);
   };
 
   const handleSellerRegistrationClick = () => {

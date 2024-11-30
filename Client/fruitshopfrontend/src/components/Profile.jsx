@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../components/AuthContext';
-import Navbar from '../layout/Navbar';  // Import the Navbar
-import Footer from '../layout/Footer';  
+
 
 const ProfilePage = () => {
   const { user, accessToken } = useAuth();
@@ -73,7 +72,6 @@ const ProfilePage = () => {
 
   return (
     <>
-      <Navbar />
       <div className="container mx-auto mt-4">
         <h2 className="text-2xl font-bold my-6">My Profile</h2>
         {/* Horizontal Dash */}
@@ -171,9 +169,6 @@ const ProfilePage = () => {
             </label>
           </div>
         </form>
-      </div>
-      <div className="mt-8">
-        <Footer /> 
       </div>
     </>
   );
