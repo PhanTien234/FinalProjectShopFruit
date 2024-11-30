@@ -25,6 +25,7 @@ import UnitFruits from './components/UnitFruits';
 import CreateUnit from './components/CreateUnitFruit';
 import UpdateUnit from './components/UpdateUnitFruit';
 import { QuantityProvider } from './components/ordercomponent/QuantityContext';
+import CategoryPage from './components/pages/category/CategoryPage';
 import { AuthProvider } from './components/AuthContext';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
@@ -49,6 +50,7 @@ const App = () => {
                 <Route path="/update-product/:productId" element={<UpdateProductForm />} />
                 <Route path="/create-category" element={<CreateCategoryForm />} />
                 <Route path="/categories" element={<Categories />} />
+                <Route path="/category/:categoryId" element={<CategoryPage />} />
                 <Route path="/unitfruits" element={<UnitFruits />} />
                 <Route path="/create-unit" element={<CreateUnit />} />
                 <Route path="/update-unit/:unitFruitId" element={<UpdateUnit />} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const ProductGrid = ({ searchQuery, currentPage, setCurrentPage  }) => {
+const ProductGrid = ({ searchQuery, currentPage, setCurrentPage= []   }) => {
   const [products, setProducts] = useState([]);
   const [hoveredProductId, setHoveredProductId] = useState(null); // Define hoveredProductId state variable
   const navigate = useNavigate(); // Initialize useNavigate
@@ -11,13 +11,12 @@ const ProductGrid = ({ searchQuery, currentPage, setCurrentPage  }) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('https://localhost:5001/api/Product/getallproducts');
+        const response = await axios.get("https://localhost:5001/api/Product/getallproducts");
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
+        console.error("Error fetching products:", error);
       }
     };
-
     fetchProducts();
   }, []);
 

@@ -87,6 +87,15 @@ namespace FruitsShopBackend.Services
             // Fetch and assign related entities
             var category = await _categoryService.GetCategoryById(productDto.CategoryId);
             var supplier = await _supplierService.GetSupplierById(productDto.SupplierId);
+            // Check if SupplierId is provided
+            if (!string.IsNullOrEmpty(productDto.SupplierId))
+            {
+                product.IsCertificate = true;
+            }
+            else
+            {
+                product.IsCertificate = false;
+            }
             var unit = await _unitFruitService.GetUnitFruitById(productDto.UnitFruitId);
             product.Category = category;
             product.Supplier = supplier;
