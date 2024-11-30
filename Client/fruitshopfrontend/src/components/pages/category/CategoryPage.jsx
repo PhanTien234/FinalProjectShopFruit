@@ -13,21 +13,28 @@ const CategoryPage = () => {
   const [currentPage, setCurrentPage] = useState(1); // For pagination in ProductGrid
 
   useEffect(() => {
+    const fetchCategoryDetails = async () => {
+      try {
+        const categoryResponse = await axios.get(`https://localhost:5001/api/Category/${categoryId}`);
+        setCategory(categoryResponse.data); // Set category details
+      } catch (error) {
+        console.error("Error fetching category details:", error);
+      }
+    };
+
     const fetchCategoryProducts = async () => {
       try {
-        const response = await axios.get("https://localhost:5001/api/Product/getallproducts");
-        const productsByCategory = response.data.filter(
+        const productsResponse = await axios.get("https://localhost:5001/api/Product/getallproducts");
+        const productsByCategory = productsResponse.data.filter(
           (product) => product.category.id === categoryId // Compare as string
         );
-        if (productsByCategory.length > 0) {
-          setCategory(productsByCategory[0].category);
-        }
         setFilteredProducts(productsByCategory);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
     };
 
+    fetchCategoryDetails();
     fetchCategoryProducts();
   }, [categoryId]);
 
@@ -48,12 +55,18 @@ const CategoryPage = () => {
             </h2>
           </div>
         )}
-        <ProductGrid
-          searchQuery={""} // No search in CategoryPage
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          initialProducts={filteredProducts} // Pass filtered products
-        />
+        {filteredProducts.length > 0 ? (
+          <ProductGrid
+            searchQuery={""} // No search in CategoryPage
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            initialProducts={filteredProducts} // Pass filtered products
+          />
+        ) : (
+          <div className="text-center text-gray-500 mt-8">
+            <p>Not have any products for display</p>
+          </div>
+        )}
       </div>
       <Footer />
     </div>
