@@ -27,19 +27,19 @@ import { QuantityProvider } from './components/ordercomponent/QuantityContext';
 import CategoryPage from './components/pages/category/CategoryPage';
 import UserProfilePage from './components/pages/userprofiles/UserProfilePage';
 import { AuthProvider } from './components/AuthContext';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+//import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const App = () => {
-  const initialOptions = {
-    clientId: "ASZpqn8e_pG6HMN_2B1_EfsCR7xEiEXad_aH86w5lYxjWiPnBO50j6_DQpQ_EN1FVzPpEYOWZxjKFuDo",
-    currency: "USD",
-    intent: "capture",
-    };
+  // const initialOptions = {
+  //   clientId: "ASZpqn8e_pG6HMN_2B1_EfsCR7xEiEXad_aH86w5lYxjWiPnBO50j6_DQpQ_EN1FVzPpEYOWZxjKFuDo",
+  //   currency: "USD",
+  //   intent: "capture",
+  //   };
 
   return (
     <AuthProvider> {/* Wrap Routes with AuthProvider */}
         <QuantityProvider> {/* Wrap the entire application with QuantityProvider */}
-          <PayPalScriptProvider options={initialOptions}>{/* Wrap the entire application with PayPalScriptProvider */}
+          {/* <PayPalScriptProvider options={initialOptions}>Wrap the entire application with PayPalScriptProvider */}
               <Router>
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -68,7 +68,7 @@ const App = () => {
                   <Route path="/update-supplier/:supplierId" element={<UpdateSupplier />} />
                 </Routes>
               </Router>
-            </PayPalScriptProvider>
+            {/* </PayPalScriptProvider> */}
           </QuantityProvider>
       </AuthProvider>
   );

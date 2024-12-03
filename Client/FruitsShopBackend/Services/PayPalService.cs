@@ -79,8 +79,8 @@ namespace FruitsShopBackend.Services
             var accessToken = await GetAccessTokenAsync();
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-            // Calculate commission (5%)
-            decimal commission = amount * 0.05m;
+            // Calculate commission (20%)
+            decimal commission = amount * 0.2m;
             decimal amountAfterCommission = amount - commission;
 
             var requestBody = new

@@ -46,7 +46,7 @@ const UserSidebar = ({ handleComponentChange }) => {
               </SidebarLink>
               <SidebarLink
                 isActive={activeLink === 'bank-account'}
-                onClick={() => handleLinkClick('bank-account')}
+                onClick={() => handleLinkClick('bank-account', '/userprofile/bank-account')}
               >
                 Bank Account
               </SidebarLink>

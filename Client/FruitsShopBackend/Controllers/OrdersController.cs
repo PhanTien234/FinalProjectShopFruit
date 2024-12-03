@@ -9,6 +9,8 @@ using System;
 using FruitsShopBackend.Model;
 using Microsoft.AspNetCore.Http;
 using FruitsShopBackend.Constants;
+using FruitsShopBackend.Services;
+using System.Collections.Generic;
 
 namespace FruitsShopBackend.Controllers
 {
@@ -24,7 +26,15 @@ namespace FruitsShopBackend.Controllers
             _orderService = orderService;
         }
 
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpGet("getallorders")]
+        public async Task<ActionResult<List<OrderDto>>> GetAllOrders()
+        {
+            var orders = await _orderService.GetAllOrders();
+            return Ok(orders);
+        }
+
+        [HttpGet("getallordersbyuser")]
         public async Task<ActionResult<Order>> GetAllOrdersByUserId()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
