@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PaymentByPayPalModal from "../payment/PaymentByPayPalModal";
 
-const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod, handleOrderSubmit }) => {
+const PaymentMethodAndTotalPayment = ({ orderItems, userId, setPaymentMethod, handleOrderSubmit }) => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -111,6 +111,7 @@ const PaymentMethodAndTotalPayment = ({ orderItems, setPaymentMethod, handleOrde
       {showPayPalModal && (
         <PaymentByPayPalModal
           totalPayment={totalPayment}
+          userId={userId}
           onClose={() => setShowPayPalModal(false)}
           handleOrderSubmit={handleOrderSubmit} // Add this prop
         />

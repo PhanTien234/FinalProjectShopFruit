@@ -44,6 +44,7 @@ const OrderPageForProductDetail = () => {
           shipping: "Fast - Guaranteed delivery from May 12 - May 13", // Placeholder
           shippingCost,// Example shipping cost
           grandTotal: (productPrice * quantity + shippingCost).toFixed(2),
+          userId: product.userId,
         });
       } catch (err) {
         console.error('Error fetching product details:', err.response || err.message);
@@ -122,6 +123,7 @@ const OrderPageForProductDetail = () => {
         <DiscountComponent />
         <PaymentMethodAndTotalPayment
           orderItems={[orderItem]}
+          userId={orderItem.userId}
           setPaymentMethod={setPaymentMethod}
           handleOrderSubmit={handleOrderSubmit} // Pass the method as a prop
         />

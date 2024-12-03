@@ -1,8 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 
-const PaymentByPayPalModal = ({ totalPayment, onClose, handleOrderSubmit }) => {
+const PaymentByPayPalModal = ({ totalPayment, userId, onClose, handleOrderSubmit }) => {
+  //const [payPalEmail, setPayPalEmail] = useState("");
+  const [isFetchingEmail, setIsFetchingEmail] = useState(false);
+
+  const fetchPayPalEmail = async () => {
+    setIsFetchingEmail(true);
+    try {
+      const response = await axios.get(
+        `https://localhost:5001/api/Payment/seller-paypal-account/${userId}`
+      );
+      if (response.data?.payPalEmail) {
+        return response.data.payPalEmail;
+      } else {
+        throw new Error("Invalid PayPal email response.");
+      }
+    } catch (error) {
+      console.error("Error fetching PayPal email:", error);
+      alert("Failed to load seller PayPal email. Please try again.");
+      throw error; // Rethrow to handle in calling function
+    } finally {
+      setIsFetchingEmail(false);
+    }
+  };
+
+
   const handleApprove = async (data, actions) => {
     try {
       // Capture the payment
@@ -10,10 +34,16 @@ const PaymentByPayPalModal = ({ totalPayment, onClose, handleOrderSubmit }) => {
 
       if (order.status === "COMPLETED") {
         console.log("Payment captured successfully:", order);
+        // Fetch PayPal email after payment is captured
+        const payPalEmail = await fetchPayPalEmail();
 
+        if (!payPalEmail) {
+          alert("PayPal email could not be retrieved. Please try again.");
+          return;
+        }
         // Send payment to the admin
         await axios.post("https://localhost:5001/api/Payment/send-payment", {
-          recipientEmail: "sb-yimao34470230@personal.example.com", // Admin PayPal email
+          recipientEmail: payPalEmail, // Admin PayPal email
           amount: totalPayment, // Total payment amount
         });
 
