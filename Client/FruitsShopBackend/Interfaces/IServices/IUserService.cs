@@ -11,5 +11,7 @@ namespace FruitsShopBackend.Interfaces.IServices
         Task<UserDto> CreateUser(UserCreateDto userDto);
         Task<UserDto> UpdateUser(string userId, UserUpdateDto userDto);
         Task DeleteUser(string userId);
+        Task<List<UserDto>> GetUsersByIds(List<string> userIds);
     }
+
 }

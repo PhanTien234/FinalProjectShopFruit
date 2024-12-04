@@ -87,7 +87,7 @@ namespace FruitsShopBackend.Services
                 ShippingAddress = shippingAddress,
                 TotalPrices = orderDto.TotalPrices,
                 OrderStatus = OrderStatus.PrepareProducts,
-                PaymentStatus = PaymentStatus.Unpaid,
+                PaymentStatus = paymentStatus,
                 PaymentDate = paymentStatus == PaymentStatus.Paid ? orderDto.PaymentDate : null, // Set PaymentDate only if paid
                 PaymentMethod = paymentMethod,
                 OrderItems = orderItems

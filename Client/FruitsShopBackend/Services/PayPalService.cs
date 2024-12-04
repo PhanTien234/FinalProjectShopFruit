@@ -141,7 +141,7 @@ namespace FruitsShopBackend.Services
         {
             var user = await _userRepository.GetUserById(userId);
 
-            if (user == null || !user.IsSeller || !user.IsPaypalLinked)
+            if (user == null || !user.IsPaypalLinked)
             {
                 throw new Exception($"Seller PayPal account not found for user with ID '{userId}'.");
             }

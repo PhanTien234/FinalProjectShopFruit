@@ -142,5 +142,10 @@ namespace FruitsShopBackend.Services
 
             await _userRepository.DeleteUser(user);
         }
+        public async Task<List<UserDto>> GetUsersByIds(List<string> userIds)
+        {
+            var users = await _userRepository.GetUsersByIds(userIds);
+            return _mapper.Map<List<UserDto>>(users);
+        }
     }
 }

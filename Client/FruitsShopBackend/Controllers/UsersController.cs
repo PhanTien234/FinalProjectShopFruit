@@ -68,5 +68,24 @@ namespace FruitsShopBackend.Controllers
             await _userService.DeleteUser(userId);
             return Ok(new { Message = "User deleted successfully." });
         }
+
+        [HttpPost("GetUsersByIds")]
+        public async Task<ActionResult<List<UserDto>>> GetUsersByIds([FromBody] List<string> userIds)
+        {
+            if (userIds == null || userIds.Count == 0)
+            {
+                return BadRequest("User IDs list cannot be null or empty.");
+            }
+
+            var users = await _userService.GetUsersByIds(userIds);
+            if (users == null || users.Count == 0)
+            {
+                return NotFound("No users found for the provided IDs.");
+            }
+
+            var userDtos = _mapper.Map<List<UserDto>>(users);
+            return Ok(userDtos);
+        }
+
     }
 }

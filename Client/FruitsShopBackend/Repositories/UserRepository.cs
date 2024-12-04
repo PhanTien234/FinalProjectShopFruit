@@ -3,6 +3,7 @@ using FruitsShopBackend.Interfaces.IRepositories;
 using FruitsShopBackend.Model;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FruitsShopBackend.Repositories
@@ -42,6 +43,13 @@ namespace FruitsShopBackend.Repositories
         {
             _context.Users.Remove(user);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<List<User>> GetUsersByIds(List<string> userIds)
+        {
+            return await _context.Users
+                                 .Where(user => userIds.Contains(user.UserId))
+                                 .ToListAsync();
         }
 
     }

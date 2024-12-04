@@ -33,6 +33,7 @@ namespace FruitsShopBackend.Controllers
             return Ok(addresses);
         }
 
+
         [HttpGet("getalladdressbyuser")]
         public async Task<ActionResult<IEnumerable<AddressDto>>> GetAllAddressesByUserId()
         {

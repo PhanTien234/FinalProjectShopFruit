@@ -52,7 +52,7 @@ const UserSidebar = ({ handleComponentChange }) => {
               </SidebarLink>
               <SidebarLink
                 isActive={activeLink === 'address'}
-                onClick={() => handleLinkClick('address')}
+                onClick={() => handleLinkClick('address', '/userprofile/address')}
               >
                 Address
               </SidebarLink>
@@ -92,13 +92,13 @@ const UserSidebar = ({ handleComponentChange }) => {
             <div className="ml-6">
               <SidebarLink
                 isActive={activeLink === 'pending-orders'}
-                onClick={() => handleLinkClick('pending-orders')}
+                onClick={() => handleLinkClick('pending-orders', '/userprofile/pending-orders')}
               >
                 Pending Orders
               </SidebarLink>
               <SidebarLink
                 isActive={activeLink === 'completed-orders'}
-                onClick={() => handleLinkClick('completed-orders')}
+                onClick={() => handleLinkClick('completed-orders', '/userprofile/completed-orders')}
               >
                 Completed Orders
               </SidebarLink>

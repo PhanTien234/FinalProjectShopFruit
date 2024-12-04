@@ -4,7 +4,7 @@ import NavbarOrder from './ordercomponent/NavbarOrder';
 import AddressComponent from './ordercomponent/AddressOrder';
 import OrderItemInfo from './ordercomponent/OrderItemInfo';
 import DiscountComponent from './ordercomponent/DiscountComponent';
-import PaymentMethodAndTotalPayment from './ordercomponent/PaymentMethodAndTotalPayment';
+import PaymentMethodAndTotalPaymentCart from './ordercomponent/PaymentMethodAndTotalPaymentCart';
 import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 import { QuantityContext } from './ordercomponent/QuantityContext';
 import Footer from '../layout/Footer';
@@ -19,6 +19,7 @@ const OrderPageForCartSelected = () => {
   const [shippingAddressId, setShippingAddressId] = useState(null); // For AddressComponent
   const [paymentMethod, setPaymentMethod] = useState(null);
   const [cartItems, setCartItems] = useState([]); // Store cart items with product details
+  const [sellerIds, setSellerIds] = useState([]); // Store unique seller IDs
   const [loading, setLoading] = useState(true); // State for loading indicator
   const {setQuantity} = useContext(QuantityContext);
   const [error, setError] = useState(null); // State for error handling
@@ -61,11 +62,16 @@ const OrderPageForCartSelected = () => {
               shipping: "Fast - Guaranteed delivery from May 12 - May 13",
               shippingCost: shippingCost,
               grandTotal: grandTotal.toFixed(2),
+              sellerId: product.userId
             };
           })
         );
 
         setCartItems(productDetails);
+
+         // Extract unique seller IDs
+         const uniqueSellerIds = [...new Set(productDetails.map((item) => item.sellerId))];
+         setSellerIds(uniqueSellerIds);
       } catch (err) {
         console.error('Error fetching product details:', err.response || err.message);
         setError('Failed to load product details.');
@@ -159,8 +165,9 @@ const OrderPageForCartSelected = () => {
       <AddressComponent setShippingAddressId={setShippingAddressId} />
       {cartItems.map((item) => (<OrderItemInfo key={item.productId} item={item} />))}                                                      
         <DiscountComponent />
-        <PaymentMethodAndTotalPayment
+        <PaymentMethodAndTotalPaymentCart
         orderItems={cartItems}
+        sellerIds={sellerIds}
         setPaymentMethod={setPaymentMethod}
         handleOrderSubmit={handleOrderSubmit} // Pass the method as a prop
         />

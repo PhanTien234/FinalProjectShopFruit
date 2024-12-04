@@ -11,5 +11,6 @@ namespace FruitsShopBackend.Interfaces.IRepositories
         Task CreateUser(User user);
         Task UpdateUser(User user);
         Task DeleteUser(User user);
+        Task<List<User>> GetUsersByIds(List<string> userIds);
     }
 }

@@ -1,6 +1,9 @@
 import React from 'react';
 import ProfilePage from "../../components/Profile";
 import PayPalAccountPage from "../userprofilecomponent/PayPalAccountPage"; 
+import Address from "../../components/Address";
+import OrderViewPending from "../pages/order/OrderedViewPagePending";
+import OrderViewComplete from "../pages/order/OrderedViewPageComplete";
 // import PendingOrders from '../components/PendingOrders';
 // import CompletedOrders from '../components/CompletedOrders';
 // import Notifications from '../components/Notifications';
@@ -13,6 +16,9 @@ const UserMainContent = ({ activeComponent  }) => {
       {/* Dynamically render components based on the activeComponent prop */}
       {activeComponent === "profile-overview" && <ProfilePage />}
       {activeComponent === "bank-account" && <PayPalAccountPage />}
+      {activeComponent === "address" && <Address />}
+      {activeComponent === "pending-orders" && <OrderViewPending />}
+      {activeComponent === "completed-orders" && <OrderViewComplete />}
       {/* {activeComponent === 'pending-orders' && <PendingOrders />}
       {activeComponent === 'completed-orders' && <CompletedOrders />}
       {activeComponent === 'notifications' && <Notifications />}
