@@ -71,6 +71,8 @@ namespace FruitsShopBackend.Services
             }
 
             // Fetch payment method and shipping address
+            
+            
             var paymentMethod = await _paymentMethodService.GetPaymentMethodById(orderDto.PaymentMethodId)
                                 ?? throw new Exception("Payment method not found.");
             var shippingAddress = await _userAddressService.GetAddressByIdAsync(userId, orderDto.ShippingAddressId)

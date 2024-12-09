@@ -27,7 +27,7 @@ namespace FruitsShopBackend.Controllers
 
         [AllowAnonymous]
         [HttpGet("getalladdresss")]
-        public async Task<ActionResult<List<Product>>> GetAllAddresses()
+        public async Task<ActionResult<List<AddressDto>>> GetAllAddresses()
         {
             var addresses = await _addressService.GetAllAddressesAsync();
             return Ok(addresses);

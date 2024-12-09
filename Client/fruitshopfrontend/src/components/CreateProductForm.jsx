@@ -109,7 +109,17 @@ const CreateProductForm = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    navigate('/products'); // Redirect to Products page
+    setProductData({ name: '',
+      description: '',
+      price: 0,
+      discountPrice: 0,
+      overallRating: 0,
+      categoryId: '',
+      availableQuantity: 0,
+      supplierId: '',
+      image: null,
+      unitFruitId: '', }); 
+    // navigate('/products'); // Redirect to Products page
   };
 
   return (

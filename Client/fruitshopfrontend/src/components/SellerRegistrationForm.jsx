@@ -47,7 +47,7 @@ const SellerRegistrationForm = ({ onRegister }) => {
 
   const handleSuccessModal = () => {
     setSuccessModal(false);
-    navigate('/sellerpage'); // Navigate to the seller page
+    navigate('/seller'); // Navigate to the seller page
   };
 
   const handleAddressChange = (province, district, ward) => {

@@ -121,7 +121,9 @@ namespace FruitsShopBackend.Services
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    CreatedAt = user.CreatedAt
+                    CreatedAt = user.CreatedAt,
+                    IsSeller = user.IsSeller,
+                    Role = user.Role
                 };
 
                 return new Result { Success = true, Data = new {

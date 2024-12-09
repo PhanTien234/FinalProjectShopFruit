@@ -1,0 +1,17 @@
+﻿using FinalProjectFruitShopAdmin.Dtos;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace FinalProjectFruitShopAdmin.Interfaces.IServices
+{
+    public interface IUserService
+    {
+        Task<UserDto> GetUserById(string userId);
+        Task<List<UserDto>> GetAllUsers();
+        Task<UserDto> CreateUser(UserCreateDto userDto);
+        Task<UserDto> UpdateUser(string userId, UserUpdateDto userDto);
+        Task DeleteUser(string userId);
+        Task<List<UserDto>> GetUsersByIds(List<string> userIds);
+    }
+
+}

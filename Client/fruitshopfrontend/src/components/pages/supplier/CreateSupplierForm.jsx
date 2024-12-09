@@ -49,7 +49,11 @@ const CreateSupplierForm = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    navigate('/suppliers'); // Redirect to Suppliers page
+    setSupplierData({ name: '',
+      location: '',
+      description: '',
+      certificateProduct: null  }); 
+    // navigate('/suppliers'); // Redirect to Suppliers page
   };
 
   return (

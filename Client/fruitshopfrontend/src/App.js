@@ -14,12 +14,13 @@ import UpdateCategoryForm from './components/UpdateCategoryForm';
 import SellerRegistrationPage from './components/SellerRegistrationPage';
 import ProductDetailPage from './components/ProductDetailPage';
 import CartPage from './components/CartPage';
-import SellerPage from './components/SellerPage';
+import SellerPage from './components/pages/seller/SellerPage';
 import OrderPageForProductDetail from './components/OrderPageForProductDetail';
 import OrderPageForCartSelected from './components/OrderPageForCartSelected';
 import Supplier from './components/pages/supplier/Supplier';
 import CreateSupplier from './components/pages/supplier/CreateSupplierForm';
 import UpdateSupplier from './components/pages/supplier/UpdateSupplierForm';
+import ShopInfomation from './components/pages/seller/ShopInfomation';
 import UnitFruits from './components/UnitFruits';
 import CreateUnit from './components/CreateUnitFruit';
 import UpdateUnit from './components/UpdateUnitFruit';
@@ -60,7 +61,8 @@ const App = () => {
                   <Route path="/sellerRegistration" element={<SellerRegistrationPage />} />
                   <Route path="/product/:productId" element={<ProductDetailPage />} />
                   <Route path="/cart" element={<CartPage />} />
-                  <Route path="/sellerpage/*" element={<SellerPage />} />
+                  <Route path="/seller/*" element={<SellerPage />} />
+                  <Route path="/shopinfomation" element={<ShopInfomation />} />
                   <Route path="/checkout/:productId" element={<OrderPageForProductDetail />} />
                   <Route path="/checkoutcart/:userId" element={<OrderPageForCartSelected />} />
                   <Route path="/suppliers" element={<Supplier />} />

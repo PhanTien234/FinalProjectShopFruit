@@ -1,0 +1,42 @@
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson;
+using System.Collections.Generic;
+using System;
+using FinalProjectFruitShopAdmin.Constants;
+using FinalProjectFruitShopAdmin.Dtos;
+
+namespace FinalProjectFruitShopAdmin.Model
+{
+    public class Order
+    {
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string OrderId { get; set; }
+
+        public string UserId { get; set; }
+
+        public DateTime OrderDate { get; set; }
+
+        public AddressDto ShippingAddress { get; set; }
+
+        public decimal TotalPrices { get; set; }
+
+        public OrderStatus OrderStatus { get; set; }
+
+        public PaymentStatus PaymentStatus { get; set; }
+
+        public DateTime? PaymentDate { get; set; }
+
+        public PaymentMethodDto PaymentMethod { get; set; }
+
+        public List<OrderItem> OrderItems { get; set; }
+    }
+    public class OrderItem
+    {
+        [BsonId]
+        public string OrderItemId { get; set; }
+        public string ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+    }
+}

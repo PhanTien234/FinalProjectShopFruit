@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useAuth } from '../../AuthContext';
-import { configureAlerts, ToastContainer } from '../../../alert/alert';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { FaTrash, FaEdit } from "react-icons/fa";
+import { useAuth } from "../../AuthContext";
+import { configureAlerts, ToastContainer } from "../../../alert/alert";
 
 const Supplier = () => {
   const { accessToken } = useAuth();
@@ -12,16 +13,20 @@ const Supplier = () => {
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await axios.get('https://localhost:5001/api/Supplier/getallsuppliersbyuser', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
+        const response = await axios.get(
+          "https://localhost:5001/api/Supplier/getallsuppliersbyuser",
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
           }
-        });
+        );
         setSuppliers(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching suppliers:', error.response || error.message);
-        alertError('Error fetching suppliers!');
+        console.error("Error fetching suppliers:", error.response || error.message);
+        alertError("Error fetching suppliers!");
+        setLoading(false);
       }
     };
 
@@ -32,49 +37,61 @@ const Supplier = () => {
     try {
       await axios.delete(`https://localhost:5001/api/Supplier/${supplierId}`, {
         headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+          Authorization: `Bearer ${accessToken}`,
+        },
       });
-      setSuppliers(suppliers.filter(supplier => supplier.supplierId !== supplierId));
-      success('Supplier deleted successfully');
+      setSuppliers(suppliers.filter((supplier) => supplier.supplierId !== supplierId));
+      success("Supplier deleted successfully");
     } catch (error) {
-      alertError('Error deleting supplier!');
+      alertError("Error deleting supplier!");
+      console.error("Error deleting supplier:", error);
     }
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h1 className="text-3xl font-semibold text-gray-600 text-center mb-6">All Suppliers</h1>
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full text-left border-collapse">
+    <div className="container mx-auto py-6 px-4">
+      <h1 className="text-3xl font-semibold text-gray-600 text-center mb-6">
+        All Suppliers
+      </h1>
+      <div className="overflow-x-auto overflow-y-auto max-h-[70vh] bg-white rounded-lg shadow-md">
+        <table className="table-auto w-full text-sm text-gray-600">
           <thead>
             <tr>
-              <th className="px-4 py-2 border">Supplier ID</th>
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Location</th>
-              <th className="px-4 py-2 border">Description</th>
-              <th className="px-4 py-2 border">Certificate</th>
-              <th className="px-4 py-2 border">Actions</th>
+              {["Supplier ID", "Name", "Location", "Description", "Certificate", "Actions"].map((header, index) => (
+                <th key={index} className="px-4 py-2 border-b-2 text-left">
+                  {header}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="6" className="text-center py-4">Loading...</td>
+                <td colSpan="6" className="text-center py-4">
+                  Loading...
+                </td>
               </tr>
             ) : (
-              suppliers.map(supplier => (
-                <tr key={supplier.supplierId}>
+              suppliers.map((supplier) => (
+                <tr key={supplier.supplierId} className="hover:bg-gray-100">
                   <td className="px-4 py-2 border">{supplier.supplierId}</td>
                   <td className="px-4 py-2 border">{supplier.name}</td>
                   <td className="px-4 py-2 border">{supplier.location}</td>
                   <td className="px-4 py-2 border">{supplier.description}</td>
                   <td className="px-4 py-2 border">
-                    <img src={supplier.certificateProductUrl} alt="Certificate" className="w-16 h-16 object-cover" />
+                    <img
+                      src={supplier.certificateProductUrl}
+                      alt="Certificate"
+                      className="w-16 h-16 object-cover"
+                    />
                   </td>
-                  <td className="px-4 py-2 border">
-                    <button onClick={() => handleDelete(supplier.supplierId)} className="bg-red-500 text-white px-4 py-2 rounded">
-                      Delete
+                  <td className="px-4 py-2 border flex items-center space-x-2">
+                    <button
+                      onClick={() => handleDelete(supplier.supplierId)}
+                      className="text-red-500 hover:text-red-700"
+                      title="Delete"
+                    >
+                      <FaTrash />
                     </button>
                   </td>
                 </tr>
@@ -83,7 +100,17 @@ const Supplier = () => {
           </tbody>
         </table>
       </div>
-      <ToastContainer />
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

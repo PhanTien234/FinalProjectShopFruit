@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { BellIcon } from '@heroicons/react/outline';  // Import the BellIcon
 import { useAuth } from '../components/AuthContext';
 import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
@@ -8,7 +8,7 @@ import FruitShopLogo from '../assets/images/Fruitshoplogo.png';
 
 const NavbarSeller = () => {
     const navigate = useNavigate();
-    const { user, logout } = useAuth();
+    const { isAuthenticated, user, accessToken, logout } = useAuth();
     const [userInfo, setUserInfo] = useState({
         firstName: '',
         lastName: '',
@@ -58,16 +58,26 @@ const NavbarSeller = () => {
                             <BellIcon className="h-6 w-6 text-white" aria-hidden="true" />
                         </button>
                         {/* User avatar and name */}
-                        {user ? (
-                            <>
-                                <div className="flex items-center cursor-pointer" onClick={handleAvatarClick}>
-                                    <img src={userInfo.imageUserPath} alt="User avatar" className="h-10 w-10 rounded-full" />
-                                    <span className="font-medium text-white">{userInfo.firstName} {userInfo.lastName}</span>
-                                    <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
-                                </div>
+                        {!isAuthenticated ? (
+                <>
+                            <Link to="/register" className="text-white px-3 py-2 rounded-md text-sm font-medium ml-6">Register</Link>
+                            <span className="text-white mx-2">|</span>
+                            <Link to="/login" className="text-white px-3 py-2 rounded-md text-sm font-medium">Login</Link>
                             </>
                         ) : (
-                            <span className="font-medium text-white">Guest</span> // Default display if no user is logged in
+                            <>
+                            <div className="flex items-center cursor-pointer" onClick={handleAvatarClick}>
+                                <img
+                                src={userInfo.imageUserPath}
+                                alt="User avatar"
+                                className="h-8 w-8 rounded-full mx-4"
+                                />
+                                <span className="text-white px-3 py-2 rounded-md text-sm font-medium">
+                                {userInfo.firstName} {userInfo.lastName}
+                                </span>
+                            </div>
+                            <button onClick={logout} className="text-white px-3 py-2 rounded-md text-sm font-medium ml-4">Logout</button>
+                            </>
                         )}
                     </div>
                 </div>
